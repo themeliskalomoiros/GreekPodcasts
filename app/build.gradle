@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "gr.kalymnos.sk3m3l10.greekpodcasts"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions{
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Test
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    // Android Support
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:palette-v7:26.1.0'
+    implementation 'com.android.support:cardview-v7:26.1.0'
+
+
+
+    //  Firebase
+    implementation 'com.google.firebase:firebase-core:15.0.2'
+    implementation 'com.google.firebase:firebase-database:15.0.0'
+    implementation 'com.google.firebase:firebase-storage:15.0.2'
+    implementation 'com.google.firebase:firebase-auth:15.1.0'
+    implementation 'com.google.firebase:firebase-ads:15.0.0'
+    implementation 'com.firebaseui:firebase-ui-auth:3.3.1'
+
+
+    // ButterKnife (Removed that library because of an unsolved issue)
+    // implementation 'com.jakewharton:butterknife:8.8.1'
+    // annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    //  Picasso
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    // ExoPlayer
+//    implementation 'com.google.android.exoplayer:exoplayer:2.7.0'
+//    implementation 'com.google.android.exoplayer:exoplayer-dash:2.7.3'
+//    implementation 'com.google.android.exoplayer:exoplayer-ui:2.7.3'
+}
