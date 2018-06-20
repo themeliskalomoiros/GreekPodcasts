@@ -33,15 +33,6 @@ public class MainViewMvcImpl implements MainViewMvc {
         initializeViews();
     }
 
-    private void initializeViews() {
-        this.createPodcastFAB = this.rootView.findViewById(R.id.fab_create_podcast);
-        this.toolbar = this.rootView.findViewById(R.id.toolbar);
-        this.collapsingToolbarLayout = this.rootView.findViewById(R.id.collapsing_toolbar_layout);
-        this.collapsingToolbarLayout.setTitle(this.collapsingToolbarLayout.getContext().getString(R.string.app_name));
-        this.tabLayout = this.rootView.findViewById(R.id.tabLayout);
-        this.tabLayout.setupWithViewPager(this.viewPager);
-    }
-
     private void initializeViewPager(FragmentManager fragmentManager) {
         String[] tabLabels = {this.rootView.getContext().getString(R.string.tab_label_shows),
                 this.rootView.getContext().getString(R.string.tab_label_categories),
@@ -49,6 +40,15 @@ public class MainViewMvcImpl implements MainViewMvc {
         this.mainPagerAdapter = new MainPagerAdapter(fragmentManager, tabLabels);
         this.viewPager = this.rootView.findViewById(R.id.viewPager);
         this.viewPager.setAdapter(this.mainPagerAdapter);
+    }
+
+    private void initializeViews() {
+        this.createPodcastFAB = this.rootView.findViewById(R.id.fab_create_podcast);
+        this.toolbar = this.rootView.findViewById(R.id.toolbar);
+        this.collapsingToolbarLayout = this.rootView.findViewById(R.id.collapsing_toolbar_layout);
+        this.collapsingToolbarLayout.setTitle(this.collapsingToolbarLayout.getContext().getString(R.string.app_name));
+        this.tabLayout = this.rootView.findViewById(R.id.tabLayout);
+        this.tabLayout.setupWithViewPager(this.viewPager);
     }
 
     @Override
