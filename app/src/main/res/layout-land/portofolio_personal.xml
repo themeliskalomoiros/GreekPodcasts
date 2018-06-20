@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorPrimary"
+    tools:layout_editor_absoluteY="25dp">
+
+
+    <TextView
+        android:id="@+id/personal_statement_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/personal_statement_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/personal_pic_imageview" />
+
+    <TextView
+        android:id="@+id/personal_statement_textview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        tools:text="@string/lorem_ipsum"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/edit_personal_statement_imagebutton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/personal_statement_label"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/edit_personal_statement_imagebutton"
+        style="@style/Portofolio_Edit_ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/edit_promotion_imagebutton"
+        app:layout_constraintTop_toTopOf="@+id/personal_statement_textview" />
+
+    <ImageButton
+        android:id="@+id/edit_promotion_imagebutton"
+        style="@style/Portofolio_Edit_ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/promotion_label"
+        app:layout_constraintStart_toEndOf="@+id/promotion_label"
+        app:layout_constraintTop_toTopOf="@+id/promotion_label" />
+
+    <TextView
+        android:id="@+id/name_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        tools:text="Panos Sketos"
+        android:textColor="?colorAccent"
+        style="@style/Portofolio_Label"
+        app:layout_constraintBaseline_toBaselineOf="@+id/promotion_label"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/edit_name_imagebutton"
+        style="@style/Portofolio_Edit_ImageButton"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/name_textview"
+        app:layout_constraintStart_toEndOf="@+id/name_textview"
+        app:layout_constraintTop_toTopOf="@+id/name_textview" />
+
+    <TextView
+        android:id="@+id/picture_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/picture_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_textview" />
+
+    <ImageView
+        android:id="@+id/personal_pic_imageview"
+        style="@style/Portofolio_ImageView"
+        android:layout_marginTop="8dp"
+        android:contentDescription="@string/personal_pic_content_description"
+        app:layout_constraintStart_toStartOf="@+id/picture_label"
+        app:layout_constraintTop_toBottomOf="@+id/picture_label" />
+
+    <TextView
+        android:id="@+id/click_to_import_new_pic_hint"
+        style="@style/Portofolio_Explanation_Hint"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/click_the_icon_to_update_label"
+        app:layout_constraintBottom_toBottomOf="@+id/personal_pic_imageview"
+        app:layout_constraintEnd_toEndOf="@+id/edit_name_imagebutton"
+        app:layout_constraintStart_toEndOf="@+id/personal_pic_imageview"
+        app:layout_constraintTop_toTopOf="@+id/personal_pic_imageview" />
+
+    <TextView
+        android:id="@+id/promotion_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/promotion_label"
+        app:layout_constraintStart_toEndOf="@+id/edit_name_imagebutton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/click_to_import_new_pic_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/promotion_label"
+        app:layout_constraintTop_toBottomOf="@+id/promotion_label" />
+
+</android.support.constraint.ConstraintLayout>

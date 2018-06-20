@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="podcaster_title_lines">1</integer>
+    <integer name="episode_title_lines">2</integer>
+    <integer name="editText_ems">10</integer>
+</resources>

@@ -6,55 +6,24 @@
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus tempus nec elit sit amet hendrerit. Pellentesque eu sollicitudin ante, at tincidunt massa. Duis eget dolor quis massa ornare feugiat. Sed eget nunc nibh. Morbi pharetra est enim, sed placerat nunc lacinia volutpat. Nulla nec volutpat neque. Duis vestibulum laoreet mattis. Fusce eu metus sem. Etiam non mi at quam egestas venenatis sit amet malesuada felis. Aenean aliquet pretium nisl id cursus. Nulla ultrices dolor in nibh lacinia tincidunt. Curabitur tincidunt viverra est, vel ornare mi sagittis sit amet. Phasellus nisi sapien, egestas sed nulla eget, elementum fringilla urna.  Duis at lacus vitae nunc egestas vehicula. Fusce feugiat malesuada dolor ac imperdiet. Pellentesque lobortis iaculis metus, lobortis vulputate augue euismod vel. Suspendisse nisi velit, convallis nec dui non, dictum molestie est. In elementum, ipsum vitae tempor maximus, lectus tortor faucibus nisl, nec gravida risus lacus id nisi. Morbi finibus pellentesque nulla et auctor. Ut tincidunt mattis iaculis. Etiam purus ante, tristique in posuere non, placerat vel ipsum.  Aenean sed velit id dolor ultrices viverra nec sit amet metus. Praesent vitae ex ligula. Donec eleifend malesuada dui, ac pretium tortor congue vel. Nam venenatis dolor in sapien eleifend accumsan. Praesent tincidunt posuere sapien, sit amet fringilla nisl luctus ac. Vestibulum at feugiat nunc. Sed eu mollis quam. Aliquam porttitor odio ac dui volutpat finibus. Nunc elit nibh, blandit id ligula sit amet, viverra eleifend mauris.  Donec turpis magna, commodo quis elementum sed, pulvinar et ante. Praesent malesuada justo est, at congue velit facilisis et. Morbi in blandit dolor. Aliquam at accumsan velit. Nulla urna augue, molestie in egestas id, commodo sed quam. Cras cursus leo nisl, in congue nisi tristique in. Phasellus feugiat tempus tellus. Duis leo libero, porta maximus tristique id, porta ac massa. Sed arcu dui, suscipit ut luctus id, lobortis ut lacus. Curabitur sed dui et augue dignissim molestie quis sed eros. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae;  Morbi tincidunt nulla ac urna lacinia, et fringilla mi volutpat. Nullam efficitur purus ac rutrum egestas. Aliquam vitae ante non est rutrum consequat non ac lacus. Fusce ultricies libero sit amet orci tristique hendrerit. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque tristique, elit sit amet convallis porta, felis dolor dignissim leo, ultricies pretium justo diam in ipsum. Mauris eu ligula tempor, sagittis tortor quis, vulputate nisl. Quisque convallis felis nec lacus convallis porttitor. Pellentesque dapibus dolor magna, vel vulputate sapien tincidunt eu. Proin enim purus, vulputate a nisl vitae, tincidunt imperdiet est. Morbi aliquet mollis pharetra. Maecenas vehicula libero ligula, nec porttitor odio porta a. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce sit amet vestibulum ligula. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce at sodales metus.</string>
     <string name="podcast_poster_content_description">This is the poster of the podcast on the quick media player.</string>
     <string name="personal_statement_label">Personal Statement</string>
-    <string name="podcast_title_label">Podcast Title</string>
+    <string name="podcast_title_label">Create title for Podcast</string>
     <string name="insert_title_label">Insert title here...</string>
     <string name="choose_poster_label">Choose the poster</string>
     <string name="click_the_icon_label">Click the icon</string>
     <string name="pick_category_label">Pick a Category</string>
     <string name="provide_description">Provide a Description</string>
     <string name="insert_description_label">Describe the show here...</string>
-    <string name="choose_podcast_label">Choose Podcast</string>
-    <string name="poster_label">Poster</string>
+    <string name="choose_podcast_label">Pick one of your shows</string>
+    <string name="poster_label">Podcast\'s Poster</string>
     <string name="click_the_icon_to_update_label">Click the icon to upload a new one.</string>
-    <string name="description_label">Description</string>
-    <string name="episodes_label">Episodes</string>
+    <string name="description_label">Content Description</string>
+    <string name="episodes_label">All the Episodes</string>
     <string name="view_all_label">View All</string>
     <string name="personal_pic_content_description">This is your personal picture.</string>
     <string name="picture_label">Picture</string>
     <string name="promotion_label">Promotion Label</string>
-    <string name="pick_category_explanation_hint">You may pick only one category</string>
-    <string name="choose_poste_explanation_hint">Poster should be at least 500x500 pixels.</string>
-    <string name="create_title_explanation_hint">Type an accurate title. Don\'t exceed the 30 char limit.</string>
-    <string name="description_explanation_hint">Write a small yet comprehensive description about the podcast.</string>
-    <string name="tab_label_shows">Shows</string>
-    <string name="tab_label_categories">Categories</string>
-    <string name="tab_label_favorites">Favorites</string>
 
-    <!--    Date Utils  -->
-    <string name="month_jan">January</string>
-    <string name="month_feb">February</string>
-    <string name="month_mar">March</string>
-    <string name="month_apr">April</string>
-    <string name="month_may">May</string>
-    <string name="month_jun">June</string>
-    <string name="month_jul">July</string>
-    <string name="month_aug">August</string>
-    <string name="month_sep">September</string>
-    <string name="month_oct">October</string>
-    <string name="month_nov">November</string>
-    <string name="month_dec">December</string>
-
-    <string name="podcaster_prefix">By</string>
-    <string name="tab_label_episodes">Episodes</string>
-    <string name="tab_label_about">About</string>
-    <string name="fransisco_tarega_mp3">https://www.mfiles.co.uk/mp3-downloads/francisco-tarrega-lagrima.mp3</string>
-    <string name="chopin_mp3">https://www.mfiles.co.uk/mp3-downloads/franz-liszt-liebestraum-3-easy-piano.mp3</string>
-
-    <string name="pause_label">pause</string>
-    <string name="play_label">play</string>
-    <string name="no_previous_episode_msg">This is no previous episode. This is the first one.</string>
-    <string name="no_next_episode_msg">This is the last episode.</string>
-    <string name="joined_date_prefix">Joined on </string>
-    <string name="mediaplayer_unknown_error">Unknown error!</string>
-    <string name="mediaplayer_server_died_error">Error: Server died!</string>
+    <string name="podcaster_prefix">Brought to you by</string>
+    <string name="tab_label_episodes">All the Episodes</string>
+    <string name="tab_label_about">About this Podcast</string>
 </resources>

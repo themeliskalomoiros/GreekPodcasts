@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gr.kalymnos.sk3m3l10.greekpodcasts.android_views.LinearLayout_5_4 xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ListItem_Podcast_Card"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/list_item_category_title"
+        style="@style/ListItem_Category_Title"
+        tools:text="Education" />
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/list_item_category_poster"
+            style="@style/ListItem_Podcast_Image"
+            android:layout_gravity="top"
+            android:contentDescription="@string/category_picture_description"
+            tools:src="@drawable/sappfo" />
+
+        <TextView
+            android:id="@+id/list_item_category_explanation"
+            style="@style/ListItem_Podcast_Title"
+            android:layout_gravity="bottom"
+            tools:text="@string/lorem_ipsum" />
+
+    </android.support.v7.widget.CardView>
+</gr.kalymnos.sk3m3l10.greekpodcasts.android_views.LinearLayout_5_4>

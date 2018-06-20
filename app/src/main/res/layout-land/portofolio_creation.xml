@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorPrimary"
+    tools:layout_editor_absoluteY="25dp">
+
+    <!--    TODO: Some android:text shall become tools:text  -->
+
+    <TextView
+        android:id="@+id/podcast_title_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/podcast_title_label"
+        app:layout_constraintBaseline_toBaselineOf="@+id/podcast_title_editText"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <EditText
+        android:id="@+id/podcast_title_editText"
+        style="@style/Portofolio_Label.EditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:hint="@string/insert_title_label"
+        android:lines="@integer/podcaster_title_lines"
+        android:maxLength="@integer/podcast_title_length"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/podcast_title_label"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/choose_poster_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/choose_poster_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/podcast_title_hint" />
+
+    <ImageView
+        android:id="@+id/update_podcast_pic_imageview"
+        style="@style/Portofolio_ImageView"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/choose_poster_hint"
+        app:layout_constraintStart_toEndOf="@+id/choose_poster_label"
+        app:layout_constraintTop_toTopOf="@+id/choose_poster_label" />
+
+    <TextView
+        android:id="@+id/click_the_icon_label"
+        style="@style/Portofolio_EditText_Hint"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/click_the_icon_label"
+        app:layout_constraintBaseline_toBaselineOf="@+id/choose_poster_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/update_podcast_pic_imageview" />
+
+    <TextView
+        android:id="@+id/pick_category_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/pick_category_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choose_poster_hint" />
+
+    <Spinner
+        android:id="@+id/categories_spinner"
+        style="@style/Portofolio_Spinner"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/pick_category_label"
+        app:layout_constraintTop_toTopOf="@+id/pick_category_label" />
+
+    <TextView
+        android:id="@+id/provide_description_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/provide_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pick_category_hint" />
+
+    <EditText
+        android:id="@+id/description_editText"
+        style="@style/Portofolio_Label.EditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:hint="@string/insert_description_label"
+        app:layout_constraintBaseline_toBaselineOf="@+id/provide_description_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/provide_description_label" />
+
+    <TextView
+        android:id="@+id/podcast_title_hint"
+        style="@style/Portofolio_Explanation_Hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/create_title_explanation_hint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/podcast_title_label"
+        app:layout_constraintTop_toBottomOf="@+id/podcast_title_label" />
+
+    <TextView
+        android:id="@+id/choose_poster_hint"
+        style="@style/Portofolio_Explanation_Hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/choose_poste_explanation_hint"
+        app:layout_constraintEnd_toEndOf="@+id/choose_poster_label"
+        app:layout_constraintStart_toStartOf="@+id/choose_poster_label"
+        app:layout_constraintTop_toBottomOf="@+id/choose_poster_label" />
+
+    <TextView
+        android:id="@+id/pick_category_hint"
+        style="@style/Portofolio_Explanation_Hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/pick_category_explanation_hint"
+        app:layout_constraintEnd_toStartOf="@+id/categories_spinner"
+        app:layout_constraintStart_toStartOf="@+id/pick_category_label"
+        app:layout_constraintTop_toBottomOf="@+id/pick_category_label" />
+
+    <TextView
+        android:id="@+id/provide_description_hint"
+        style="@style/Portofolio_Explanation_Hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/description_explanation_hint"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/provide_description_label"
+        app:layout_constraintTop_toBottomOf="@+id/provide_description_label" />
+
+</android.support.constraint.ConstraintLayout>

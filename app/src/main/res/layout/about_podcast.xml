@@ -1,0 +1,27 @@
+<FrameLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?colorPrimary">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_headset_black_light_148dp"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/fab_margin">
+
+        <TextView
+            android:id="@+id/about_textview"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/primaryTextColor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:text="@string/lorem_ipsum"/>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>

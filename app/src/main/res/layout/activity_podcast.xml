@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_anchor="@id/quick_player_container"
+        app:layout_anchorGravity="top"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            style="@style/CollapsingToolbarLayout"
+            android:layout_height="@dimen/podcast_app_bar_default_height"
+            app:titleEnabled="false">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="@dimen/default_margin"
+                android:orientation="horizontal"
+                android:padding="@dimen/default_margin"
+                app:layout_collapseMode="parallax">
+
+                <ImageView
+                    android:id="@+id/poster_imageview"
+                    android:layout_width="112dp"
+                    android:layout_height="112dp"
+                    android:layout_margin="@dimen/default_margin"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/sappfo" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/default_margin"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/podcast_title_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:textColor="@color/secondaryColor"
+                        android:textSize="32sp"
+                        tools:text="Poetry Slam GR" />
+
+                    <TextView
+                        android:id="@+id/podcaster_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="16sp"
+                        tools:text="By Panos Sketos" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                style="@style/TabLayout" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/play_fab"
+        style="@style/FAB"
+        app:layout_anchor="@id/quick_player_container"
+        app:layout_anchorGravity="top|end"
+        android:src="@drawable/ic_play_arrow_white_24dp" />
+
+    <FrameLayout
+        android:id="@+id/quick_player_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom" />
+
+</android.support.design.widget.CoordinatorLayout>

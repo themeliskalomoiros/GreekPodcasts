@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gr.kalymnos.sk3m3l10.greekpodcasts.android_views.CardView_5_4 xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/ListItem_Podcast_Card">
+
+        <ImageView
+            android:id="@+id/list_item_podcast_image"
+            style="@style/ListItem_Podcast_Image"
+            android:contentDescription="@string/podcast_picture_description"
+            tools:src="@drawable/sappfo"/>
+
+        <TextView
+            android:id="@+id/list_item_podcast_title"
+            style="@style/ListItem_Podcast_Title"
+            tools:text="Poetry Slam GR"/>
+
+    <ImageView
+        android:id="@+id/list_item_podcast_star"
+        style="@style/ListItem_Podcast_Star" />
+
+</gr.kalymnos.sk3m3l10.greekpodcasts.android_views.CardView_5_4>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorPrimary">
+
+    <TextView
+        android:id="@+id/category_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/pick_category_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/podcast_pic_imageview" />
+
+    <TextView
+        android:id="@+id/click_the_icon_label"
+        style="@style/Portofolio_EditText_Hint"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/click_the_icon_to_update_label"
+        app:layout_constraintStart_toEndOf="@+id/podcast_pic_imageview"
+        app:layout_constraintTop_toTopOf="@+id/podcast_pic_imageview" />
+
+    <ImageView
+        android:id="@+id/podcast_pic_imageview"
+        style="@style/Portofolio_ImageView"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/poster_label" />
+
+    <TextView
+        android:id="@+id/choose_podcast_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/choose_podcast_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/choose_podcast_spinner"
+        style="@style/Portofolio_Spinner"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choose_podcast_label" />
+
+    <ImageButton
+        android:id="@+id/edit_description_imagebutton"
+        style="@style/Portofolio_Edit_ImageButton"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/description_textview"
+        app:layout_constraintStart_toEndOf="@+id/description_textview"
+        app:layout_constraintTop_toTopOf="@+id/description_textview" />
+
+    <ImageButton
+        android:id="@+id/edit_podcast_title_imagebutton"
+        style="@style/Portofolio_Edit_ImageButton"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/choose_podcast_spinner"
+        app:layout_constraintStart_toEndOf="@+id/choose_podcast_spinner"
+        app:layout_constraintTop_toTopOf="@+id/choose_podcast_spinner" />
+
+    <TextView
+        android:id="@+id/poster_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/poster_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/choose_podcast_spinner" />
+
+    <Spinner
+        android:id="@+id/categories_spinner"
+        style="@style/Portofolio_Spinner"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/category_label" />
+
+    <TextView
+        android:id="@+id/description_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/description_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/categories_spinner" />
+
+    <TextView
+        android:id="@+id/description_textview"
+        android:layout_width="@dimen/portofolio_description_width"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:lines="@integer/episode_title_lines"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_label"
+        tools:text="@string/lorem_ipsum" />
+
+    <TextView
+        android:id="@+id/episodes_label"
+        style="@style/Portofolio_Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/episodes_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_textview" />
+
+    <Button
+        android:id="@+id/view_all_episodes_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:text="@string/view_all_label"
+        app:layout_constraintBottom_toBottomOf="@+id/episodes_label"
+        app:layout_constraintStart_toEndOf="@+id/episodes_label"
+        app:layout_constraintTop_toTopOf="@+id/episodes_label" />
+</android.support.constraint.ConstraintLayout>

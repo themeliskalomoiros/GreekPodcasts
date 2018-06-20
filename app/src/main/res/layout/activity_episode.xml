@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?colorPrimary">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/Toolbar"
+        android:theme="@style/AppTheme.ActionBar" />
+
+    <gr.kalymnos.sk3m3l10.greekpodcasts.android_views.EpisodePoster
+        android:id="@+id/poster_imageview"
+        android:layout_width="@dimen/episode_main_poster_default_width"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:srcCompat="@drawable/sappfo" />
+
+
+    <!--    TODO: This text must be underlined at the end
+            https://stackoverflow.com/questions/5645789/how-to-set-underline-text-on-textview/17658285  -->
+    <TextView
+        android:id="@+id/podcaster_textView"
+        style="@style/Podcaster_Title"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/episode_title_textview"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/poster_imageview"
+        tools:text="Panos Sketos" />
+
+    <TextView
+        android:id="@+id/episode_title_textview"
+        style="@style/Episode_Title"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/podcaster_textView"
+        tools:text="Sappho the great poet of love: EP 24" />
+
+    <ImageView
+        android:id="@+id/star_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_star_white_40dp"
+        app:layout_constraintStart_toStartOf="@+id/episode_title_textview"
+        app:layout_constraintTop_toBottomOf="@+id/episode_title_textview" />
+
+    <ImageView
+        android:id="@+id/download_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="60dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginRight="60dp"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_file_download_white_40dp"
+        app:layout_constraintEnd_toStartOf="@+id/info_imageview"
+        app:layout_constraintStart_toEndOf="@+id/star_imageview"
+        app:layout_constraintTop_toBottomOf="@+id/episode_title_textview" />
+
+    <ImageView
+        android:id="@+id/info_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/ic_info_outline_white_24dp"
+        app:layout_constraintEnd_toEndOf="@+id/episode_title_textview"
+        app:layout_constraintTop_toBottomOf="@+id/episode_title_textview" />
+
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/main_media_player"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/download_imageview"
+        app:layout_constraintVertical_bias="1.0" />
+
+</android.support.constraint.ConstraintLayout>
