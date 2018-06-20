@@ -20,7 +20,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_favorites.AllFavoritesVi
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_favorites.FavoritesAdapter;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
-import static gr.kalymnos.sk3m3l10.greekpodcasts.local_database.UserMetadataContract.PodcastWatchedEntry;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.PodcastWatchedEntry;
 import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_favorites.AllFavoritesViewMvc.OnPodcastItemLongClickListener;
 
 public class AllFavoritesFragment extends AllPodcastsFragment implements OnPodcastItemLongClickListener{

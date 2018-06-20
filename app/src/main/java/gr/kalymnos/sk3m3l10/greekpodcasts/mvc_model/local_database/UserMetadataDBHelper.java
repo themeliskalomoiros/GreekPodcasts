@@ -1,11 +1,11 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.local_database;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import static gr.kalymnos.sk3m3l10.greekpodcasts.local_database.UserMetadataContract.PodcastWatchedEntry;
-import static gr.kalymnos.sk3m3l10.greekpodcasts.local_database.UserMetadataContract.EpisodeEntry;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.PodcastWatchedEntry;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.EpisodeEntry;
 
 public class UserMetadataDBHelper extends SQLiteOpenHelper {
 

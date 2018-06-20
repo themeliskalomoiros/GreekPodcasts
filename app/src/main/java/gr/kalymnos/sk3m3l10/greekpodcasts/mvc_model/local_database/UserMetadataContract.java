@@ -1,4 +1,4 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.local_database;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database;
 
 import android.net.Uri;
 import android.provider.BaseColumns;

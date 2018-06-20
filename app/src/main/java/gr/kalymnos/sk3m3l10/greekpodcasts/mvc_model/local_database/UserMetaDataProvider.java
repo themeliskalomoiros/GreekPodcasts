@@ -1,4 +1,4 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.local_database;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
@@ -11,11 +11,11 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import static gr.kalymnos.sk3m3l10.greekpodcasts.local_database.UserMetadataContract.EpisodeEntry;
-import static gr.kalymnos.sk3m3l10.greekpodcasts.local_database.UserMetadataContract.PodcastWatchedEntry;
-import static gr.kalymnos.sk3m3l10.greekpodcasts.local_database.UserMetadataContract.AUTHORITY;
-import static gr.kalymnos.sk3m3l10.greekpodcasts.local_database.UserMetadataContract.PATH_EPISODE;
-import static gr.kalymnos.sk3m3l10.greekpodcasts.local_database.UserMetadataContract.PATH_PODCAST_WATCHED;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.EpisodeEntry;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.PodcastWatchedEntry;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.AUTHORITY;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.PATH_EPISODE;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.PATH_PODCAST_WATCHED;
 
 public class UserMetaDataProvider extends ContentProvider {
 
