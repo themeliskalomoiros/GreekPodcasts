@@ -63,6 +63,9 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
     @Override
     public void onStop() {
         super.onStop();
+        if (MediaControllerCompat.getMediaController(getActivity())!=null){
+            MediaControllerCompat.getMediaController(getActivity()).unregisterCallback(mediaControllerCallback);
+        }
         this.mediaBrowser.disconnect();
     }
 
