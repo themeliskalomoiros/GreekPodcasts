@@ -98,6 +98,11 @@ public class QuickPlayerViewMvcImpl implements QuickPlayerViewMvc {
     }
 
     @Override
+    public void bindPodcastPoster(Bitmap bitmap) {
+        poster.setImageBitmap(bitmap);
+    }
+
+    @Override
     public void disableTransportControls(boolean disable) {
         if (disable){
             play.setEnabled(false);

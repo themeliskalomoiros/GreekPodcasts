@@ -33,6 +33,8 @@ public interface QuickPlayerViewMvc extends ViewMvc {
 
     void bindPodcastPoster(String url);
 
+    void bindPodcastPoster(Bitmap bitmap);
+
     void disableTransportControls(boolean disable);
 
     void setOnTransportControlsClickListener(OnTransportControlsClickListener listener);
