@@ -12,8 +12,6 @@ interface PlayerHolder {
 
     void release();
 
-    void setPlaybackInfoListener(PlaybackInfoListener listener);
-
     void play();
 
     void pause();
@@ -32,5 +30,5 @@ interface PlayerHolder {
 
     boolean isPlaying();
 
-    void setContext(Context context);
+    void setPlaybackInfoListener(PlaybackInfoListener listener);
 }

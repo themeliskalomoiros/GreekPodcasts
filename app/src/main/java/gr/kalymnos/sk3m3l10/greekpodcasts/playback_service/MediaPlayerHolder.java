@@ -26,13 +26,14 @@ class MediaPlayerHolder implements PlayerHolder, MediaPlayer.OnPreparedListener,
     private MediaPlayer mediaPlayer;
     private PlaybackInfoListener playbackInfoListener;
 
-    MediaPlayerHolder() {
+    MediaPlayerHolder(Context context) {
         mediaPlayer = new MediaPlayer();
         reportState(IDLE);
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnCompletionListener(this);
         mediaPlayer.setOnPreparedListener(this);
         mediaPlayer.setOnErrorListener(this);
+        this.context = context;
     }
 
     @Override
@@ -132,11 +133,6 @@ class MediaPlayerHolder implements PlayerHolder, MediaPlayer.OnPreparedListener,
         if (playbackInfoListener != null) {
             playbackInfoListener.onStateChanged(state);
         }
-    }
-
-    @Override
-    public void setContext(Context context) {
-        this.context = context;
     }
 
     @Override
