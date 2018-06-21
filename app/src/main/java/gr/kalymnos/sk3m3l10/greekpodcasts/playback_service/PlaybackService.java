@@ -311,6 +311,11 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                 audioFocus -> this.onPause();
 
         @Override
+        public void onPlay() {
+            player.play();
+        }
+
+        @Override
         public void onPlayFromMediaId(String mediaId, Bundle extras) {
             if (PlaybackUtils.gainedAudioFocus(PlaybackService.this, audioFocusChangeListener)) {
                 if (cachedMediaItems != null && cachedMediaItems.size() > 0) {
