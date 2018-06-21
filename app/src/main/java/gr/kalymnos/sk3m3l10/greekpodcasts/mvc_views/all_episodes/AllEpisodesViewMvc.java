@@ -1,5 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_episodes;
 
+import android.support.v4.media.MediaBrowserCompat;
+
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.ViewMvc;
@@ -17,7 +19,7 @@ public interface AllEpisodesViewMvc extends ViewMvc {
 
     void markSelectedPosition(int position);
 
-    void bindEpisodes(List<Episode> episodes);
+    void bindEpisodes(List<MediaBrowserCompat.MediaItem> episodes);
 
     void displayLoadingIndicator(boolean display);
 

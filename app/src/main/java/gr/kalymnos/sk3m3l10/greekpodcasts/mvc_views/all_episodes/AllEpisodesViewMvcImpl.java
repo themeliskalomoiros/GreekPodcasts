@@ -3,6 +3,7 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_episodes;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PaintDrawable;
+import android.support.v4.media.MediaBrowserCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -49,7 +50,7 @@ public class AllEpisodesViewMvcImpl implements AllEpisodesViewMvc {
     }
 
     @Override
-    public void bindEpisodes(List<Episode> episodes) {
+    public void bindEpisodes(List<MediaBrowserCompat.MediaItem> episodes) {
         this.adapter.addEpisodes(episodes);
         this.adapter.notifyDataSetChanged();
     }
