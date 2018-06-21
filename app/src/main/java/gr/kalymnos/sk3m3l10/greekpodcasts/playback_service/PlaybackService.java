@@ -1,6 +1,8 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.playback_service;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -14,7 +16,11 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
+import android.util.Log;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,14 +44,15 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
     private PlaybackStateCompat.Builder stateBuilder;
     private MediaMetadataCompat.Builder metadataBuilder;
+    private Bitmap cachedAlbumArt = null;
 
     private PlayerHolder player;
     private int reportedPlayerState;
     private String cachedMediaId = null;
-    private String cachedAlbumArtUrl = null;
 
     private AsyncTask<String, Void, List<Episode>> fetchEpisodesTask;
     private AsyncTask<String, Void, String> fetchPodcasterNameTask;
+    private AsyncTask<String, Void, Bitmap> fetchPosterBitmapTask;    /*Podcast's poster*/
     private List<MediaBrowserCompat.MediaItem> cachedMediaItems;
     private String cachedPodcastersName;
 
@@ -67,10 +74,6 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
         Bundle rootHints = getBrowserRootHints();
         if (areRootHintsValid(rootHints)) {
-
-            //  Cache the podcast poster url, it will be used as album art
-            cachedAlbumArtUrl = rootHints.getString(Podcast.POSTER_KEY);
-
             //  Detatch to fetch the data in another thread
             result.detach();
 
@@ -91,10 +94,23 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                 initializeFetchPodcasterNameTask();
             }
 
-            //  Start fetching the name. After the name is fetched then fetchPodcasterNameTask thread executes also fetchEpisodesTask
+            if (fetchPosterBitmapTask == null) {
+                initializeFetchPosterBitmapTask();
+            } else {
+                fetchPosterBitmapTask.cancel(true);
+                fetchPosterBitmapTask = null;
+                initializeFetchPosterBitmapTask();
+            }
+
+            /*  Tasks Execution Order:
+             *   1 ->    fetchPodcasterNameTask. When has fetched data it executes fetchPosterBitmapTask.
+             *   2 ->    fetchPosterBitmapTask.  When has fetched data it executes fetchEpisodesTask
+             *   3 ->    fetchEpisodesTask.      When has fetched data it creates mediaItems and sends the result to clients
+             *   All the parameters for the tasks are given to the first one.*/
             fetchPodcasterNameTask.execute(new String[]{
-                    rootHints.getString(Podcaster.PUSH_ID_KEY) /*   Id to fetch podcaster (artist) name*/,
-                    rootHints.getString(Episode.EPISODES_KEY /* Id to fetch the episodes (tracks) list*/)});
+                    rootHints.getString(Podcaster.PUSH_ID_KEY)  /*  Pass podcaster push id*/,
+                    rootHints.getString(Podcast.POSTER_KEY),    /*  Pass podcast poster url*/
+                    rootHints.getString(Episode.EPISODES_KEY)   /*  Pass podcast's episodes push id*/});
 
             return;
         }
@@ -103,13 +119,18 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
     private void initializeFetchPodcasterNameTask() {
 
+        final String[] localTaskParam = new String[1];
+        final String[] bitmapTaskParam = new String[1];
         final String[] episodeTaskParam = new String[1];
 
         fetchPodcasterNameTask = new AsyncTask<String, Void, String>() {
             @Override
             protected String doInBackground(String... strings) {
-                //  Cache the episodeTaskParam to execute fetchEpisodesTask in onPostExecute().
-                episodeTaskParam[0] = strings[1];
+
+                localTaskParam[0] = strings[0];
+                bitmapTaskParam[0] = strings[1];
+                episodeTaskParam[0] = strings[2];
+
                 //  TODO:   Swap with a real service.
                 DataRepository repo = new StaticFakeDataRepo();
                 return repo.fetchPodcasterName(strings[0]);
@@ -117,25 +138,63 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
             @Override
             protected void onPostExecute(String podcasterName) {
-                //  Start fetching episodes (track) list.
-                if (!TextUtils.isEmpty(episodeTaskParam[0])) {
-                    fetchEpisodesTask.execute(episodeTaskParam[0]);
-                } else {
-                    throw new IllegalArgumentException(TAG + ": Cannot fetch episodes (track) list with null parameter");
-                }
-
                 if (!TextUtils.isEmpty(podcasterName)) {
                     //  An artist name was fetched, cache it to set it to metadata later
                     cachedPodcastersName = podcasterName;
                 } else {
                     throw new IllegalArgumentException(TAG + ": Cannot fetch podcaster (artist) name with null parameter");
                 }
+
+                if (!TextUtils.isEmpty(bitmapTaskParam[0]) && !TextUtils.isEmpty(episodeTaskParam[0])) {
+                    //  Start fetching the bitmap.
+                    // Pass also episode task parameter to execute the latter.
+                    fetchPosterBitmapTask.execute(bitmapTaskParam[0], episodeTaskParam[0]);
+                } else {
+                    throw new IllegalArgumentException(TAG + ": Cannot fetch bitmap/episodes with null parameter");
+                }
+
+            }
+        };
+    }
+
+    private void initializeFetchPosterBitmapTask() {
+        fetchPosterBitmapTask = new AsyncTask<String, Void, Bitmap>() {
+
+            String episodeTaskParam;
+
+            @Override
+            protected Bitmap doInBackground(String... strings) {
+                String imageUrl = strings[0];
+                episodeTaskParam = strings[1];
+
+                Bitmap bitmap = null;
+
+                try {
+                    InputStream in = new URL(imageUrl).openStream();
+                    bitmap = BitmapFactory.decodeStream(in);
+                } catch (IOException e) {
+                    Log.d(TAG, "Error when fetching the stream for " + imageUrl);
+                    e.printStackTrace();
+                }
+                return bitmap;
+            }
+
+            @Override
+            protected void onPostExecute(Bitmap bitmap) {
+                if (bitmap != null) {
+                    cachedAlbumArt = bitmap;
+                }
+
+                //  Execute the final task which will also send the result
+                fetchEpisodesTask.execute(episodeTaskParam);
             }
         };
     }
 
     private void initializeFetchEpisodesTask(@NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
         fetchEpisodesTask = new AsyncTask<String, Void, List<Episode>>() {
+
+
             @Override
             protected List<Episode> doInBackground(String... strings) {
                 //  TODO:   Replace with a real service.
@@ -146,8 +205,10 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
             @Override
             protected void onPostExecute(List<Episode> episodes) {
                 if (episodes != null && episodes.size() > 0) {
+
                     //  Data is fetched. Create mediaItems for clients
                     List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
+
                     for (Episode episode : episodes) {
 
                         Bundle extras = new Bundle();
@@ -160,7 +221,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                                 .setTitle(episode.getTitle())
                                 .setMediaId(episode.getFirebasePushId())
                                 .setMediaUri(Uri.parse(episode.getUrl()))
-                                .setIconUri(Uri.parse(cachedAlbumArtUrl))
+                                .setIconBitmap(cachedAlbumArt)
                                 .setExtras(extras)
                                 .build();
                         mediaItems.add(new MediaBrowserCompat.MediaItem(mediaDescription, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
