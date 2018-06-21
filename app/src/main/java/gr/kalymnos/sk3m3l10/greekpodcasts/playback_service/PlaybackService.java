@@ -34,6 +34,10 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 
 public class PlaybackService extends MediaBrowserServiceCompat implements PlaybackInfoListener {
 
+    /*  Clients should call onPrepareFromMediaId() if the episode is not saved localy.
+     *   //  TODO:   Must set a flag to a media item to check if it's downloaded so it can be played directly without preparation.
+     *   They can call onPlayFromMediaId() only if the episode is saved in the device.*/
+
     private static final String TAG = PlaybackService.class.getSimpleName();
     private static final String SESSION_TAG = "MyMediaSession";
     private static final float DEFAULT_PLAYBACK_SPEED = 1f;
@@ -116,6 +120,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
         }
         result.sendResult(null);
     }
+
 
     private void initializeFetchPodcasterNameTask() {
 
@@ -318,17 +323,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
 
                             //  Set metadata. Playback state is set in onStateChanged(), don't need to do it here
-                            MediaBrowserCompat.MediaItem item = getMediaItemByMediaId(cachedMediaItems, mediaId);
-                            long duration = PlaybackUtils.validStateToGetDuration(reportedPlayerState) ? player.getDuration() : 0;
-
-                            session.setMetadata(metadataBuilder
-                                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, cachedPodcastersName)
-                                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedAlbumArt)
-                                    .putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.getDescription().getTitle().toString())
-                                    .putLong(MediaMetadataCompat.METADATA_KEY_DATE, item.getDescription().getExtras().getLong(Episode.DATE_KEY))
-                                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
-                                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID,mediaId)
-                                    .build());
+                            updateMetadata(mediaId);
                         }
                     } else {
                         throw new UnsupportedOperationException(TAG + ": Cannot play an item with null or empty mediaId");
@@ -376,12 +371,16 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
         public void onPause() {
             if (PlaybackUtils.validStateToPause(reportedPlayerState)) {
                 player.pause();
+                updateMetadata(cachedMediaId);
             }
         }
 
         @Override
         public void onStop() {
             if (PlaybackUtils.validStateToStop(reportedPlayerState)) {
+                player.stop();
+                updateMetadata(cachedMediaId);
+                
                 PlaybackUtils.abandonAudioFocus(PlaybackService.this, audioFocusChangeListener);
                 session.setActive(false);
                 PlaybackService.this.stopSelf();
@@ -403,6 +402,20 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
         @Override
         public void onSeekTo(long pos) {
             super.onSeekTo(pos);
+        }
+
+        private void updateMetadata(String mediaId) {
+            MediaBrowserCompat.MediaItem item = getMediaItemByMediaId(cachedMediaItems, mediaId);
+            long duration = PlaybackUtils.validStateToGetDuration(reportedPlayerState) ? player.getDuration() : 0;
+
+            session.setMetadata(metadataBuilder
+                    .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, cachedPodcastersName)
+                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedAlbumArt)
+                    .putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.getDescription().getTitle().toString())
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DATE, item.getDescription().getExtras().getLong(Episode.DATE_KEY))
+                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId)
+                    .build());
         }
 
     }
