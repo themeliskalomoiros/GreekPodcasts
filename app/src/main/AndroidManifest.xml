@@ -29,6 +29,12 @@
             </intent-filter>
         </service>
 
+        <provider
+            android:name=".mvc_model.local_database.UserMetaDataProvider"
+            android:authorities="gr.kalymnos.sk3m3l10.greekpodcasts.provider"
+            android:exported="false" />
+
+
     </application>
 
 </manifest>
