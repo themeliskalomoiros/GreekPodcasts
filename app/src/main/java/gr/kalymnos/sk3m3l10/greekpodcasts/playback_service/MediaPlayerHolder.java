@@ -161,5 +161,6 @@ class MediaPlayerHolder implements PlayerHolder, MediaPlayer.OnPreparedListener,
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         reportState(PREPARED);
+        playbackInfoListener.onPlaybackPrepared();
     }
 }
