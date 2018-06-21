@@ -6,10 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.AllEpisodesFragment;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.QuickPlayerFragment;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcast_screen.PodcastScreenViewMvc;
@@ -17,7 +20,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcast_screen.PodcastScreen
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
 public class PodcastActivity extends AppCompatActivity implements PodcastScreenViewMvc.OnActionPlayClickListener,
-        LoaderManager.LoaderCallbacks<String>{
+        LoaderManager.LoaderCallbacks<String>, AllEpisodesFragment.AllEpisodesFragmentCommunicator {
 
     private static final String TAG = PodcastActivity.class.getSimpleName();
 
@@ -31,14 +34,6 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
         super.onCreate(savedInstanceState);
         initializeMvcView();
         setContentView(viewMvc.getRootView());
-    }
-
-    private Podcast getPodcastFromExtras(){
-        Bundle extras = getIntent().getExtras();
-        if (extras!=null && extras.containsKey(Podcast.PODCAST_KEY)){
-            return getIntent().getExtras().getParcelable(Podcast.PODCAST_KEY);
-        }
-        throw new IllegalStateException(TAG+": Bundle is null or does not contain Podcast.PODCAST_KEY");
     }
 
     private void initializeMvcView() {
@@ -98,5 +93,22 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
     @Override
     public void onLoaderReset(@NonNull Loader<String> loader) {
 
+    }
+
+    @Override
+    public void onEpisodeClicked(int position) {
+        showQuickPlayerFragment();
+    }
+
+    @Override
+    public void onEpisodePopUpMenuClicked(int position) {
+
+    }
+
+    private void showQuickPlayerFragment() {
+        QuickPlayerFragment quickPlayerFragment = new QuickPlayerFragment();
+        this.getSupportFragmentManager().beginTransaction()
+                .replace(viewMvc.getQuickPlayerContainerId(), quickPlayerFragment)
+                .commit();
     }
 }
