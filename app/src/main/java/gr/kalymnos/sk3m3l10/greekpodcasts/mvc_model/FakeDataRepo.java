@@ -61,7 +61,7 @@ public class FakeDataRepo implements DataRepository {
     }
 
     @Override
-    public List<Episode> fetchPodcastEpisodes(String pushId) {
+    public List<Episode> fetchEpisodes(String episodesId) {
         sleep(SLEEP_TIME);
         return generateEpisodeObjects(new Random().nextInt(40) + 1);
     }

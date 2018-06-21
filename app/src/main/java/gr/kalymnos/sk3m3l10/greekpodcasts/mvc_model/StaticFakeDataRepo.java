@@ -69,10 +69,10 @@ public class StaticFakeDataRepo implements DataRepository {
     }
 
     @Override
-    public List<Episode> fetchPodcastEpisodes(String podcastPushId) {
+    public List<Episode> fetchEpisodes(String episodesId) {
         sleep(SLEEP_TIME);
         List<Episode> list = new ArrayList<>();
-        if (podcastPushId.equals(FIREBASE_ID_1)){
+        if (episodesId.equals(EPISODES_ID_1)){
             Episode e1 = new Episode("Episode 1",EPISODE_URL_1,30,34,System.currentTimeMillis());
             e1.setFirebasePushId(EPISODES_ID_1);
             Episode e2 = new Episode("Episode 2",EPISODE_URL_2,20,34,System.currentTimeMillis());

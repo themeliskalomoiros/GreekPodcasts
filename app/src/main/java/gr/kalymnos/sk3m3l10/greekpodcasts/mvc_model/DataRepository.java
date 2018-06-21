@@ -19,7 +19,7 @@ public interface DataRepository {
 
     List<Podcast> fetchStarredPodcasts(Cursor starredPodcastsCursor);
 
-    List<Episode> fetchPodcastEpisodes(String podcastPushId);
+    List<Episode> fetchEpisodes(String episodesId);
 
     List<Category> fetchAllCategories();
 

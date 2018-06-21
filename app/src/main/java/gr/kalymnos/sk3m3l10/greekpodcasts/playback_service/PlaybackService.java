@@ -206,7 +206,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
             protected List<Episode> doInBackground(String... strings) {
                 //  TODO:   Replace with a real service.
                 DataRepository repo = new StaticFakeDataRepo();
-                return repo.fetchPodcastEpisodes(strings[0]);
+                return repo.fetchEpisodes(strings[0]);
             }
 
             @Override
