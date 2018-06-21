@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -27,9 +28,13 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
 
     private static final String TAG = AllEpisodesFragment.class.getSimpleName();
 
-    public interface AllEpisodesFragmentActivityCommunicator{
+    public interface AllEpisodesFragmentCommunicator {
+        void onEpisodeClicked(int position);
 
+        void onEpisodePopUpMenuClicked(int position);
     }
+
+    private AllEpisodesFragmentCommunicator mCallback;
 
     private AllEpisodesViewMvc viewMvc;
 
@@ -46,6 +51,20 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
         //  Display loading bar until the fragment get connected to PlaybackService and fetched mediaItems
         viewMvc.displayLoadingIndicator(true);
         return viewMvc.getRootView();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (AllEpisodesFragmentCommunicator) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnChosenEpisodeChangedListener");
+        }
     }
 
     @Override
