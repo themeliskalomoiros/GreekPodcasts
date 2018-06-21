@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
 import android.content.ComponentName;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
@@ -47,27 +48,43 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
                 connectionCallback = new ConnectionCallback(), null);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        mediaBrowser.connect();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setVolumeControlStream(AudioManager.STREAM_MUSIC);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        this.mediaBrowser.disconnect();
+    }
+
     private void initializeViewMvc(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
         viewMvc = new QuickPlayerViewMvcImpl(inflater, container);
         viewMvc.setOnTransportControlsClickListener(this);
         viewMvc.setOnRootClickListener(this);
-        viewMvc.disableRoot(true);
-        viewMvc.disableTransportControls(true);
     }
 
     @Override
     public void onPlayButtonClick() {
-
+        Toast.makeText(getContext(), "play clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onPauseButtonClick() {
-
+        Toast.makeText(getContext(), "pause clicked", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onQuickPlayerClick() {
-
+        Toast.makeText(getContext(), "root clicked", Toast.LENGTH_SHORT).show();
     }
 
     private class ConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
@@ -89,8 +106,8 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
 
                     @Override
                     public void onSessionDestroyed() {
-                        viewMvc.disableRoot(false);
-                        viewMvc.disableTransportControls(false);
+                        viewMvc.disableRoot(true);
+                        viewMvc.disableTransportControls(true);
 
                         //  TODO:   Display a better message
                         Toast.makeText(getContext(), "Debug: Session destroyed", Toast.LENGTH_SHORT).show();
@@ -121,8 +138,10 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
                 }
 
                 MediaMetadataCompat metadata = mediaController.getMetadata();
-                viewMvc.bindEpisodeTitle(metadata.getDescription().getTitle().toString());
-                viewMvc.bindPodcastPoster(metadata.getDescription().getIconBitmap());
+                if (metadata != null) {
+                    viewMvc.bindEpisodeTitle(metadata.getDescription().getTitle().toString());
+                    viewMvc.bindPodcastPoster(metadata.getDescription().getIconBitmap());
+                }
 
             } catch (RemoteException e) {
                 Log.e(TAG, ": Unable to access this media session");
