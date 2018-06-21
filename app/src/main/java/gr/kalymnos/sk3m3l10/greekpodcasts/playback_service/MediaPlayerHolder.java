@@ -78,7 +78,7 @@ class MediaPlayerHolder implements PlayerHolder, MediaPlayer.OnPreparedListener,
 
     @Override
     public void setPlaybackInfoListener(PlaybackInfoListener listener) {
-
+        playbackInfoListener = listener;
     }
 
     @Override
