@@ -17,6 +17,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -380,7 +381,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
             if (PlaybackUtils.validStateToStop(reportedPlayerState)) {
                 player.stop();
                 updateMetadata(cachedMediaId);
-                
+
                 PlaybackUtils.abandonAudioFocus(PlaybackService.this, audioFocusChangeListener);
                 session.setActive(false);
                 PlaybackService.this.stopSelf();
@@ -391,12 +392,30 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
         @Override
         public void onSkipToNext() {
-            super.onSkipToNext();
+            int currentMediaItemIndex = getCurrentMediaItemIndex(cachedMediaItems, cachedMediaId);
+            int nextMediaIndex = currentMediaItemIndex - 1;
+            if (nextMediaIndex < cachedMediaItems.size()) {
+                //  There is a next media item, cached its mediaId and prepare it to play
+                cachedMediaId = cachedMediaItems.get(nextMediaIndex).getMediaId();
+                onPrepareFromMediaId(cachedMediaId, null);
+            } else {
+                //  There is no previous media item
+                Toast.makeText(PlaybackService.this, R.string.no_next_episode_msg, Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
         public void onSkipToPrevious() {
-            super.onSkipToPrevious();
+            int currentMediaItemIndex = getCurrentMediaItemIndex(cachedMediaItems, cachedMediaId);
+            int previousMediaIndex = currentMediaItemIndex - 1;
+            if (previousMediaIndex >= 0) {
+                //  There is a previous media item, cached its mediaId and prepare it to play
+                cachedMediaId = cachedMediaItems.get(previousMediaIndex).getMediaId();
+                onPrepareFromMediaId(cachedMediaId, null);
+            } else {
+                //  There is no previous media item
+                Toast.makeText(PlaybackService.this, R.string.no_previous_episode_msg, Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
@@ -416,6 +435,33 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId)
                     .build());
+        }
+
+        private int getCurrentMediaItemIndex(List<MediaBrowserCompat.MediaItem> items, String mediaId) {
+            if (items != null && items.size() > 0) {
+
+                //  Start with an invalid index in case the list does not contain a mediaItem
+                //  that matches the mediaId (if we returned 0 it would be a lie because that's
+                //  the first item in the list).
+                int index = -1;
+
+                for (int i = 0; i < items.size(); i++) {
+                    MediaBrowserCompat.MediaItem temp = items.get(i);
+                    if (temp.getMediaId().equals(cachedMediaId)) {
+                        //  Corect index found, leave loop
+                        index = i;
+                        break;
+                    }
+                }
+
+                if (index >= 0) {
+                    return index;
+                } else {
+                    throw new UnsupportedOperationException(TAG + ": getCurrentMediaItemIndex() returned illegal index.");
+                }
+            } else {
+                throw new UnsupportedOperationException(TAG + ": Can't get Current MediaItem Index if the items list is null.");
+            }
         }
 
     }
