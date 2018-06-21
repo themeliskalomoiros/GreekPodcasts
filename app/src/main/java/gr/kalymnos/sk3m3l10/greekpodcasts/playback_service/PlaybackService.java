@@ -311,12 +311,23 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                             //  want the playback to stop when all clients unbind
                             startService(new Intent(PlaybackService.this, PlaybackService.class));
                             session.setActive(true);
-                            //  Only onPlaybackPrepared() calls this method, so the media is prepared to be played
+
+
+                            //  Only onPlaybackPrepared() calls this method, so the media is already prepared to be played
                             player.play();
+
+
                             //  Set metadata. Playback state is set in onStateChanged(), don't need to do it here
+                            MediaBrowserCompat.MediaItem item = getMediaItemByMediaId(cachedMediaItems, mediaId);
+                            long duration = PlaybackUtils.validStateToGetDuration(reportedPlayerState) ? player.getDuration() : 0;
+
                             session.setMetadata(metadataBuilder
                                     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, cachedPodcastersName)
-                                    /*  For album art it only accepts a bitmap, so better fetch a bitmap instead of poster url*/
+                                    .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedAlbumArt)
+                                    .putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.getDescription().getTitle().toString())
+                                    .putLong(MediaMetadataCompat.METADATA_KEY_DATE, item.getDescription().getExtras().getLong(Episode.DATE_KEY))
+                                    .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
+                                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID,mediaId)
                                     .build());
                         }
                     } else {
