@@ -40,7 +40,6 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
 
     private MediaBrowserCompat mediaBrowser;
     private ConnectionCallback connectionCallback;
-    private MediaControllerCompat.Callback mediaControllerCallback;
 
     @Nullable
     @Override
@@ -108,8 +107,8 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
 
         @Override
         public void onConnected() {
-            MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
             try {
+                MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
                 //  Create controller
                 MediaControllerCompat mediaController = new MediaControllerCompat(getContext(), token);
                 //  Save controller
