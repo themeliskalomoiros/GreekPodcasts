@@ -5,7 +5,7 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-interface PlaybackInfoListener {
+public interface PlaybackInfoListener {
 
     @IntDef({State.IDLE, State.INITIALIZED, State.PREPARED, State.STARTED, State.COMPLETED,
             State.STOPPED, State.ERROR, State.END})

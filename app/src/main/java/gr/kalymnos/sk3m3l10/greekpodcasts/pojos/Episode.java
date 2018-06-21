@@ -9,6 +9,9 @@ public class Episode implements Parcelable {
     public static final String TITLE_KEY = "title-key";
     public static final String INDEX_KEY = "index_key";
     public static final String FIREBASE_ID_KEY = "firebase_id key";
+    public static final String DATE_KEY = "date key";
+    public static final String MINUTES_KEY = "minutes key";
+    public static final String SECONDS_KEY = "seconds key";
 
     private String title, url, firebasePushId;
     private int minutes, seconds;

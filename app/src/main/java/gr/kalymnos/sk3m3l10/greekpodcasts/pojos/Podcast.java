@@ -7,9 +7,7 @@ public class Podcast implements Parcelable{
 
     public static final String PODCASTS_KEY = "podcasts_key";
     public static final String PODCAST_KEY = "podcast_key";
-    public static final String PODCASTER_KEY = "podcaster_key";
     public static final String POSTER_KEY = "poster_key";
-    public static final String FIREBASE_ID_KEY = "firebase id key";
 
     private String title, categoryId, posterUrl, description, podcasterId, firebasePushId, episodesId;
 
