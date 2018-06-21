@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.PodcastActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_podcasts.AllPodcastsViewMvc;
@@ -57,15 +59,14 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
 
     @Override
     public void onItemPodcastClick(int position) {
-//        if (this.cachedPodcasts != null && this.cachedPodcasts.size() > 0) {
-//            Bundle extras = new Bundle();
-//            extras.putParcelable(Podcast.PODCAST_KEY,this.cachedPodcasts.get(position));
-//
-//            Intent intent = new Intent(this.getContext(), PodcastActivity.class);
-//            intent.putExtras(extras);
-//            this.getContext().startActivity(intent);
-//        }
-        Toast.makeText(getContext(), "Episode clicked", Toast.LENGTH_SHORT).show();
+        if (this.cachedPodcasts != null && this.cachedPodcasts.size() > 0) {
+            Bundle extras = new Bundle();
+            extras.putParcelable(Podcast.PODCAST_KEY,this.cachedPodcasts.get(position));
+
+            Intent intent = new Intent(this.getContext(), PodcastActivity.class);
+            intent.putExtras(extras);
+            this.getContext().startActivity(intent);
+        }
     }
 
     @NonNull
