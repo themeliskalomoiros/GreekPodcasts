@@ -40,6 +40,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
 
     private MediaBrowserCompat mediaBrowser;
     private ConnectionCallback connectionCallback;
+    private List<MediaBrowserCompat.MediaItem> cachedMediaItems;
 
     @Nullable
     @Override
@@ -95,7 +96,11 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
 
     @Override
     public void onEpisodeClick(int position) {
-        Toast.makeText(getContext(), "Clicked", Toast.LENGTH_SHORT).show();
+        if (cachedMediaItems != null && cachedMediaItems.size() > 0) {
+            String mediaId = cachedMediaItems.get(position).getMediaId();
+            MediaControllerCompat.getMediaController(getActivity()).getTransportControls().prepareFromMediaId(mediaId,null);
+            mCallback.onEpisodeClicked(position);
+        }
     }
 
     @Override
@@ -125,11 +130,13 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                     public void onChildrenLoaded(@NonNull String parentId, @NonNull List<MediaBrowserCompat.MediaItem> children) {
                         viewMvc.displayLoadingIndicator(false);
                         viewMvc.bindEpisodes(children);
+                        cachedMediaItems = children;
                     }
 
                     @Override
                     public void onError(@NonNull String parentId) {
                         viewMvc.displayLoadingIndicator(false);
+                        cachedMediaItems = null;
                         Toast.makeText(getContext(), "Error fetching episodes!", Toast.LENGTH_SHORT).show();
                     }
                 });
