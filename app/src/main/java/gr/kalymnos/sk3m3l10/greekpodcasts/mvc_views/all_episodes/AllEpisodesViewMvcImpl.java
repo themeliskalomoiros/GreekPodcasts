@@ -23,6 +23,10 @@ public class AllEpisodesViewMvcImpl implements AllEpisodesViewMvc {
     private EpisodesAdapter adapter;
 
     public AllEpisodesViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
+        initializeViews(inflater, parent);
+    }
+
+    private void initializeViews(LayoutInflater inflater, ViewGroup parent) {
         this.rootView = inflater.inflate(R.layout.episodes_list, parent, false);
         this.progressBar = this.rootView.findViewById(R.id.pb_loading_indicator);
         setUpRecyclerView();
@@ -39,7 +43,7 @@ public class AllEpisodesViewMvcImpl implements AllEpisodesViewMvc {
 
     @Override
     public void markSelectedPosition(int position) {
-        if (adapter!=null){
+        if (adapter != null) {
             adapter.cachedViewHolder.markSelectionView(position);
         }
     }
