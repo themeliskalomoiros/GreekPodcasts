@@ -77,12 +77,24 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
 
     @Override
     public void onPlayButtonClick() {
-        Toast.makeText(getContext(), "play clicked", Toast.LENGTH_SHORT).show();
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(getActivity());
+        if (mediaController!=null){
+            PlaybackStateCompat state = mediaController.getPlaybackState();
+            if (state!=null && state.getState()==PlaybackStateCompat.STATE_PAUSED){
+                mediaController.getTransportControls().play();
+            }
+        }
     }
 
     @Override
     public void onPauseButtonClick() {
-        Toast.makeText(getContext(), "pause clicked", Toast.LENGTH_SHORT).show();
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(getActivity());
+        if (mediaController!=null){
+            PlaybackStateCompat state = mediaController.getPlaybackState();
+            if (state!=null && state.getState()==PlaybackStateCompat.STATE_PLAYING){
+                mediaController.getTransportControls().pause();
+            }
+        }
     }
 
     @Override
