@@ -33,9 +33,10 @@ public class PodcastScreenViewMvcImpl implements PodcastScreenViewMvc {
 
     private boolean onLand;
 
-    public PodcastScreenViewMvcImpl(LayoutInflater inflater, ViewGroup parent, @NonNull FragmentManager fragmentManager, Bundle fragmentArgs) {
+    public PodcastScreenViewMvcImpl(LayoutInflater inflater, ViewGroup parent, @NonNull
+            FragmentManager fragmentManager, Bundle viewPagerArgs) {
         this.rootView = inflater.inflate(R.layout.activity_podcast, parent, false);
-        this.initialize(fragmentManager, fragmentArgs);
+        this.initialize(fragmentManager, viewPagerArgs);
     }
 
     private void initialize(FragmentManager manager, Bundle fragmentArgs) {
