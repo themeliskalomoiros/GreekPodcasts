@@ -3,7 +3,9 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.utils;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 
@@ -16,17 +18,17 @@ public class DateUtils {
 
     public static String getStringDateFromMilli(long milli, @NonNull Resources resources, boolean monthFirstThreeLettersOnly) {
         int day = getDayFromMilli(milli);
-        String month = getStringMonth(getMonthFromMilli(milli),resources,monthFirstThreeLettersOnly);
+        String month = getStringMonth(getMonthFromMilli(milli), resources, monthFirstThreeLettersOnly);
         int year = getYearFromMilli(milli);
-        return String.format("%d %s %d",day,month,year);
+        return String.format("%d %s %d", day, month, year);
     }
 
     //  Returns the joined date of a podcaster in a nice format.
-    public static String getJoinedDate(long milli,Resources resources){
+    public static String getJoinedDate(long milli, Resources resources) {
         int day = getDayFromMilli(milli);
-        String month = getStringMonth(getMonthFromMilli(milli),resources,false);
+        String month = getStringMonth(getMonthFromMilli(milli), resources, false);
         int year = getYearFromMilli(milli);
-        return String.format("%s %d, %d",month,day,year);   //  example:    March 23, 2018
+        return String.format("%s %d, %d", month, day, year);   //  example:    March 23, 2018
     }
 
     private static String getStringMonth(int month, Resources resources, boolean firstThreeLettersOnly) {
@@ -93,5 +95,10 @@ public class DateUtils {
     private static int getYearFromMilli(long milli) {
         calendar.setTimeInMillis(milli);
         return calendar.get(Calendar.YEAR);
+    }
+
+    public static String dateRFC3339(long millis) {
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+                .format(new Date(millis));
     }
 }

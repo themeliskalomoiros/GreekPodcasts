@@ -31,6 +31,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.DateUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 
 public class PlaybackService extends MediaBrowserServiceCompat implements PlaybackInfoListener {
@@ -256,6 +257,8 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                         PlaybackStateCompat.ACTION_PLAY_PAUSE);
         session.setPlaybackState(stateBuilder.build());
 
+        metadataBuilder = new MediaMetadataCompat.Builder();
+
         //  Handle callbacks from a MediaController
         session.setCallback(sessionCallback = new MediaSessionCallback());
 
@@ -431,7 +434,8 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, cachedPodcastersName)
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedAlbumArt)
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.getDescription().getTitle().toString())
-                    .putLong(MediaMetadataCompat.METADATA_KEY_DATE, item.getDescription().getExtras().getLong(Episode.DATE_KEY))
+                    //  putLong() with METADATA_KEY_DATE raises IllegalStateException
+                    .putString(MediaMetadataCompat.METADATA_KEY_DATE, DateUtils.dateRFC3339(item.getDescription().getExtras().getLong(Episode.DATE_KEY)))
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId)
                     .build());
