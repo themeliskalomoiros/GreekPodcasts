@@ -81,7 +81,11 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
         if (mediaController != null) {
             PlaybackStateCompat state = mediaController.getPlaybackState();
-            if (state != null && state.getState() == PlaybackStateCompat.STATE_PAUSED) {
+            boolean statePausedOrStoppedOrNone = state.getState() == PlaybackStateCompat.STATE_PAUSED
+                    || state.getState() == PlaybackStateCompat.STATE_STOPPED
+                    || state.getState() == PlaybackStateCompat.STATE_NONE;  /*  Why state none? Because if the playback is stoped the service is calling stopSelf() and that results to state none!*/
+
+            if (state != null && statePausedOrStoppedOrNone) {
                 mediaController.getTransportControls().play();
             }
         }
@@ -121,7 +125,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser){
+        if (fromUser) {
             MediaControllerCompat.getMediaController(this).getTransportControls().seekTo(progress);
             seekBar.setProgress(progress);
         }
