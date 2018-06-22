@@ -282,7 +282,8 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
         reportedPlayerState = state;
 
         //  Set the playback state for the session, the metadata will be set inside the sessionCallback methods.
-        if (reportedPlayerState == State.STARTED || reportedPlayerState == State.PAUSED || reportedPlayerState == State.STOPPED) {
+        if (reportedPlayerState == State.STARTED || reportedPlayerState == State.PAUSED || reportedPlayerState == State.STOPPED
+                || reportedPlayerState == State.COMPLETED) {
             int currentPosition = PlaybackUtils.validStateToGetPosition(state) ? player.getCurrentPosition() : 0;
             session.setPlaybackState(PlaybackUtils.getPlaybackStateFromPlayerState(state, currentPosition, DEFAULT_PLAYBACK_SPEED, stateBuilder));
         }
@@ -295,7 +296,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
     @Override
     public void onPlaybackCompleted() {
-        if (PlaybackUtils.validStateToStop(reportedPlayerState)){
+        if (PlaybackUtils.validStateToStop(reportedPlayerState)) {
             sessionCallback.onStop();
         }
     }
