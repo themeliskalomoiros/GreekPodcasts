@@ -53,7 +53,7 @@ public interface EpisodePlayViewMvc extends ViewMvc {
 
     Toolbar getToolbar();
 
-    void setOnEpisodeControlsClickListener(OnActionButtonsClickListener listener);
+    void setOnActionButtonsClickListener(OnActionButtonsClickListener listener);
 
     void setOnTransportControlsClickListener(OnTransportControlsClickListener listener);
 

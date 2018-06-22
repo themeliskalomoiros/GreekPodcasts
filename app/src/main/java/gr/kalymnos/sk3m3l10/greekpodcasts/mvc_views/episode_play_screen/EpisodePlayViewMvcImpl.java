@@ -109,7 +109,7 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
     }
 
     @Override
-    public void setOnEpisodeControlsClickListener(OnActionButtonsClickListener listener) {
+    public void setOnActionButtonsClickListener(OnActionButtonsClickListener listener) {
         if (listener != null) {
             this.star.setOnClickListener(view -> listener.onStarClick());
             this.download.setOnClickListener(view -> listener.onDownloadClick());

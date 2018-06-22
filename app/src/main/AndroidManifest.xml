@@ -33,7 +33,7 @@
             android:authorities="gr.kalymnos.sk3m3l10.greekpodcasts.provider"
             android:exported="false" />
 
-        <activity android:name=".mvc_controllers.activities.EpisodePlay"></activity>
+        <activity android:name=".mvc_controllers.activities.EpisodePlayActivity"></activity>
     </application>
 
 </manifest>
