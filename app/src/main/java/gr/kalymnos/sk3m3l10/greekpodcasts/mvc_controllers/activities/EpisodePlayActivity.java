@@ -10,6 +10,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     @Override
     public void onStop() {
         super.onStop();
+        //  Make sure the thread is stoped
         stopUpdatingMediabar();
         if (MediaControllerCompat.getMediaController(this) != null) {
             MediaControllerCompat.getMediaController(this).unregisterCallback(mediaControllerCallback);
@@ -85,7 +87,21 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                     || state.getState() == PlaybackStateCompat.STATE_STOPPED
                     || state.getState() == PlaybackStateCompat.STATE_NONE;  /*  Why state none? Because if the playback is stoped the service is calling stopSelf() and that results to state none!*/
 
+            MediaMetadataCompat metadata = mediaController.getMetadata();
+            long duration = 0;
+            if (metadata != null) {
+                duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+            }
+
             if (state != null && statePausedOrStoppedOrNone) {
+
+                if (viewMvc.getSeekBarProgress() == duration) {
+                    //  media bar reached the end, reset it to seekTo from the begining
+                    viewMvc.resetSeekBarProgress();
+                }
+
+                //  First seek to the position of the media bar and then play the track from there
+                mediaController.getTransportControls().seekTo(viewMvc.getSeekBarProgress());
                 mediaController.getTransportControls().play();
             }
         }
@@ -126,8 +142,21 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
-            MediaControllerCompat.getMediaController(this).getTransportControls().seekTo(progress);
-            seekBar.setProgress(progress);
+            MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
+            PlaybackStateCompat state = mediaController.getPlaybackState();
+
+            if (state != null) {
+                if (state.getState() == PlaybackStateCompat.STATE_NONE) {
+                    //  This state was set after onStop() because service called stopSelf()
+                    //  There is no playback, though the track is allready prepared so
+                    //  just bind the position
+                    seekBar.setProgress(progress);
+                    viewMvc.bindPlaybackPosition(PlaybackUtils.playbackPositionString(progress));
+                } else {
+                    mediaController.getTransportControls().seekTo(progress);
+                    seekBar.setProgress(progress);
+                }
+            }
         }
     }
 
@@ -232,7 +261,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                 try {
                     Thread.sleep(SEEKBAR_UPDATE_INTERVAL);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    //  This thread has being interrupted, terminate
+                    return;
                 }
 
                 PlaybackStateCompat state = mediaController.getPlaybackState();
