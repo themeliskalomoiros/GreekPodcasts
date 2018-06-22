@@ -46,6 +46,10 @@ public interface EpisodePlayViewMvc extends ViewMvc {
 
     void enableSeekBar(boolean enable);
 
+    int getSeekBarProgress();
+
+    void resetSeekBarProgress();
+
     void bindSeekBarMax(int max);
 
     void disableTransportControls(boolean disable);

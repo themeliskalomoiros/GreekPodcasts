@@ -77,6 +77,21 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
     }
 
     @Override
+    public int getSeekBarProgress() {
+        if (seekBar != null) {
+            return seekBar.getProgress();
+        }
+        return 0;
+    }
+
+    @Override
+    public void resetSeekBarProgress() {
+        if (seekBar != null) {
+            seekBar.setProgress(0);
+        }
+    }
+
+    @Override
     public void bindSeekBarMax(int max) {
         this.seekBar.setMax(max);
     }
