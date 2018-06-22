@@ -22,11 +22,14 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 public class EpisodePlayActivity extends AppCompatActivity implements EpisodePlayViewMvc.OnActionButtonsClickListener,
         EpisodePlayViewMvc.OnTransportControlsClickListener, EpisodePlayViewMvc.OnPodcasterClickListener, SeekBar.OnSeekBarChangeListener {
 
+    private static final long SEEKBAR_UPDATE_INTERVAL = 500;
     private EpisodePlayViewMvc viewMvc;
 
     private MediaBrowserCompat mediaBrowser;
     private ConnectionCallback connectionCallback;
     private MediaControllerCompat.Callback mediaControllerCallback;
+
+    private Thread updateMediaBarTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     @Override
     public void onStop() {
         super.onStop();
+        stopUpdatingMediabar();
         if (MediaControllerCompat.getMediaController(this) != null) {
             MediaControllerCompat.getMediaController(this).unregisterCallback(mediaControllerCallback);
         }
@@ -159,8 +163,10 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                     public void onPlaybackStateChanged(PlaybackStateCompat state) {
                         if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
                             viewMvc.displayPlayButton(false);
+                            startUpdatingMediabar();
                         } else {
                             viewMvc.displayPlayButton(true);
+                            stopUpdatingMediabar();
                         }
                     }
 
@@ -174,8 +180,10 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                 PlaybackStateCompat state = mediaController.getPlaybackState();
                 if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
                     viewMvc.displayPlayButton(false);
+                    startUpdatingMediabar();
                 } else {
                     viewMvc.displayPlayButton(true);
+                    stopUpdatingMediabar();
                 }
 
                 MediaMetadataCompat metadata = mediaController.getMetadata();
@@ -207,6 +215,45 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
             viewMvc.bindSeekBarMax((int) durationMilli);
             viewMvc.bindPlaybackDuration(PlaybackUtils.playbackPositionString(durationMilli));
         }
+    }
+
+    private void initializeUpdateMediaBarTask() {
+        updateMediaBarTask = new Thread(() -> {
+            MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(EpisodePlayActivity.this);
+
+            while (true) {
+                try {
+                    Thread.sleep(SEEKBAR_UPDATE_INTERVAL);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                PlaybackStateCompat state = mediaController.getPlaybackState();
+                long position = state.getPosition();
+
+                runOnUiThread(() -> {
+                    viewMvc.bindSeekBarProgress((int) position);
+                    viewMvc.bindPlaybackPosition(PlaybackUtils.playbackPositionString(position));
+                });
+            }
+        });
+    }
+
+    private void startUpdatingMediabar() {
+        if (updateMediaBarTask == null) {
+            initializeUpdateMediaBarTask();
+        }
+
+        if (!updateMediaBarTask.isAlive()) {
+            updateMediaBarTask.start();
+        }
+    }
+
+    private void stopUpdatingMediabar() {
+        if (updateMediaBarTask != null) {
+            updateMediaBarTask.interrupt();
+        }
+        updateMediaBarTask = null;
     }
 
     private void setUpMediaBrowser() {
