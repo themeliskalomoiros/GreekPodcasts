@@ -428,7 +428,14 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
         @Override
         public void onSeekTo(long pos) {
-            super.onSeekTo(pos);
+            if (PlaybackUtils.validStateToSeek(reportedPlayerState)) {
+                player.seekTo((int) pos);
+                //  Usually the state is updated in onStateChanged(), though with a seek action the
+                //  actual player does not change its state (from STATE_PLAY after a seekTo action
+                //  the state is again STATE_PLAY). So this is a state refresher so the clients will
+                //  be able to update UI after a seekTo action.
+                session.setPlaybackState(PlaybackUtils.getPlaybackStateFromPlayerState(reportedPlayerState, pos, DEFAULT_PLAYBACK_SPEED, stateBuilder));
+            }
         }
 
         private void updateMetadata(String mediaId) {
