@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.EpisodePlayActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.quick_player.QuickPlayerViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.quick_player.QuickPlayerViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.playback_service.PlaybackService;
@@ -101,7 +103,7 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
 
     @Override
     public void onQuickPlayerClick() {
-        Toast.makeText(getContext(), "root clicked", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(getContext(), EpisodePlayActivity.class));
     }
 
     private class ConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
