@@ -295,7 +295,9 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
     @Override
     public void onPlaybackCompleted() {
-
+        if (PlaybackUtils.validStateToStop(reportedPlayerState)){
+            sessionCallback.onStop();
+        }
     }
 
     @Override
