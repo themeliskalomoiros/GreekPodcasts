@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.Toolbar;
 import android.widget.SeekBar;
 
@@ -30,6 +31,8 @@ public interface EpisodePlayViewMvc extends ViewMvc {
     }
 
     void bindPoster(String url);
+
+    void bindPoster(Bitmap bitmap);
 
     void bindPodcaster(String name);
 

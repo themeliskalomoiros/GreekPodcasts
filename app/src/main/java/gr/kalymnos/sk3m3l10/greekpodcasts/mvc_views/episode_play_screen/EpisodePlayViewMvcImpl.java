@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen;
 
+import android.graphics.Bitmap;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,11 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
                 .placeholder(R.drawable.ic_headset_black_light_148dp)
                 .error(R.drawable.ic_error_black_light_148dp)
                 .into(this.poster);
+    }
+
+    @Override
+    public void bindPoster(Bitmap bitmap) {
+        poster.setImageBitmap(bitmap);
     }
 
     @Override
