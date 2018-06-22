@@ -73,12 +73,24 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onPlayButtonClick() {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
+        if (mediaController!=null){
+            PlaybackStateCompat state = mediaController.getPlaybackState();
+            if (state!=null && state.getState()==PlaybackStateCompat.STATE_PAUSED){
+                mediaController.getTransportControls().play();
+            }
+        }
     }
 
     @Override
     public void onPauseButtonClick() {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
+        if (mediaController!=null){
+            PlaybackStateCompat state = mediaController.getPlaybackState();
+            if (state!=null && state.getState()==PlaybackStateCompat.STATE_PLAYING){
+                mediaController.getTransportControls().pause();
+            }
+        }
     }
 
     @Override
