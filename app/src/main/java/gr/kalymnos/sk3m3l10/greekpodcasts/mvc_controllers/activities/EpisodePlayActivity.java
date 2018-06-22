@@ -74,9 +74,9 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     @Override
     public void onPlayButtonClick() {
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
-        if (mediaController!=null){
+        if (mediaController != null) {
             PlaybackStateCompat state = mediaController.getPlaybackState();
-            if (state!=null && state.getState()==PlaybackStateCompat.STATE_PAUSED){
+            if (state != null && state.getState() == PlaybackStateCompat.STATE_PAUSED) {
                 mediaController.getTransportControls().play();
             }
         }
@@ -85,9 +85,9 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     @Override
     public void onPauseButtonClick() {
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
-        if (mediaController!=null){
+        if (mediaController != null) {
             PlaybackStateCompat state = mediaController.getPlaybackState();
-            if (state!=null && state.getState()==PlaybackStateCompat.STATE_PLAYING){
+            if (state != null && state.getState() == PlaybackStateCompat.STATE_PLAYING) {
                 mediaController.getTransportControls().pause();
             }
         }
@@ -95,12 +95,18 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onSkipToNextButtonClick() {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
+        if (mediaController != null) {
+            mediaController.getTransportControls().skipToNext();
+        }
     }
 
     @Override
     public void onSkipToPreviousButtonClick() {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
+        if (mediaController != null) {
+            mediaController.getTransportControls().skipToPrevious();
+        }
     }
 
     @Override
