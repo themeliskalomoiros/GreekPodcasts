@@ -401,7 +401,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
         @Override
         public void onSkipToNext() {
             int currentMediaItemIndex = getCurrentMediaItemIndex(cachedMediaItems, cachedMediaId);
-            int nextMediaIndex = currentMediaItemIndex - 1;
+            int nextMediaIndex = currentMediaItemIndex + 1;
             if (nextMediaIndex < cachedMediaItems.size()) {
                 //  There is a next media item, cached its mediaId and prepare it to play
                 cachedMediaId = cachedMediaItems.get(nextMediaIndex).getMediaId();
