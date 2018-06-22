@@ -120,8 +120,11 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (fromUser){
+            MediaControllerCompat.getMediaController(this).getTransportControls().seekTo(progress);
+            seekBar.setProgress(progress);
+        }
     }
 
     @Override
