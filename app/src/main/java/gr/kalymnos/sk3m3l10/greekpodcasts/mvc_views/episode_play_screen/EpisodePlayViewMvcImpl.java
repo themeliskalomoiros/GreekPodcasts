@@ -1,4 +1,4 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_screen;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen;
 
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 
-public class EpisodeViewMvcImpl implements EpisodeViewMvc {
+public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
 
     //  TODO:   Missing Seekbar functionality!!!
 
@@ -22,7 +22,7 @@ public class EpisodeViewMvcImpl implements EpisodeViewMvc {
     private SeekBar seekBar;
     private Toolbar toolbar;
 
-    public EpisodeViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
+    public EpisodePlayViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
     }
 

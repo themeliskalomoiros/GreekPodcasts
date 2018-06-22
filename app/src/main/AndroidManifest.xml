@@ -20,12 +20,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".mvc_controllers.activities.PodcastActivity"></activity>
+        <activity android:name=".mvc_controllers.activities.PodcastActivity" />
 
         <service android:name=".playback_service.PlaybackService">
             <intent-filter>
-                <action android:name="android.media.browse.MediaBrowserService"/>
+                <action android:name="android.media.browse.MediaBrowserService" />
             </intent-filter>
         </service>
 
@@ -34,7 +33,7 @@
             android:authorities="gr.kalymnos.sk3m3l10.greekpodcasts.provider"
             android:exported="false" />
 
-
+        <activity android:name=".mvc_controllers.activities.EpisodePlay"></activity>
     </application>
 
 </manifest>

@@ -1,11 +1,11 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_screen;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen;
 
 import android.support.v7.widget.Toolbar;
 import android.widget.SeekBar;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.ViewMvc;
 
-public interface EpisodeViewMvc extends ViewMvc {
+public interface EpisodePlayViewMvc extends ViewMvc {
 
     interface OnActionButtonsClickListener {
         void onStarClick();
