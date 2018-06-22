@@ -17,6 +17,7 @@ import android.widget.Toast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.playback_service.PlaybackService;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 
 public class EpisodePlayActivity extends AppCompatActivity implements EpisodePlayViewMvc.OnActionButtonsClickListener,
         EpisodePlayViewMvc.OnTransportControlsClickListener, EpisodePlayViewMvc.OnPodcasterClickListener, SeekBar.OnSeekBarChangeListener {
@@ -165,10 +166,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                     @Override
                     public void onMetadataChanged(MediaMetadataCompat metadata) {
-                        viewMvc.bindEpisodeTitle(metadata.getDescription().getTitle().toString());
-                        viewMvc.bindPodcaster(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
-                        viewMvc.bindPoster(metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART));
-                        viewMvc.bindSeekBarMax((int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
+                        updateUiFromMetadata(metadata);
                     }
                 });
 
@@ -182,10 +180,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                 MediaMetadataCompat metadata = mediaController.getMetadata();
                 if (metadata != null) {
-                    viewMvc.bindEpisodeTitle(metadata.getDescription().getTitle().toString());
-                    viewMvc.bindPodcaster(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
-                    viewMvc.bindPoster(metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART));
-                    viewMvc.bindSeekBarMax((int) metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION));
+                    updateUiFromMetadata(metadata);
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -204,7 +199,14 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
             //  Service has refused our connection
         }
 
-
+        private void updateUiFromMetadata(MediaMetadataCompat metadata) {
+            viewMvc.bindEpisodeTitle(metadata.getDescription().getTitle().toString());
+            viewMvc.bindPodcaster(metadata.getString(MediaMetadataCompat.METADATA_KEY_ARTIST));
+            viewMvc.bindPoster(metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART));
+            long durationMilli = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+            viewMvc.bindSeekBarMax((int) durationMilli);
+            viewMvc.bindPlaybackDuration(PlaybackUtils.playbackPositionString(durationMilli));
+        }
     }
 
     private void setUpMediaBrowser() {
