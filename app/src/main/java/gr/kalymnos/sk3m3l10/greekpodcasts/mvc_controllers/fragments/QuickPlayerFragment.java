@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
 import android.content.ComponentName;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -12,6 +13,7 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v7.graphics.Palette;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -141,6 +143,7 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
                     public void onMetadataChanged(MediaMetadataCompat metadata) {
                         viewMvc.bindEpisodeTitle(metadata.getDescription().getTitle().toString());
                         viewMvc.bindPodcastPoster(metadata.getDescription().getIconBitmap());
+                        bindPlayerBackgroundColor(viewMvc.getPosterBitmap());
                     }
                 });
 
@@ -175,5 +178,14 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
         public void onConnectionFailed() {
             //  Service has refused our connection
         }
+    }
+
+    private void bindPlayerBackgroundColor(Bitmap bitmap) {
+        Palette.from(bitmap).generate(palette -> {
+            //  Palette generated
+            int lightVibrantColor = palette.getLightVibrantColor(
+                    getActivity().getResources().getColor(QuickPlayerViewMvc.DEFAULT_BACKGROUND_COLOR));
+            viewMvc.bindBackgroundColor(lightVibrantColor);
+        });
     }
 }
