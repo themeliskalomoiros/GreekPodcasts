@@ -22,6 +22,7 @@ import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_episodes.AllEpiso
 
 public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.EpisodeHolder> {
 
+    public static final int INVALID_INDEX_POSITION = -1;
     private Context context;
     private List<MediaBrowserCompat.MediaItem> episodes;
 
@@ -71,6 +72,18 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
             return this.episodes.size();
         }
         return 0;
+    }
+
+    public int getItemPositionFromMediaId(String mediaId) {
+        int invalidIndex = INVALID_INDEX_POSITION;
+        if (episodes != null && episodes.size() > 0) {
+            for (int i = 0; i < episodes.size(); i++) {
+                if (mediaId.equals(episodes.get(i).getMediaId())) {
+                    return i;
+                }
+            }
+        }
+        return invalidIndex;
     }
 
     class EpisodeHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

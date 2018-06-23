@@ -19,6 +19,8 @@ public interface AllEpisodesViewMvc extends ViewMvc {
 
     void markSelectedPosition(int position);
 
+    int getItemPositionFromMediaId(String mediaId);
+
     void bindEpisodes(List<MediaBrowserCompat.MediaItem> episodes);
 
     void displayLoadingIndicator(boolean display);

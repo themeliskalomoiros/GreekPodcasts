@@ -45,7 +45,18 @@ public class AllEpisodesViewMvcImpl implements AllEpisodesViewMvc {
     @Override
     public void markSelectedPosition(int position) {
         if (adapter != null) {
-            adapter.cachedViewHolder.markSelectionView(position);
+            if (adapter.cachedViewHolder!=null){
+                adapter.cachedViewHolder.markSelectionView(position);
+            }
+        }
+    }
+
+    @Override
+    public int getItemPositionFromMediaId(String mediaId) {
+        if (adapter != null) {
+            return adapter.getItemPositionFromMediaId(mediaId);
+        } else {
+            throw new UnsupportedOperationException(AllEpisodesViewMvcImpl.class.getSimpleName() + ": Can't get item position from media id because adapter is null.");
         }
     }
 
