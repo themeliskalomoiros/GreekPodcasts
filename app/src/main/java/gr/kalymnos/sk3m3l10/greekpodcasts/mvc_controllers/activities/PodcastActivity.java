@@ -108,7 +108,7 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
 
     private void showQuickPlayerFragment() {
         Bundle args = new Bundle();
-        args.putString(Podcaster.PUSH_ID_KEY,cachedPodcast.getPodcasterId());
+        args.putString(Podcaster.PUSH_ID_KEY, cachedPodcast.getPodcasterId());
 
         QuickPlayerFragment quickPlayerFragment = new QuickPlayerFragment();
         quickPlayerFragment.setArguments(args);

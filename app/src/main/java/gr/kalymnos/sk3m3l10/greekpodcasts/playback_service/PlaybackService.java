@@ -449,6 +449,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, cachedPodcastersName)
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedAlbumArt)
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.getDescription().getTitle().toString())
+                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID,mediaId)
                     //  putLong() with METADATA_KEY_DATE raises IllegalStateException
                     .putString(MediaMetadataCompat.METADATA_KEY_DATE, DateUtils.dateRFC3339(item.getDescription().getExtras().getLong(Episode.DATE_KEY)))
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
