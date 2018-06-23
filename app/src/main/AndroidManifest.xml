@@ -13,14 +13,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".mvc_controllers.activities.MainActivity">
+        <activity
+            android:name=".mvc_controllers.activities.MainActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mvc_controllers.activities.PodcastActivity" />
+        <activity
+            android:name=".mvc_controllers.activities.PodcastActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".mvc_controllers.activities.MainActivity" />
 
         <service android:name=".playback_service.PlaybackService">
             <intent-filter>
@@ -33,7 +38,13 @@
             android:authorities="gr.kalymnos.sk3m3l10.greekpodcasts.provider"
             android:exported="false" />
 
-        <activity android:name=".mvc_controllers.activities.EpisodePlayActivity"></activity>
+        <activity
+            android:name=".mvc_controllers.activities.EpisodePlayActivity"
+            android:launchMode="singleTop"
+            android:parentActivityName=".mvc_controllers.activities.PodcastActivity"></activity>
+        <activity
+            android:name=".mvc_controllers.activities.PodcasterActivity"
+            android:parentActivityName=".mvc_controllers.activities.EpisodePlayActivity"></activity>
     </application>
 
 </manifest>
