@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.RemoteException;
 import android.support.v4.media.MediaBrowserCompat;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.playback_service.PlaybackService;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 
 public class EpisodePlayActivity extends AppCompatActivity implements EpisodePlayViewMvc.OnActionButtonsClickListener,
@@ -140,7 +142,9 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onPodcasterClick() {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,PodcasterActivity.class);
+        intent.putExtra(Podcaster.PUSH_ID_KEY,getIntent().getExtras().getString(Podcaster.PUSH_ID_KEY));
+        startActivity(intent);
     }
 
     @Override

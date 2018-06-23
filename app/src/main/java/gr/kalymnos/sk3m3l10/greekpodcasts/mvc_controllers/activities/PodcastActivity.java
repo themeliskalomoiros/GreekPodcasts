@@ -18,13 +18,14 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcast_screen.PodcastScreenViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcast_screen.PodcastScreenViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 
 public class PodcastActivity extends AppCompatActivity implements PodcastScreenViewMvc.OnActionPlayClickListener,
         LoaderManager.LoaderCallbacks<String>, AllEpisodesFragment.AllEpisodesFragmentCommunicator {
 
     private static final String TAG = PodcastActivity.class.getSimpleName();
 
-    private static Podcast cachedPodcast;
+    private Podcast cachedPodcast;
     private String cachedPodcasterName;
 
     private PodcastScreenViewMvc viewMvc;
@@ -106,7 +107,11 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
     }
 
     private void showQuickPlayerFragment() {
+        Bundle args = new Bundle();
+        args.putString(Podcaster.PUSH_ID_KEY,cachedPodcast.getPodcasterId());
+
         QuickPlayerFragment quickPlayerFragment = new QuickPlayerFragment();
+        quickPlayerFragment.setArguments(args);
         this.getSupportFragmentManager().beginTransaction()
                 .replace(viewMvc.getQuickPlayerContainerId(), quickPlayerFragment)
                 .commit();
