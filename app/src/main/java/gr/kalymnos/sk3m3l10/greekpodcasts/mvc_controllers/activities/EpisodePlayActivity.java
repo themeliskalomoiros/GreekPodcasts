@@ -95,7 +95,11 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
             if (state != null && statePausedOrStoppedOrNone) {
 
-                if (viewMvc.getSeekBarProgress() == duration) {
+                //  Typically because of the time interval where the thread updates the seekbar
+                //  the progress of the seekbar may not be exactly the same as the duration,
+                //  but if it's less than a second its almost the same
+                boolean positionEqualsDuration = Math.abs(viewMvc.getSeekBarProgress()-duration)<800;
+                if ( positionEqualsDuration) {
                     //  media bar reached the end, reset it to seekTo from the begining
                     viewMvc.resetSeekBarProgress();
                 }
