@@ -27,6 +27,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.EpisodePlay
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.quick_player.QuickPlayerViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.quick_player.QuickPlayerViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.playback_service.PlaybackService;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 
 public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.OnTransportControlsClickListener, QuickPlayerViewMvc.OnQuickPlayerClickListener {
@@ -106,6 +107,7 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
     public void onQuickPlayerClick() {
         Intent intent = new Intent(getContext(), EpisodePlayActivity.class);
         intent.putExtra(Podcaster.PUSH_ID_KEY,getArguments().getString(Podcaster.PUSH_ID_KEY));
+        intent.putExtra(Podcast.PODCAST_KEY,getArguments().getString(Podcast.PODCAST_KEY));
         startActivity(intent);
     }
 
