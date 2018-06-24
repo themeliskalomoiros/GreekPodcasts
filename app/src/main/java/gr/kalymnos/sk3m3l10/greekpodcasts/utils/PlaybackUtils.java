@@ -26,7 +26,7 @@ public class PlaybackUtils {
                         .build();
             case PREPARED:
                 return stateBuilder.setState(PlaybackStateCompat.STATE_NONE, 0, 0)
-                        .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_SEEK_TO)
+                        .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_SEEK_TO | PlaybackStateCompat.ACTION_PLAY_PAUSE)
                         .build();
             case STARTED:
                 return stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, currentPosition, playbackSpeed)
@@ -136,7 +136,7 @@ public class PlaybackUtils {
         return playerState == IDLE;
     }
 
-    public static boolean validStateToStop(int playerState){
+    public static boolean validStateToStop(int playerState) {
         return playerState == PREPARED || playerState == STARTED || playerState == PAUSED
                 || playerState == STOPPED || playerState == COMPLETED;
     }
