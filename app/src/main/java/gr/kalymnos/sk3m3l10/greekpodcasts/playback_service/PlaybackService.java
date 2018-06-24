@@ -9,12 +9,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaBrowserServiceCompat;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
+import android.support.v4.media.session.MediaButtonReceiver;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -43,6 +48,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     private static final String TAG = PlaybackService.class.getSimpleName();
     private static final String SESSION_TAG = "MyMediaSession";
     private static final float DEFAULT_PLAYBACK_SPEED = 1f;
+    private static final int FOREGROUND_ID = 112;
 
 
     private MediaSessionCompat session;
@@ -333,9 +339,10 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                             //  Only onPlaybackPrepared() calls this method, so the media is already prepared to be played
                             player.play();
 
-
                             //  Set metadata. Playback state is set in onStateChanged(), don't need to do it here
                             updateMetadata(mediaId);
+
+                            showMediaStyleNotification();
                         }
                     } else {
                         throw new UnsupportedOperationException(TAG + ": Cannot play an item with null or empty mediaId");
@@ -449,7 +456,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                     .putString(MediaMetadataCompat.METADATA_KEY_ARTIST, cachedPodcastersName)
                     .putBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART, cachedAlbumArt)
                     .putString(MediaMetadataCompat.METADATA_KEY_TITLE, item.getDescription().getTitle().toString())
-                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID,mediaId)
+                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId)
                     //  putLong() with METADATA_KEY_DATE raises IllegalStateException
                     .putString(MediaMetadataCompat.METADATA_KEY_DATE, DateUtils.dateRFC3339(item.getDescription().getExtras().getLong(Episode.DATE_KEY)))
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
@@ -509,5 +516,58 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
             return true;
         }
         return false;
+    }
+
+    private void showMediaStyleNotification() {
+        // Given a media session and its context (usually the component containing the session)
+        // Create a NotificationCompat.Builder
+
+        // Get the session's metadata
+        MediaControllerCompat controller = session.getController();
+        MediaMetadataCompat mediaMetadata = controller.getMetadata();
+        MediaDescriptionCompat description = mediaMetadata.getDescription();
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        // Add the metadata for the currently playing track
+        builder
+                .setContentTitle(description.getTitle())
+                .setContentText(description.getSubtitle())
+                .setSubText(description.getDescription())
+                .setLargeIcon(description.getIconBitmap())
+
+                // Enable launching the player by clicking the notification
+                .setContentIntent(controller.getSessionActivity())
+
+                // Stop the service when the notification is swiped away
+                .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(this,
+                        PlaybackStateCompat.ACTION_STOP))
+
+                // Make the transport controls visible on the lockscreen
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+
+                // Add an app icon and set its accent color
+                // Be careful about the color
+                .setSmallIcon(R.drawable.ic_headset_pink_40dp)
+                .setColor(ContextCompat.getColor(this, R.color.secondaryColor))
+
+                // Add a pause button
+                .addAction(new NotificationCompat.Action(
+                        R.drawable.ic_pause_white_40dp, getString(R.string.pause_label),
+                        MediaButtonReceiver.buildMediaButtonPendingIntent(this,
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE)))
+
+                // Take advantage of MediaStyle features
+                .setStyle(new MediaStyle()
+                        .setMediaSession(session.getSessionToken())
+                        .setShowActionsInCompactView(0)
+
+                        // Add a cancel button
+                        .setShowCancelButton(true)
+                        .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(this,
+                                PlaybackStateCompat.ACTION_STOP)));
+
+// Display the notification and place the service in the foreground
+        startForeground(FOREGROUND_ID, builder.build());
     }
 }
