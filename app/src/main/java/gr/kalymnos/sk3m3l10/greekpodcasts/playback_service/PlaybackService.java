@@ -75,6 +75,12 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
         initializePlayer();
     }
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        MediaButtonReceiver.handleIntent(session,intent);
+        return super.onStartCommand(intent, flags, startId);
+    }
+
     @Nullable
     @Override
     public BrowserRoot onGetRoot(@NonNull String clientPackageName, int clientUid, @Nullable Bundle rootHints) {
@@ -256,6 +262,8 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
         //  Enable callbacks from MediaButtons and TransportControls
         session.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
                 MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        session.setMediaButtonReceiver(null);
 
         //  Set an initial PlaybackState with ACTION_PLAY so media buttons can start the player
         stateBuilder = new PlaybackStateCompat.Builder()
