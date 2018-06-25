@@ -9,8 +9,10 @@ public class Podcast implements Parcelable{
     public static final String PODCAST_KEY = "podcast_key";
     public static final String POSTER_KEY = "poster_key";
     public static final String DESCRIPTION_KEY = "description key";
+    public static final String LOCAL_DB_ID_KEY = "local db key";
 
     private String title, categoryId, posterUrl, description, podcasterId, firebasePushId, episodesId;
+    private int localDbId;
 
     public Podcast() {
     }
@@ -64,6 +66,14 @@ public class Podcast implements Parcelable{
 
     public void setFirebasePushId(String firebasePushId) {
         this.firebasePushId = firebasePushId;
+    }
+
+    public int getLocalDbId() {
+        return localDbId;
+    }
+
+    public void setLocalDbId(int localDbId) {
+        this.localDbId = localDbId;
     }
 
     protected Podcast(Parcel in) {
