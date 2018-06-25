@@ -45,6 +45,13 @@
         <activity
             android:name=".mvc_controllers.activities.PodcasterActivity"
             android:parentActivityName=".mvc_controllers.activities.EpisodePlayActivity"></activity>
+
+        <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
