@@ -110,7 +110,8 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
         Bundle args = new Bundle();
         args.putString(Podcaster.PUSH_ID_KEY, cachedPodcast.getPodcasterId());
         args.putString(Podcast.PODCAST_KEY,cachedPodcast.getFirebasePushId());
-
+        args.putInt(Podcast.LOCAL_DB_ID_KEY,cachedPodcast.getLocalDbId());
+        
         QuickPlayerFragment quickPlayerFragment = new QuickPlayerFragment();
         quickPlayerFragment.setArguments(args);
         this.getSupportFragmentManager().beginTransaction()
