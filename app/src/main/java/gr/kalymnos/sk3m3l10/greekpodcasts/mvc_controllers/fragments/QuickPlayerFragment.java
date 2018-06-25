@@ -108,6 +108,8 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
         Intent intent = new Intent(getContext(), EpisodePlayActivity.class);
         intent.putExtra(Podcaster.PUSH_ID_KEY,getArguments().getString(Podcaster.PUSH_ID_KEY));
         intent.putExtra(Podcast.PODCAST_KEY,getArguments().getString(Podcast.PODCAST_KEY));
+        intent.putExtra(Podcast.LOCAL_DB_ID_KEY,getArguments().getString(Podcast.LOCAL_DB_ID_KEY));
+        
         startActivity(intent);
     }
 
