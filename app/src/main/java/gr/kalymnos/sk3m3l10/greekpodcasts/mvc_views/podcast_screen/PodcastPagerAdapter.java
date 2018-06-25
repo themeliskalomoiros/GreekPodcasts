@@ -44,10 +44,13 @@ public class PodcastPagerAdapter extends MainPagerAdapter {
             String posterUrl = podcast.getPosterUrl();
             String podcasterId = podcast.getPodcasterId();
             String episodesId = podcast.getEpisodesId();
+            int localDbId = podcast.getLocalDbId();
+
             allEpisodesArgs = new Bundle();
             allEpisodesArgs.putString(Podcast.POSTER_KEY, posterUrl);
             allEpisodesArgs.putString(Podcaster.PUSH_ID_KEY, podcasterId);
             allEpisodesArgs.putString(Episode.EPISODES_KEY, episodesId);
+            allEpisodesArgs.putInt(Podcast.LOCAL_DB_ID_KEY, localDbId);
 
             aboutPodcastArgs = new Bundle();
             aboutPodcastArgs.putString(Podcast.DESCRIPTION_KEY, podcast.getDescription());

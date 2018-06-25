@@ -2,7 +2,6 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
 import android.app.Activity;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -17,21 +16,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.PodcastWatchedEntry;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.PodcastActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_podcasts.AllPodcastsViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_podcasts.AllPodcastsViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_podcasts.PodcastsAdapter;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
 import static android.support.v4.app.LoaderManager.LoaderCallbacks;
+import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.PodcastWatchedEntry;
 import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_podcasts.AllPodcastsViewMvc.OnPodcastItemClickListener;
 
 public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickListener, LoaderCallbacks<List<Podcast>> {
@@ -210,6 +207,5 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
             values.put(PodcastWatchedEntry.COLUMN_NAME_FIREBASE_PUSH_ID, firebasePushId);
             return values;
         }
-
     }
 }
