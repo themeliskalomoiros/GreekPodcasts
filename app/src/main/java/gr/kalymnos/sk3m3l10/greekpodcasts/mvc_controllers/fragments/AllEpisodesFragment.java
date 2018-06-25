@@ -2,9 +2,12 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.HandlerThread;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,10 +24,13 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_episodes.AllEpisodesViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_episodes.AllEpisodesViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_episodes.EpisodesAdapter;
 import gr.kalymnos.sk3m3l10.greekpodcasts.playback_service.PlaybackService;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.LocalDatabaseUtils;
 
 public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.OnEpisodeClickListener,
         AllEpisodesViewMvc.OnPopUpMenuClickListener {
@@ -156,6 +162,13 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                             }
                         });
                         markPositionTask.start();
+
+                        //  Store episodes to local database
+                        int podcastLocalDbId = getArguments().getInt(Podcast.LOCAL_DB_ID_KEY);
+                        DatabaseOperations.countPodcastEpisodesTask(getActivity(),
+                                podcastLocalDbId,
+                                () -> DatabaseOperations.insertAllEpisodesTask(getContext(), podcastLocalDbId, children).execute(),
+                                () -> DatabaseOperations.insertOnlyNewEpisodesTask(getActivity(), podcastLocalDbId, children).execute());
                     }
 
                     @Override
@@ -198,6 +211,101 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
         int indexToSelectInTheList = viewMvc.getItemPositionFromMediaId(playingItemMediaId);
         if (indexToSelectInTheList != EpisodesAdapter.INVALID_INDEX_POSITION) {
             viewMvc.markSelectedPosition(indexToSelectInTheList);
+        }
+    }
+
+    private static class DatabaseOperations {
+
+        private static final int NO_EPISODES = 0;
+        private static final int FIRST_EPISODE = 0;
+
+        //  We need to get the count of the episodes that are saved in the local database.
+        //  In case of none the first episode of the new will be the current episode of the podcast by default.
+        static AsyncTask<Void, Void, Integer> countPodcastEpisodesTask(@NonNull Activity activity,
+                                                                       @NonNull int podcastLocalDbId,
+                                                                       Runnable insertAllEpisodes,
+                                                                       Runnable insertOnlyNewEpisodes) {
+            return new AsyncTask<Void, Void, Integer>() {
+
+                @Override
+                protected Integer doInBackground(Void... voids) {
+                    String selection = UserMetadataContract.EpisodeEntry.COLUMN_NAME_PODCAST + "= ?";
+                    String[] selectionArgs = new String[]{String.valueOf(podcastLocalDbId)};
+                    Cursor cursor = activity.getContentResolver().query(UserMetadataContract.EpisodeEntry.CONTENT_URI
+                            , null, selection, selectionArgs, null);
+                    if (cursor != null && cursor.getCount() > 0) {
+                        return cursor.getCount();
+                    } else {
+                        //  No episodes saved yet
+                        return NO_EPISODES;
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(Integer integer) {
+                    if (integer.intValue() != NO_EPISODES) {
+                        activity.runOnUiThread(insertOnlyNewEpisodes);
+                    } else {
+                        activity.runOnUiThread(insertAllEpisodes);
+                    }
+                }
+            };
+        }
+
+        static AsyncTask<Void, Void, Void> insertAllEpisodesTask(@NonNull Context context, int podcastLocalDbId,
+                                                                 @NonNull List<MediaBrowserCompat.MediaItem> mediaItems) {
+            return new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    if (mediaItems.size() > 0) {
+                        throw new UnsupportedOperationException(TAG + ": mediaItems list size is 0.");
+                    }
+
+                    for (int i = 0; i < mediaItems.size(); i++) {
+
+                        if (i == 0) {
+                            //  Special case: mark the first as the current item
+                            ContentValues podcastValues = new ContentValues();
+                            podcastValues.put(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_CURRENT_EPISODE, FIRST_EPISODE);
+                            LocalDatabaseUtils.updatePodcastCurrentEpisode(context, podcastLocalDbId, podcastValues);
+                        }
+
+                        LocalDatabaseUtils.insertEpisode(context, episodeValues(podcastLocalDbId, 0, null));
+                    }
+
+                    return null;
+                }
+            };
+        }
+
+        static AsyncTask<Void, Void, Void> insertOnlyNewEpisodesTask(@NonNull Activity activity, @NonNull int podcastLocalDbId,
+                                                                     @NonNull List<MediaBrowserCompat.MediaItem> mediaItems) {
+            return new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected Void doInBackground(Void... voids) {
+                    for (int i = 0; i < mediaItems.size(); i++) {
+
+                        Cursor cursor = LocalDatabaseUtils.queryEpisode(activity, mediaItems.get(i).getMediaId(), podcastLocalDbId);
+                        boolean episodeExist = cursor != null && cursor.getCount() != 0;
+
+                        if (!episodeExist) {
+                            cursor.close();
+
+                            LocalDatabaseUtils.insertEpisode(activity, episodeValues(podcastLocalDbId, 0, null));
+                        }
+                    }
+                    return null;
+                }
+            };
+        }
+
+        @NonNull
+        private static ContentValues episodeValues(int podcastLocalDbId, int currentPosition, String fileUri) {
+            ContentValues episodeValues = new ContentValues();
+            episodeValues.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_PODCAST, podcastLocalDbId);
+            episodeValues.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_CURRENT_PLAYBACK_POSITION, 0);
+            episodeValues.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI, fileUri);
+            return episodeValues;
         }
     }
 }
