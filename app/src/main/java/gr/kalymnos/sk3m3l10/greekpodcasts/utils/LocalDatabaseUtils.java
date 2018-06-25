@@ -9,12 +9,14 @@ import android.support.annotation.NonNull;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
 
 public class LocalDatabaseUtils {
+
+    //  TODO:   Close all the cursors in the app
+
     private LocalDatabaseUtils() {
 
     }
 
-    public static Uri insertEpisode(@NonNull Context context, int currentPlaybackPosition,
-                                    String fileUri, @NonNull int podcastLocalDbId, ContentValues values) {
+    public static Uri insertEpisode(@NonNull Context context, ContentValues values) {
         return context.getContentResolver().insert(UserMetadataContract.EpisodeEntry.CONTENT_URI, values);
     }
 
