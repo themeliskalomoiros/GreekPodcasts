@@ -132,7 +132,7 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
     private static class DatabaseOperations {
 
         private static final int EXACTLY_ONE_PODCAST = 1;
-        private static final int INVALIDE_EPISODE_ID = -1;
+        private static final int FIRST_EPISODE_ID = 0;
 
         static AsyncTask<Void, Void, Boolean> findPodcastInLocalDatabaseTask(@NonNull Activity activity, @NonNull Podcast podcast,
                                                                              Runnable action) {
@@ -172,10 +172,10 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
                         //  Insert the podcast and execute the same action (navigate to another activity)
                         insertPodcastTask(activity, PodcastWatchedEntry.CONTENT_URI,
                                 DatabaseOperations.contentValuesToInsertPodcast(false,
-                                        INVALIDE_EPISODE_ID,
+                                        FIRST_EPISODE_ID,
                                         podcast.getFirebasePushId()),
                                 podcast,
-                                action);
+                                action).execute();
                     }
                 }
             };
