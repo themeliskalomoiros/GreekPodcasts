@@ -16,6 +16,20 @@ public class LocalDatabaseUtils {
 
     }
 
+    public static Cursor queryPodcast(@NonNull Context context, @NonNull int podcastLocalDbId) {
+
+        Uri contentUriWithAppendedId = UserMetadataContract.PodcastWatchedEntry.CONTENT_URI
+                .buildUpon()
+                .appendPath(String.valueOf(podcastLocalDbId))
+                .build();
+
+        return context.getContentResolver().query(contentUriWithAppendedId,
+                null,
+                null,
+                null,
+                null);
+    }
+
     public static Uri insertEpisode(@NonNull Context context, ContentValues values) {
         return context.getContentResolver().insert(UserMetadataContract.EpisodeEntry.CONTENT_URI, values);
     }
@@ -50,6 +64,6 @@ public class LocalDatabaseUtils {
                 .build();
 
         return context.getContentResolver()
-                .update(contentUriWithAppendedId, values,null,null);
+                .update(contentUriWithAppendedId, values, null, null);
     }
 }
