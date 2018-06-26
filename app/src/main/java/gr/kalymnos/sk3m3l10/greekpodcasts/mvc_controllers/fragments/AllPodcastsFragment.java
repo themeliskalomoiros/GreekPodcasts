@@ -202,7 +202,11 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
 
         static ContentValues contentValuesToInsertPodcast(boolean starred, int currentEpisodeId, String firebasePushId) {
             ContentValues values = new ContentValues();
-            values.put(PodcastWatchedEntry.COLUMN_NAME_STARRED, starred);
+            if (starred){
+                values.put(PodcastWatchedEntry.COLUMN_NAME_STARRED, 1);
+            }else{
+                values.put(PodcastWatchedEntry.COLUMN_NAME_STARRED, 0);
+            }
             values.put(PodcastWatchedEntry.COLUMN_NAME_CURRENT_EPISODE, currentEpisodeId);
             values.put(PodcastWatchedEntry.COLUMN_NAME_FIREBASE_PUSH_ID, firebasePushId);
             return values;
