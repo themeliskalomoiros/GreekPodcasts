@@ -44,10 +44,12 @@ public class LocalDatabaseUtils {
          *   Here the SET role is played by ContentValues*/
 
 
-        String selection = UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_FIREBASE_PUSH_ID + " = ?";
-        String[] selectionArgs = new String[]{String.valueOf(podcastLocalDatabaseId)};
+        Uri contentUriWithAppendedId = UserMetadataContract.PodcastWatchedEntry.CONTENT_URI
+                .buildUpon()
+                .appendEncodedPath(String.valueOf(podcastLocalDatabaseId))
+                .build();
 
         return context.getContentResolver()
-                .update(UserMetadataContract.PodcastWatchedEntry.CONTENT_URI, values, selection, selectionArgs);
+                .update(contentUriWithAppendedId, values,null,null);
     }
 }
