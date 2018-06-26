@@ -46,8 +46,8 @@ public class LocalDatabaseUtils {
                 null);
     }
 
-    public static int updatePodcastCurrentEpisode(@NonNull Context context, @NonNull int podcastLocalDatabaseId,
-                                                  @NonNull ContentValues values) {
+    public static int updatePodcastTask(@NonNull Context context, @NonNull int podcastLocalDatabaseId,
+                                        @NonNull ContentValues values) {
         /*  SQL Update Statement
          *
          *   UPDATE table_name

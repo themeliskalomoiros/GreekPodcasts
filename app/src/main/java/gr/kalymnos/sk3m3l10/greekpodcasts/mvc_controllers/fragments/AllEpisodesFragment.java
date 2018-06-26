@@ -271,7 +271,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                             //  Special case: mark the first as the current item
                             ContentValues podcastValues = new ContentValues();
                             podcastValues.put(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_CURRENT_EPISODE, FIRST_EPISODE);
-                            LocalDatabaseUtils.updatePodcastCurrentEpisode(context, podcastLocalDbId, podcastValues);
+                            LocalDatabaseUtils.updatePodcastTask(context, podcastLocalDbId, podcastValues);
                         }
 
                         LocalDatabaseUtils.insertEpisode(context, episodeValues(podcastLocalDbId,
