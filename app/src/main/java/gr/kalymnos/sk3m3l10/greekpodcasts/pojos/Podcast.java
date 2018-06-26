@@ -36,6 +36,29 @@ public class Podcast implements Parcelable{
         this.episodesId = episodesId;
     }
 
+    protected Podcast(Parcel in) {
+        title = in.readString();
+        categoryId = in.readString();
+        posterUrl = in.readString();
+        description = in.readString();
+        podcasterId = in.readString();
+        firebasePushId = in.readString();
+        episodesId = in.readString();
+        localDbId = in.readInt();
+    }
+
+    public static final Creator<Podcast> CREATOR = new Creator<Podcast>() {
+        @Override
+        public Podcast createFromParcel(Parcel in) {
+            return new Podcast(in);
+        }
+
+        @Override
+        public Podcast[] newArray(int size) {
+            return new Podcast[size];
+        }
+    };
+
     public String getTitle() {
         return title;
     }
@@ -76,41 +99,20 @@ public class Podcast implements Parcelable{
         this.localDbId = localDbId;
     }
 
-    protected Podcast(Parcel in) {
-        title = in.readString();
-        categoryId = in.readString();
-        posterUrl = in.readString();
-        description = in.readString();
-        podcasterId = in.readString();
-        firebasePushId = in.readString();
-        episodesId = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(title);
-        dest.writeString(categoryId);
-        dest.writeString(posterUrl);
-        dest.writeString(description);
-        dest.writeString(podcasterId);
-        dest.writeString(firebasePushId);
-        dest.writeString(episodesId);
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
-    public static final Creator<Podcast> CREATOR = new Creator<Podcast>() {
-        @Override
-        public Podcast createFromParcel(Parcel in) {
-            return new Podcast(in);
-        }
-
-        @Override
-        public Podcast[] newArray(int size) {
-            return new Podcast[size];
-        }
-    };
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeString(categoryId);
+        parcel.writeString(posterUrl);
+        parcel.writeString(description);
+        parcel.writeString(podcasterId);
+        parcel.writeString(firebasePushId);
+        parcel.writeString(episodesId);
+        parcel.writeInt(localDbId);
+    }
 }
