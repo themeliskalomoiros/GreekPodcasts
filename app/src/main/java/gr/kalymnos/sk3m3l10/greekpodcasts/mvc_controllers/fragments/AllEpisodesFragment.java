@@ -106,6 +106,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
         if (MediaControllerCompat.getMediaController(getActivity()) != null) {
             MediaControllerCompat.getMediaController(getActivity()).unregisterCallback(mediaControllerCallback);
         }
+        this.mediaBrowser.unsubscribe(mediaBrowser.getRoot());
         this.mediaBrowser.disconnect();
     }
 
