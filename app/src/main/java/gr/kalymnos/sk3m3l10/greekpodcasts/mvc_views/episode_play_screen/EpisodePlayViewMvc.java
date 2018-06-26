@@ -32,6 +32,10 @@ public interface EpisodePlayViewMvc extends ViewMvc {
 
     void bindPoster(String url);
 
+    void drawStar();
+
+    void unDrawStar();
+
     void bindPoster(Bitmap bitmap);
 
     void bindPodcaster(String name);
