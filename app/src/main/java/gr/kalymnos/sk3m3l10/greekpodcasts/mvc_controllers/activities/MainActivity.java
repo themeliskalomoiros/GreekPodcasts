@@ -1,9 +1,8 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.widget.Toast;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.main_screen.MainViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.main_screen.MainViewMvcImpl;
@@ -25,7 +24,6 @@ public class MainActivity extends AppCompatActivity implements MainViewMvc.OnAct
     @Override
     public void onActionCreatePodcastClick() {
         //  TODO:   Implement the create podcast action
-        Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
     }
 
     private void initializeViewMvc() {

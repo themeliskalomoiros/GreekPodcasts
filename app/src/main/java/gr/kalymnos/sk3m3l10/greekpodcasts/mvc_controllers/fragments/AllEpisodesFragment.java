@@ -168,7 +168,8 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                         DatabaseOperations.countPodcastEpisodesTask(getActivity(),
                                 podcastLocalDbId,
                                 () -> DatabaseOperations.insertAllEpisodesTask(getContext(), podcastLocalDbId, children).execute(),
-                                () -> DatabaseOperations.insertOnlyNewEpisodesTask(getActivity(), podcastLocalDbId, children).execute());
+                                () -> DatabaseOperations.insertOnlyNewEpisodesTask(getActivity(), podcastLocalDbId, children).execute())
+                                .execute();
                     }
 
                     @Override
@@ -234,7 +235,9 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                     Cursor cursor = activity.getContentResolver().query(UserMetadataContract.EpisodeEntry.CONTENT_URI
                             , null, selection, selectionArgs, null);
                     if (cursor != null && cursor.getCount() > 0) {
-                        return cursor.getCount();
+                        int count = cursor.getCount();
+                        cursor.close();
+                        return count;
                     } else {
                         //  No episodes saved yet
                         return NO_EPISODES;
@@ -243,10 +246,10 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
 
                 @Override
                 protected void onPostExecute(Integer integer) {
-                    if (integer.intValue() != NO_EPISODES) {
-                        activity.runOnUiThread(insertOnlyNewEpisodes);
-                    } else {
+                    if (integer.intValue() == NO_EPISODES) {
                         activity.runOnUiThread(insertAllEpisodes);
+                    } else {
+                        activity.runOnUiThread(insertOnlyNewEpisodes);
                     }
                 }
             };
@@ -257,7 +260,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
             return new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected Void doInBackground(Void... voids) {
-                    if (mediaItems.size() > 0) {
+                    if (mediaItems.size() == 0) {
                         throw new UnsupportedOperationException(TAG + ": mediaItems list size is 0.");
                     }
 
@@ -270,7 +273,8 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                             LocalDatabaseUtils.updatePodcastCurrentEpisode(context, podcastLocalDbId, podcastValues);
                         }
 
-                        LocalDatabaseUtils.insertEpisode(context, episodeValues(podcastLocalDbId, 0, null));
+                        LocalDatabaseUtils.insertEpisode(context, episodeValues(podcastLocalDbId,
+                                0, null, mediaItems.get(i).getMediaId()));
                     }
 
                     return null;
@@ -291,7 +295,8 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                         if (!episodeExist) {
                             cursor.close();
 
-                            LocalDatabaseUtils.insertEpisode(activity, episodeValues(podcastLocalDbId, 0, null));
+                            LocalDatabaseUtils.insertEpisode(activity, episodeValues(podcastLocalDbId,
+                                    0, null, mediaItems.get(i).getMediaId()));
                         }
                     }
                     return null;
@@ -300,11 +305,12 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
         }
 
         @NonNull
-        private static ContentValues episodeValues(int podcastLocalDbId, int currentPosition, String fileUri) {
+        private static ContentValues episodeValues(int podcastLocalDbId, int currentPosition, String fileUri, String episodePushId) {
             ContentValues episodeValues = new ContentValues();
             episodeValues.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_PODCAST, podcastLocalDbId);
             episodeValues.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_CURRENT_PLAYBACK_POSITION, 0);
             episodeValues.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI, fileUri);
+            episodeValues.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_FIREBASE_PUSH_ID, episodePushId);
             return episodeValues;
         }
     }
