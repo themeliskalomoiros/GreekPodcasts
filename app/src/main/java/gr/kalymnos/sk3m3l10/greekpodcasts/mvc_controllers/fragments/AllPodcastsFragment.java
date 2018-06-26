@@ -132,7 +132,7 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
     private static class DatabaseOperations {
 
         private static final int EXACTLY_ONE_PODCAST = 1;
-        private static final int FIRST_EPISODE_ID = 0;
+        private static final int FIRST_EPISODE_ID = 1;
 
         static AsyncTask<Void, Void, Boolean> findPodcastInLocalDatabaseTask(@NonNull Activity activity, @NonNull Podcast podcast,
                                                                              Runnable action) {
