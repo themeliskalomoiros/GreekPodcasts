@@ -1,9 +1,14 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities;
 
+import android.app.Activity;
 import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.media.AudioManager;
+import android.os.AsyncTask;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -11,15 +16,17 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.playback_service.PlaybackService;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.LocalDatabaseUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 
 public class EpisodePlayActivity extends AppCompatActivity implements EpisodePlayViewMvc.OnActionButtonsClickListener,
@@ -67,7 +74,16 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onStarClick() {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        int podcastLocalDbId = getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY);
+
+        Runnable starPodcastAction = () -> DatabaseOperations.starPodcastTask(this, podcastLocalDbId, true,
+                () -> viewMvc.drawStar(), () -> viewMvc.unDrawStar()).execute();
+
+        Runnable unStarPodcastAction = () -> DatabaseOperations.starPodcastTask(this, podcastLocalDbId, false,
+                () -> viewMvc.drawStar(), () -> viewMvc.unDrawStar()).execute();
+
+        DatabaseOperations.clickPodcastTask(this, podcastLocalDbId, starPodcastAction, unStarPodcastAction)
+                .execute();
     }
 
     @Override
@@ -100,8 +116,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                 //  Typically because of the time interval where the thread updates the seekbar
                 //  the progress of the seekbar may not be exactly the same as the duration,
                 //  but if it's less than a second its almost the same
-                boolean positionEqualsDuration = Math.abs(viewMvc.getSeekBarProgress()-duration)<800;
-                if ( positionEqualsDuration) {
+                boolean positionEqualsDuration = Math.abs(viewMvc.getSeekBarProgress() - duration) < 800;
+                if (positionEqualsDuration) {
                     //  media bar reached the end, reset it to seekTo from the begining
                     viewMvc.resetSeekBarProgress();
                 }
@@ -142,8 +158,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onPodcasterClick() {
-        Intent intent = new Intent(this,PodcasterActivity.class);
-        intent.putExtra(Podcaster.PUSH_ID_KEY,getIntent().getExtras().getString(Podcaster.PUSH_ID_KEY));
+        Intent intent = new Intent(this, PodcasterActivity.class);
+        intent.putExtra(Podcaster.PUSH_ID_KEY, getIntent().getExtras().getString(Podcaster.PUSH_ID_KEY));
         startActivity(intent);
     }
 
@@ -314,5 +330,87 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         viewMvc.setOnTransportControlsClickListener(this);
         viewMvc.setSeekBarChangeListener(this);
         setSupportActionBar(viewMvc.getToolbar());
+        DatabaseOperations.isPodcastStarredTask(this,
+                getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
+                () -> viewMvc.drawStar(),
+                () -> viewMvc.unDrawStar()).execute();
+    }
+
+    private static class DatabaseOperations {
+
+        private static final int ONE_EPISODE = 1;
+        private static final String TAG = DatabaseOperations.class.getSimpleName();
+
+        static AsyncTask<Void, Void, Cursor> isPodcastStarredTask(@NonNull Activity activity, int podcastLocalDatabaseId, Runnable drawStarAction, Runnable undrawStarAction) {
+            return new AsyncTask<Void, Void, Cursor>() {
+
+                @Override
+                protected Cursor doInBackground(Void... voids) {
+                    return LocalDatabaseUtils.queryPodcast(activity, podcastLocalDatabaseId);
+                }
+
+                @Override
+                protected void onPostExecute(Cursor cursor) {
+                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
+
+                        cursor.moveToFirst();
+
+                        int starredIndex = cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED);
+                        boolean isPodcastStarred = cursor.getInt(starredIndex) == 0 ? false : true;
+
+                        if (isPodcastStarred) {
+                            activity.runOnUiThread(drawStarAction);
+                        } else {
+                            activity.runOnUiThread(undrawStarAction);
+                        }
+
+                    } else {
+                        throw new UnsupportedOperationException(TAG + ": Null cursor or its size is 0.");
+                    }
+                }
+            };
+        }
+
+        static AsyncTask<Void, Void, Cursor> clickPodcastTask(@NonNull Activity activity, int podcastLocalDatabaseId, Runnable starPodcastAction, Runnable unStarPodcastAction) {
+            return new AsyncTask<Void, Void, Cursor>() {
+
+                @Override
+                protected Cursor doInBackground(Void... voids) {
+                    return LocalDatabaseUtils.queryPodcast(activity, podcastLocalDatabaseId);
+                }
+
+                @Override
+                protected void onPostExecute(Cursor cursor) {
+                    boolean isPodcastStarred = cursor != null && cursor.getCount() > 0;
+                    if (isPodcastStarred) {
+                        activity.runOnUiThread(unStarPodcastAction);
+                    } else {
+                        activity.runOnUiThread(starPodcastAction);
+                    }
+                }
+            };
+        }
+
+        static AsyncTask<Void, Void, Integer> starPodcastTask(@NonNull Activity activity, int podcastLocalDatabaseId,
+                                                              boolean setStarred, Runnable drawStarAction, Runnable undrawStarAction) {
+            return new AsyncTask<Void, Void, Integer>() {
+
+                @Override
+                protected Integer doInBackground(Void... voids) {
+                    ContentValues values = new ContentValues();
+                    values.put(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED, setStarred);
+                    return LocalDatabaseUtils.updatePodcastTask(activity, podcastLocalDatabaseId, values);
+                }
+
+                @Override
+                protected void onPostExecute(Integer integer) {
+                    if (integer.intValue() == ONE_EPISODE) {
+                        activity.runOnUiThread(drawStarAction);
+                    } else {
+                        activity.runOnUiThread(undrawStarAction);
+                    }
+                }
+            };
+        }
     }
 }
