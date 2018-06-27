@@ -381,11 +381,16 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                 @Override
                 protected void onPostExecute(Cursor cursor) {
-                    boolean isPodcastStarred = cursor != null && cursor.getCount() > 0;
-                    if (isPodcastStarred) {
-                        activity.runOnUiThread(unStarPodcastAction);
+                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
+                        cursor.moveToFirst();
+                        boolean isPodcastStarred = cursor.getInt(cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED)) != 0;
+                        if (isPodcastStarred) {
+                            activity.runOnUiThread(unStarPodcastAction);
+                        } else {
+                            activity.runOnUiThread(starPodcastAction);
+                        }
                     } else {
-                        activity.runOnUiThread(starPodcastAction);
+                        throw new UnsupportedOperationException(TAG + ": Cursor is null or 0 size.");
                     }
                 }
             };
@@ -405,9 +410,12 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                 @Override
                 protected void onPostExecute(Integer integer) {
                     if (integer.intValue() == ONE_EPISODE) {
-                        activity.runOnUiThread(drawStarAction);
-                    } else {
-                        activity.runOnUiThread(undrawStarAction);
+                        //  Podcast updated successfuly
+                        if (setStarred) {
+                            activity.runOnUiThread(drawStarAction);
+                        } else {
+                            activity.runOnUiThread(undrawStarAction);
+                        }
                     }
                 }
             };
