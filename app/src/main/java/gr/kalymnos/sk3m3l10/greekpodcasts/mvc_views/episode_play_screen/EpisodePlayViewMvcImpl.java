@@ -36,12 +36,12 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
     }
 
     @Override
-    public void drawStar() {
+    public void drawStarButton() {
         star.setImageResource(R.drawable.ic_star_pink_40dp);
     }
 
     @Override
-    public void unDrawStar() {
+    public void unDrawStarButton() {
         star.setImageResource(R.drawable.ic_star_white_40dp);
     }
 

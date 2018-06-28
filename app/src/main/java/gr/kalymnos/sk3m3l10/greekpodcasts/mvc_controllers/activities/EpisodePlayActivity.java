@@ -77,10 +77,10 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         int podcastLocalDbId = getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY);
 
         Runnable starPodcastAction = () -> DatabaseOperations.starPodcastTask(this, podcastLocalDbId, true,
-                () -> viewMvc.drawStar(), () -> viewMvc.unDrawStar()).execute();
+                () -> viewMvc.drawStarButton(), () -> viewMvc.unDrawStarButton()).execute();
 
         Runnable unStarPodcastAction = () -> DatabaseOperations.starPodcastTask(this, podcastLocalDbId, false,
-                () -> viewMvc.drawStar(), () -> viewMvc.unDrawStar()).execute();
+                () -> viewMvc.drawStarButton(), () -> viewMvc.unDrawStarButton()).execute();
 
         DatabaseOperations.clickPodcastTask(this, podcastLocalDbId, starPodcastAction, unStarPodcastAction)
                 .execute();
@@ -332,8 +332,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         setSupportActionBar(viewMvc.getToolbar());
         DatabaseOperations.isPodcastStarredTask(this,
                 getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
-                () -> viewMvc.drawStar(),
-                () -> viewMvc.unDrawStar()).execute();
+                () -> viewMvc.drawStarButton(),
+                () -> viewMvc.unDrawStarButton()).execute();
     }
 
     private static class DatabaseOperations {
