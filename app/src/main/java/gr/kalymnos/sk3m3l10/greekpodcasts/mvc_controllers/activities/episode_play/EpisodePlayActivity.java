@@ -32,7 +32,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.utils.LocalDatabaseUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 
 public class EpisodePlayActivity extends AppCompatActivity implements EpisodePlayViewMvc.OnActionButtonsClickListener,
-        EpisodePlayViewMvc.OnTransportControlsClickListener, EpisodePlayViewMvc.OnPodcasterClickListener, SeekBar.OnSeekBarChangeListener {
+        EpisodePlayViewMvc.OnTransportControlsClickListener, EpisodePlayViewMvc.OnPodcasterClickListener, SeekBar.OnSeekBarChangeListener,
+        DownloadAudioService.OnDownloadAudioFileListener {
 
     private static final long SEEKBAR_UPDATE_INTERVAL = 500;
     private EpisodePlayViewMvc viewMvc;
@@ -40,9 +41,6 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     private MediaBrowserCompat mediaBrowser;
     private ConnectionCallback connectionCallback;
     private MediaControllerCompat.Callback mediaControllerCallback;
-
-    //  Will be used to query current episode's status
-    private String cachedEpisodePushId;
 
     private Thread updateMediaBarTask;
 
@@ -93,7 +91,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onDownloadClick() {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+//        MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
+//        DownloadAudioService.startActionDownloadAudio(this, );
     }
 
     @Override
@@ -199,6 +198,16 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     }
 
+    @Override
+    public void onDownloadCompleted(String episodeName) {
+        viewMvc.drawDownloadButton();
+    }
+
+    @Override
+    public void onDownloadError(String errorMessage) {
+        viewMvc.unDrawDownloadButton();
+    }
+
     private class ConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
 
         @Override
@@ -237,7 +246,6 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                     @Override
                     public void onMetadataChanged(MediaMetadataCompat metadata) {
-                        cachedEpisodePushId = metadata.getDescription().getMediaId();
                         updateUiFromMetadata(metadata);
                     }
                 });
@@ -254,7 +262,6 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                 MediaMetadataCompat metadata = mediaController.getMetadata();
                 if (metadata != null) {
-                    cachedEpisodePushId = metadata.getDescription().getMediaId();
                     updateUiFromMetadata(metadata);
                 }
             } catch (RemoteException e) {
@@ -283,7 +290,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
             viewMvc.bindPlaybackDuration(PlaybackUtils.playbackPositionString(durationMilli));
 
             DatabaseOperations.isDownloadedTask(EpisodePlayActivity.this,
-                    cachedEpisodePushId, getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
+                    getCurrentEpisodePushId(), getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
                     () -> viewMvc.drawDownloadButton(),
                     () -> viewMvc.unDrawDownloadButton())
                     .execute();
@@ -321,6 +328,17 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         if (!updateMediaBarTask.isAlive()) {
             updateMediaBarTask.start();
         }
+    }
+
+    private String getCurrentEpisodePushId() {
+        MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
+        if (controller != null) {
+            MediaMetadataCompat metadata = controller.getMetadata();
+            if (metadata!=null){
+                return metadata.getDescription().getMediaId();
+            }
+        }
+        return null;
     }
 
     private void stopUpdatingMediabar() {

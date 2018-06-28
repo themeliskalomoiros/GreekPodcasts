@@ -19,8 +19,6 @@ import java.net.URLConnection;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
-import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
-import gr.kalymnos.sk3m3l10.greekpodcasts.utils.LocalDatabaseUtils;
 
 public class DownloadAudioService extends IntentService {
     private static final String ACTION_DOWNLOAD_AUDIO = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.episode_play.action.download_audio";
@@ -33,7 +31,7 @@ public class DownloadAudioService extends IntentService {
     public interface OnDownloadAudioFileListener {
         void onDownloadCompleted(String episodeName);
 
-        void onError(String errorMessage);
+        void onDownloadError(String errorMessage);
     }
 
     private static OnDownloadAudioFileListener callback;
@@ -117,9 +115,9 @@ public class DownloadAudioService extends IntentService {
             return Uri.fromFile(audioFile);
 
         } catch (MalformedURLException e) {
-            callback.onError(e.getMessage());
+            callback.onDownloadError(e.getMessage());
         } catch (IOException e) {
-            callback.onError(e.getMessage());
+            callback.onDownloadError(e.getMessage());
         }
 
         return null;
