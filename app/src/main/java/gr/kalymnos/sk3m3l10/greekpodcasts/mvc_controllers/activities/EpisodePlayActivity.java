@@ -426,11 +426,21 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
             };
         }
 
-        static AsyncTask<Void,Void,Boolean> isDownloadedTask(){
-            return new AsyncTask<Void, Void, Boolean>() {
+        static AsyncTask<Void, Void, Cursor> isDownloadedTask(@NonNull Activity activity, @NonNull String episodePushId, int podcastLocalDbId,
+                                                              Runnable actionIfDownloaded, Runnable actionIfNotDownloaded) {
+            return new AsyncTask<Void, Void, Cursor>() {
                 @Override
-                protected Boolean doInBackground(Void... voids) {
-                    return null;
+                protected Cursor doInBackground(Void... voids) {
+                    return LocalDatabaseUtils.queryEpisode(activity, episodePushId, podcastLocalDbId);
+                }
+
+                @Override
+                protected void onPostExecute(Cursor cursor) {
+                    if (cursor!=null && cursor.getCount()==ONE_EPISODE){
+                        activity.runOnUiThread(actionIfDownloaded);
+                    }else {
+                        activity.runOnUiThread(actionIfNotDownloaded);
+                    }
                 }
             };
         }
