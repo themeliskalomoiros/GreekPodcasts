@@ -98,7 +98,8 @@ public class DateUtils {
     }
 
     public static String dateRFC3339(long millis) {
-        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")
+        //  TODO: This used to popup an error...
+        return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .format(new Date(millis));
     }
 }
