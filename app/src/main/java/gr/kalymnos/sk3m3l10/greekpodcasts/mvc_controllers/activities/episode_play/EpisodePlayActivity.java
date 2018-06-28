@@ -16,6 +16,7 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.SeekBar;
 import android.widget.Toast;
@@ -433,17 +434,27 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
             };
         }
 
-        static AsyncTask<Void, Void, Cursor> isDownloadedTask(@NonNull Activity activity, @NonNull String episodePushId, int podcastLocalDbId,
-                                                              Runnable actionIfDownloaded, Runnable actionIfNotDownloaded) {
-            return new AsyncTask<Void, Void, Cursor>() {
+        static AsyncTask<Void, Void, Boolean> isDownloadedTask(@NonNull Activity activity, @NonNull String episodePushId, int podcastLocalDbId,
+                                                               Runnable actionIfDownloaded, Runnable actionIfNotDownloaded) {
+            return new AsyncTask<Void, Void, Boolean>() {
                 @Override
-                protected Cursor doInBackground(Void... voids) {
-                    return LocalDatabaseUtils.queryEpisode(activity, episodePushId, podcastLocalDbId);
+                protected Boolean doInBackground(Void... voids) {
+                    Cursor cursor = LocalDatabaseUtils.queryEpisode(activity, episodePushId, podcastLocalDbId);
+                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
+                        cursor.moveToFirst();
+                        int uriColumnIndex = cursor.getColumnIndex(UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI);
+                        String episodeUri = cursor.getString(uriColumnIndex);
+                        if (!TextUtils.isEmpty(episodeUri)) {
+                            return true;
+                        }
+                        return false;
+                    }
+                    return false;
                 }
 
                 @Override
-                protected void onPostExecute(Cursor cursor) {
-                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
+                protected void onPostExecute(Boolean uriExists) {
+                    if (uriExists) {
                         activity.runOnUiThread(actionIfDownloaded);
                     } else {
                         activity.runOnUiThread(actionIfNotDownloaded);
