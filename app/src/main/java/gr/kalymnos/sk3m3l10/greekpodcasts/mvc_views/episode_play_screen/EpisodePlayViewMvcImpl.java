@@ -46,6 +46,16 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
     }
 
     @Override
+    public void drawDownloadButton() {
+        download.setImageResource(R.drawable.ic_file_download_pink_40dp);
+    }
+
+    @Override
+    public void unDrawDownloadButton() {
+        download.setImageResource(R.drawable.ic_file_download_white_40dp);
+    }
+
+    @Override
     public void bindPoster(Bitmap bitmap) {
         poster.setImageBitmap(bitmap);
     }

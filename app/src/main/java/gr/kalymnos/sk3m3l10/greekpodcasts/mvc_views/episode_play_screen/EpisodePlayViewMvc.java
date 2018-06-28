@@ -26,7 +26,7 @@ public interface EpisodePlayViewMvc extends ViewMvc {
         void onSkipToPreviousButtonClick();
     }
 
-    interface OnPodcasterClickListener{
+    interface OnPodcasterClickListener {
         void onPodcasterClick();
     }
 
@@ -35,6 +35,10 @@ public interface EpisodePlayViewMvc extends ViewMvc {
     void drawStarButton();
 
     void unDrawStarButton();
+
+    void drawDownloadButton();
+
+    void unDrawDownloadButton();
 
     void bindPoster(Bitmap bitmap);
 
