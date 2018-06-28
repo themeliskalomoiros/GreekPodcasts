@@ -57,4 +57,7 @@
     <string name="joined_date_prefix">Joined on </string>
     <string name="mediaplayer_unknown_error">Unknown error!</string>
     <string name="mediaplayer_server_died_error">Error: Server died!</string>
+    <string name="downloading_label">Downloading...</string>
+    <string name="download_completed">Download completed</string>
+    <string name="download_error">Couldn\'t download the file</string>
 </resources>

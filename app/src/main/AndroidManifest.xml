@@ -41,17 +41,20 @@
         <activity
             android:name=".mvc_controllers.activities.episode_play.EpisodePlayActivity"
             android:launchMode="singleTop"
-            android:parentActivityName=".mvc_controllers.activities.PodcastActivity"></activity>
+            android:parentActivityName=".mvc_controllers.activities.PodcastActivity" />
         <activity
             android:name=".mvc_controllers.activities.PodcasterActivity"
-            android:parentActivityName=".mvc_controllers.activities.episode_play.EpisodePlayActivity"></activity>
+            android:parentActivityName=".mvc_controllers.activities.episode_play.EpisodePlayActivity" />
 
         <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
+        <service
+            android:name=".mvc_controllers.activities.episode_play.DownloadAudioService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
