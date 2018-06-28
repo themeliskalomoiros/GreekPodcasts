@@ -235,8 +235,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                     @Override
                     public void onMetadataChanged(MediaMetadataCompat metadata) {
-                        updateUiFromMetadata(metadata);
                         cachedEpisodePushId = metadata.getDescription().getMediaId();
+                        updateUiFromMetadata(metadata);
                     }
                 });
 
@@ -252,8 +252,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                 MediaMetadataCompat metadata = mediaController.getMetadata();
                 if (metadata != null) {
-                    updateUiFromMetadata(metadata);
                     cachedEpisodePushId = metadata.getDescription().getMediaId();
+                    updateUiFromMetadata(metadata);
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -279,6 +279,12 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
             long durationMilli = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
             viewMvc.bindSeekBarMax((int) durationMilli);
             viewMvc.bindPlaybackDuration(PlaybackUtils.playbackPositionString(durationMilli));
+
+            DatabaseOperations.isDownloadedTask(EpisodePlayActivity.this,
+                    cachedEpisodePushId, getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
+                    () -> viewMvc.drawDownloadButton(),
+                    () -> viewMvc.unDrawDownloadButton())
+                    .execute();
         }
     }
 
@@ -436,9 +442,9 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                 @Override
                 protected void onPostExecute(Cursor cursor) {
-                    if (cursor!=null && cursor.getCount()==ONE_EPISODE){
+                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
                         activity.runOnUiThread(actionIfDownloaded);
-                    }else {
+                    } else {
                         activity.runOnUiThread(actionIfNotDownloaded);
                     }
                 }
