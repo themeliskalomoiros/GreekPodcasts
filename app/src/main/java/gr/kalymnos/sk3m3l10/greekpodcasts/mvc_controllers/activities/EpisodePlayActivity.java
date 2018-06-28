@@ -39,6 +39,9 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     private ConnectionCallback connectionCallback;
     private MediaControllerCompat.Callback mediaControllerCallback;
 
+    //  Will be used to query current episode's status
+    private String cachedEpisodePushId;
+
     private Thread updateMediaBarTask;
 
     @Override
@@ -233,6 +236,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                     @Override
                     public void onMetadataChanged(MediaMetadataCompat metadata) {
                         updateUiFromMetadata(metadata);
+                        cachedEpisodePushId = metadata.getDescription().getMediaId();
                     }
                 });
 
@@ -249,6 +253,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                 MediaMetadataCompat metadata = mediaController.getMetadata();
                 if (metadata != null) {
                     updateUiFromMetadata(metadata);
+                    cachedEpisodePushId = metadata.getDescription().getMediaId();
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -417,6 +422,15 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                             activity.runOnUiThread(undrawStarAction);
                         }
                     }
+                }
+            };
+        }
+
+        static AsyncTask<Void,Void,Boolean> isDownloadedTask(){
+            return new AsyncTask<Void, Void, Boolean>() {
+                @Override
+                protected Boolean doInBackground(Void... voids) {
+                    return null;
                 }
             };
         }
