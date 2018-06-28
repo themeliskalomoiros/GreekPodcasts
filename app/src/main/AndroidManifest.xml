@@ -39,12 +39,12 @@
             android:exported="false" />
 
         <activity
-            android:name=".mvc_controllers.activities.EpisodePlay.EpisodePlayActivity"
+            android:name=".mvc_controllers.activities.episode_play.EpisodePlayActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".mvc_controllers.activities.PodcastActivity"></activity>
         <activity
             android:name=".mvc_controllers.activities.PodcasterActivity"
-            android:parentActivityName=".mvc_controllers.activities.EpisodePlay.EpisodePlayActivity"></activity>
+            android:parentActivityName=".mvc_controllers.activities.episode_play.EpisodePlayActivity"></activity>
 
         <receiver android:name="android.support.v4.media.session.MediaButtonReceiver">
             <intent-filter>

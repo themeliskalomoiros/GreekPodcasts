@@ -1,4 +1,4 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.EpisodePlay;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.episode_play;
 
 import android.app.Activity;
 import android.content.ComponentName;
