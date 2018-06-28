@@ -91,8 +91,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onDownloadClick() {
-//        MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
-//        DownloadAudioService.startActionDownloadAudio(this, );
+        MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
+        DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), );
     }
 
     @Override
@@ -334,8 +334,19 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
         if (controller != null) {
             MediaMetadataCompat metadata = controller.getMetadata();
-            if (metadata!=null){
+            if (metadata != null) {
                 return metadata.getDescription().getMediaId();
+            }
+        }
+        return null;
+    }
+
+    private String getCurrentEpisodeUrl() {
+        MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
+        if (controller != null) {
+            MediaMetadataCompat metadata = controller.getMetadata();
+            if (metadata != null) {
+                return metadata.getDescription().getMediaUri().toString();
             }
         }
         return null;
@@ -370,6 +381,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     private static class DatabaseOperations {
 
         private static final int ONE_EPISODE = 1;
+        private static final int INVALID_ID = -1;
         private static final String TAG = DatabaseOperations.class.getSimpleName();
 
         static AsyncTask<Void, Void, Cursor> isPodcastStarredTask(@NonNull Activity activity, int podcastLocalDatabaseId, Runnable drawStarAction, Runnable undrawStarAction) {
@@ -476,6 +488,31 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                         activity.runOnUiThread(actionIfDownloaded);
                     } else {
                         activity.runOnUiThread(actionIfNotDownloaded);
+                    }
+                }
+            };
+        }
+
+        static AsyncTask<Void, Void, Integer> currentEpisodeLocalDbIdTask(@NonNull Activity activity,
+                                                                          @NonNull String episodePushId, int podcastLocalDbId, Runnable action) {
+            return new AsyncTask<Void, Void, Integer>() {
+                @Override
+                protected Integer doInBackground(Void... voids) {
+                    Cursor cursor = LocalDatabaseUtils.queryEpisode(activity, episodePushId, podcastLocalDbId);
+                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
+                        cursor.moveToFirst();
+                        int idIndex = cursor.getColumnIndex(UserMetadataContract.EpisodeEntry._ID);
+                        return cursor.getInt(idIndex);
+                    }
+                    return INVALID_ID;
+                }
+
+                @Override
+                protected void onPostExecute(Integer id) {
+                    if (id != INVALID_ID) {
+                        activity.runOnUiThread(action);
+                    } else {
+                        throw new UnsupportedOperationException(TAG + ": Cursor is null or size 0.");
                     }
                 }
             };
