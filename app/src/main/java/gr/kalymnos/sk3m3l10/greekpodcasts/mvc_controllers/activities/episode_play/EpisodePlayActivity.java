@@ -1,4 +1,4 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.EpisodePlay;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.PodcasterActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvcImpl;

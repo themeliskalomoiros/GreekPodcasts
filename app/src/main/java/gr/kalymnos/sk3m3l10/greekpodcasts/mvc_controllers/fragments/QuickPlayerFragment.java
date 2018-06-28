@@ -21,9 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.List;
-
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.EpisodePlayActivity;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.EpisodePlay.EpisodePlayActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.quick_player.QuickPlayerViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.quick_player.QuickPlayerViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.playback_service.PlaybackService;
