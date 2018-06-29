@@ -234,7 +234,6 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                         extras.putLong(Episode.DATE_KEY, episode.getDateMilli());
                         extras.putInt(Episode.MINUTES_KEY, episode.getMinutes());
                         extras.putInt(Episode.SECONDS_KEY, episode.getSeconds());
-                        extras.putString(Episode.URL_KEY,episode.getUrl());
 
                         MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat
                                 .Builder()
@@ -470,6 +469,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                     .putString(MediaMetadataCompat.METADATA_KEY_DATE, DateUtils.dateRFC3339(item.getDescription().getExtras().getLong(Episode.DATE_KEY)))
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId)
+                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI,item.getDescription().getMediaUri().toString())
                     .build());
         }
 
