@@ -94,7 +94,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     @Override
     public void onDownloadClick() {
         MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
-        DatabaseOperations.currentEpisodeLocalDbIdTask(this, getCurrentEpisodePushId(),
+        DatabaseOperations.cacheCurrentEpisodeLocalDbIdTask(this, getCurrentEpisodePushId(),
                 getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
                 () -> DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), cachedCurrentEpisodeLocalDbId, getCurrentEpisodeName(), this))
                 .execute();
@@ -205,12 +205,12 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onDownloadCompleted(String episodeName) {
-        viewMvc.drawDownloadButton();
+        this.runOnUiThread(() -> viewMvc.drawDownloadButton());
     }
 
     @Override
     public void onDownloadError(String errorMessage) {
-        viewMvc.unDrawDownloadButton();
+        this.runOnUiThread(() -> viewMvc.unDrawDownloadButton());
     }
 
     private class ConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
@@ -509,8 +509,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
             };
         }
 
-        static AsyncTask<Void, Void, Integer> currentEpisodeLocalDbIdTask(@NonNull Activity activity,
-                                                                          @NonNull String episodePushId, int podcastLocalDbId, Runnable action) {
+        static AsyncTask<Void, Void, Integer> cacheCurrentEpisodeLocalDbIdTask(@NonNull Activity activity,
+                                                                               @NonNull String episodePushId, int podcastLocalDbId, Runnable action) {
             return new AsyncTask<Void, Void, Integer>() {
                 @Override
                 protected Integer doInBackground(Void... voids) {
