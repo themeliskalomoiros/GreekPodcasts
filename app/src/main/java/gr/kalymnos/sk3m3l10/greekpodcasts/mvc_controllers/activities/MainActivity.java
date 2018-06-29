@@ -30,16 +30,14 @@ public class MainActivity extends AppCompatActivity implements MainViewMvc.OnAct
 //        Cursor cursor = getContentResolver().query(UserMetadataContract.PodcastWatchedEntry.CONTENT_URI,
 //                null,UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED+"!=?",new String[]{"0"},null);
 //
-        Cursor cursor = getContentResolver().query(UserMetadataContract.PodcastWatchedEntry.CONTENT_URI,
+        Cursor cursor = getContentResolver().query(UserMetadataContract.EpisodeEntry.CONTENT_URI,
                 null,null,null,null);
 
         while (cursor.moveToNext()){
-            int idIndex = cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry._ID);
-            int starredIndex = cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED);
-            int curEpisodeIndex = cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_CURRENT_EPISODE);
-            int pushIdIndex = cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_FIREBASE_PUSH_ID);
-            String s = String.format("Podcast with id:%d, current episode:%d, push id:\"%s\" and starred:%d",cursor.getInt(idIndex),cursor.getInt(curEpisodeIndex),cursor.getString(pushIdIndex),cursor.getInt(starredIndex));
-            Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+            int idIndex = cursor.getColumnIndex(UserMetadataContract.EpisodeEntry._ID);
+            int uriIndex = cursor.getColumnIndex(UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI);
+            String string = String.format("Episode with id %d and uri %s",cursor.getInt(idIndex),cursor.getString(uriIndex));
+            Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
         }
     }
 

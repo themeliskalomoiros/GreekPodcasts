@@ -46,7 +46,7 @@ public class DownloadAudioService extends IntentService {
     public static void startActionDownloadAudio(Context context, String audioUrl, int episodeLocalDbId,
                                                 String episodeName, int podcastLocalDbId, OnDownloadAudioFileListener listener) {
 
-        callback = listener;
+         callback = listener;
 
         Intent intent = new Intent(context, DownloadAudioService.class);
         intent.setAction(ACTION_DOWNLOAD_AUDIO);
