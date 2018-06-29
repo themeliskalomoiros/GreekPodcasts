@@ -44,6 +44,8 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     private Thread updateMediaBarTask;
 
+    private int cachedCurrentEpisodeLocalDbId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,10 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     @Override
     public void onDownloadClick() {
         MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
-        DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), );
+        DatabaseOperations.currentEpisodeLocalDbIdTask(this, getCurrentEpisodePushId(),
+                getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
+                () -> DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), cachedCurrentEpisodeLocalDbId, getCurrentEpisodeName(), this))
+                .execute();
     }
 
     @Override
@@ -352,6 +357,17 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         return null;
     }
 
+    private String getCurrentEpisodeName() {
+        MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
+        if (controller != null) {
+            MediaMetadataCompat metadata = controller.getMetadata();
+            if (metadata != null) {
+                return metadata.getDescription().getTitle().toString();
+            }
+        }
+        return null;
+    }
+
     private void stopUpdatingMediabar() {
         if (updateMediaBarTask != null) {
             updateMediaBarTask.interrupt();
@@ -509,10 +525,14 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
                 @Override
                 protected void onPostExecute(Integer id) {
-                    if (id != INVALID_ID) {
+                    if (id != INVALID_ID && activity instanceof EpisodePlayActivity) {
+                        //  First cache the id because action is probably going to use it
+                        EpisodePlayActivity episodePlayActivity = (EpisodePlayActivity) activity;
+                        episodePlayActivity.cachedCurrentEpisodeLocalDbId = id;
+
                         activity.runOnUiThread(action);
                     } else {
-                        throw new UnsupportedOperationException(TAG + ": Cursor is null or size 0.");
+                        throw new UnsupportedOperationException(TAG + ": INVALID_ID or activity not an EpisodePlayActivity isntance.");
                     }
                 }
             };
