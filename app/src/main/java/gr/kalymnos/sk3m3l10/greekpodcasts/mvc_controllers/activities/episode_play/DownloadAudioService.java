@@ -81,7 +81,8 @@ public class DownloadAudioService extends IntentService {
     private void saveUriToDatabase(String uriString, int episodeLocalDbId, String episodeName) {
         ContentValues values = new ContentValues();
         values.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI, uriString);
-        getContentResolver().update(UserMetadataContract.EpisodeEntry.CONTENT_URI, values, null, null);
+        Uri episodeUri = UserMetadataContract.EpisodeEntry.CONTENT_URI.buildUpon().appendPath(""+episodeLocalDbId).build();
+        getContentResolver().update(episodeUri, values, null, null);
     }
 
     //  Returns true only if the download was successful
