@@ -96,7 +96,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
         DatabaseOperations.cacheCurrentEpisodeLocalDbIdTask(this, getCurrentEpisodePushId(),
                 getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
-                () -> DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), cachedCurrentEpisodeLocalDbId, getCurrentEpisodeName(), this))
+                () -> DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), cachedCurrentEpisodeLocalDbId, getCurrentEpisodeName(), getIntent().getIntExtra(Podcast.LOCAL_DB_ID_KEY, 0), this))
                 .execute();
     }
 
@@ -205,12 +205,14 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onDownloadCompleted(String episodeName) {
-        this.runOnUiThread(() -> viewMvc.drawDownloadButton());
+        runOnUiThread(() -> Toast.makeText(this,"Download completed",Toast.LENGTH_SHORT).show());
+        runOnUiThread(() -> viewMvc.drawDownloadButton());
     }
 
     @Override
     public void onDownloadError(String errorMessage) {
-        this.runOnUiThread(() -> viewMvc.unDrawDownloadButton());
+        runOnUiThread(() -> Toast.makeText(this,errorMessage,Toast.LENGTH_LONG).show());
+        runOnUiThread(() -> viewMvc.unDrawDownloadButton());
     }
 
     private class ConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
