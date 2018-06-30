@@ -77,7 +77,6 @@ public class DownloadAudioService extends IntentService {
      * parameters.
      */
     private void handleActionDownloadAudio(String audioUrl, int episodeLocalDbId, String episodeName, int podcastLocalDbId) {
-        Toast.makeText(this, R.string.downloading_label, Toast.LENGTH_SHORT).show();
         Uri uri = downloadAudioFile(audioUrl, episodeName, podcastLocalDbId);
         if (uri != null) {
             saveUriToDatabase(uri.toString(), episodeLocalDbId, episodeName);

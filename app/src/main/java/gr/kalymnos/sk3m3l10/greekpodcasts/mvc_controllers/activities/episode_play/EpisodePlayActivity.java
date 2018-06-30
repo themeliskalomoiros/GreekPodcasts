@@ -44,7 +44,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     private Thread updateMediaBarTask;
 
-    private int cachedCurrentEpisodeLocalDbId;
+    public int cachedCurrentEpisodeLocalDbId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,20 +81,20 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     public void onStarClick() {
         int podcastLocalDbId = getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY);
 
-        Runnable starPodcastAction = () -> DatabaseOperations.starPodcastTask(this, podcastLocalDbId, true,
+        Runnable starPodcastAction = () -> LocalDatabaseUtils.starPodcastTask(this, podcastLocalDbId, true,
                 () -> viewMvc.drawStarButton(), () -> viewMvc.unDrawStarButton()).execute();
 
-        Runnable unStarPodcastAction = () -> DatabaseOperations.starPodcastTask(this, podcastLocalDbId, false,
+        Runnable unStarPodcastAction = () -> LocalDatabaseUtils.starPodcastTask(this, podcastLocalDbId, false,
                 () -> viewMvc.drawStarButton(), () -> viewMvc.unDrawStarButton()).execute();
 
-        DatabaseOperations.clickPodcastTask(this, podcastLocalDbId, starPodcastAction, unStarPodcastAction)
+        LocalDatabaseUtils.clickPodcastTask(this, podcastLocalDbId, starPodcastAction, unStarPodcastAction)
                 .execute();
     }
 
     @Override
     public void onDownloadClick() {
         MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
-        DatabaseOperations.cacheCurrentEpisodeLocalDbIdTask(this, getCurrentEpisodePushId(),
+        LocalDatabaseUtils.cacheCurrentEpisodeLocalDbIdTask(this, getCurrentEpisodePushId(),
                 getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
                 () -> DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), cachedCurrentEpisodeLocalDbId, getCurrentEpisodeName(), getIntent().getIntExtra(Podcast.LOCAL_DB_ID_KEY, 0), this))
                 .execute();
@@ -296,7 +296,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
             viewMvc.bindSeekBarMax((int) durationMilli);
             viewMvc.bindPlaybackDuration(PlaybackUtils.playbackPositionString(durationMilli));
 
-            DatabaseOperations.isDownloadedTask(EpisodePlayActivity.this,
+            LocalDatabaseUtils.isDownloadedTask(EpisodePlayActivity.this,
                     getCurrentEpisodePushId(), getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
                     () -> viewMvc.drawDownloadButton(),
                     () -> viewMvc.unDrawDownloadButton())
@@ -390,154 +390,9 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         viewMvc.setOnTransportControlsClickListener(this);
         viewMvc.setSeekBarChangeListener(this);
         setSupportActionBar(viewMvc.getToolbar());
-        DatabaseOperations.isPodcastStarredTask(this,
+        LocalDatabaseUtils.isPodcastStarredTask(this,
                 getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
                 () -> viewMvc.drawStarButton(),
                 () -> viewMvc.unDrawStarButton()).execute();
-    }
-
-    private static class DatabaseOperations {
-
-        private static final int ONE_EPISODE = 1;
-        private static final int INVALID_ID = -1;
-        private static final String TAG = DatabaseOperations.class.getSimpleName();
-
-        static AsyncTask<Void, Void, Cursor> isPodcastStarredTask(@NonNull Activity activity, int podcastLocalDatabaseId, Runnable drawStarAction, Runnable undrawStarAction) {
-            return new AsyncTask<Void, Void, Cursor>() {
-
-                @Override
-                protected Cursor doInBackground(Void... voids) {
-                    return LocalDatabaseUtils.queryPodcast(activity, podcastLocalDatabaseId);
-                }
-
-                @Override
-                protected void onPostExecute(Cursor cursor) {
-                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
-
-                        cursor.moveToFirst();
-
-                        int starredIndex = cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED);
-                        boolean isPodcastStarred = cursor.getInt(starredIndex) == 0 ? false : true;
-
-                        if (isPodcastStarred) {
-                            activity.runOnUiThread(drawStarAction);
-                        } else {
-                            activity.runOnUiThread(undrawStarAction);
-                        }
-
-                    } else {
-                        throw new UnsupportedOperationException(TAG + ": Null cursor or its size is 0.");
-                    }
-                }
-            };
-        }
-
-        static AsyncTask<Void, Void, Cursor> clickPodcastTask(@NonNull Activity activity, int podcastLocalDatabaseId, Runnable starPodcastAction, Runnable unStarPodcastAction) {
-            return new AsyncTask<Void, Void, Cursor>() {
-
-                @Override
-                protected Cursor doInBackground(Void... voids) {
-                    return LocalDatabaseUtils.queryPodcast(activity, podcastLocalDatabaseId);
-                }
-
-                @Override
-                protected void onPostExecute(Cursor cursor) {
-                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
-                        cursor.moveToFirst();
-                        boolean isPodcastStarred = cursor.getInt(cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED)) != 0;
-                        if (isPodcastStarred) {
-                            activity.runOnUiThread(unStarPodcastAction);
-                        } else {
-                            activity.runOnUiThread(starPodcastAction);
-                        }
-                    } else {
-                        throw new UnsupportedOperationException(TAG + ": Cursor is null or 0 size.");
-                    }
-                }
-            };
-        }
-
-        static AsyncTask<Void, Void, Integer> starPodcastTask(@NonNull Activity activity, int podcastLocalDatabaseId,
-                                                              boolean setStarred, Runnable drawStarAction, Runnable undrawStarAction) {
-            return new AsyncTask<Void, Void, Integer>() {
-
-                @Override
-                protected Integer doInBackground(Void... voids) {
-                    ContentValues values = new ContentValues();
-                    values.put(UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED, setStarred);
-                    return LocalDatabaseUtils.updatePodcastTask(activity, podcastLocalDatabaseId, values);
-                }
-
-                @Override
-                protected void onPostExecute(Integer integer) {
-                    if (integer.intValue() == ONE_EPISODE) {
-                        //  Podcast updated successfuly
-                        if (setStarred) {
-                            activity.runOnUiThread(drawStarAction);
-                        } else {
-                            activity.runOnUiThread(undrawStarAction);
-                        }
-                    }
-                }
-            };
-        }
-
-        static AsyncTask<Void, Void, Boolean> isDownloadedTask(@NonNull Activity activity, @NonNull String episodePushId, int podcastLocalDbId,
-                                                               Runnable actionIfDownloaded, Runnable actionIfNotDownloaded) {
-            return new AsyncTask<Void, Void, Boolean>() {
-                @Override
-                protected Boolean doInBackground(Void... voids) {
-                    Cursor cursor = LocalDatabaseUtils.queryEpisode(activity, episodePushId, podcastLocalDbId);
-                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
-                        cursor.moveToFirst();
-                        int uriColumnIndex = cursor.getColumnIndex(UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI);
-                        String episodeUri = cursor.getString(uriColumnIndex);
-                        if (!TextUtils.isEmpty(episodeUri)) {
-                            return true;
-                        }
-                        return false;
-                    }
-                    return false;
-                }
-
-                @Override
-                protected void onPostExecute(Boolean uriExists) {
-                    if (uriExists) {
-                        activity.runOnUiThread(actionIfDownloaded);
-                    } else {
-                        activity.runOnUiThread(actionIfNotDownloaded);
-                    }
-                }
-            };
-        }
-
-        static AsyncTask<Void, Void, Integer> cacheCurrentEpisodeLocalDbIdTask(@NonNull Activity activity,
-                                                                               @NonNull String episodePushId, int podcastLocalDbId, Runnable action) {
-            return new AsyncTask<Void, Void, Integer>() {
-                @Override
-                protected Integer doInBackground(Void... voids) {
-                    Cursor cursor = LocalDatabaseUtils.queryEpisode(activity, episodePushId, podcastLocalDbId);
-                    if (cursor != null && cursor.getCount() == ONE_EPISODE) {
-                        cursor.moveToFirst();
-                        int idIndex = cursor.getColumnIndex(UserMetadataContract.EpisodeEntry._ID);
-                        return cursor.getInt(idIndex);
-                    }
-                    return INVALID_ID;
-                }
-
-                @Override
-                protected void onPostExecute(Integer id) {
-                    if (id != INVALID_ID && activity instanceof EpisodePlayActivity) {
-                        //  First cache the id because action is probably going to use it
-                        EpisodePlayActivity episodePlayActivity = (EpisodePlayActivity) activity;
-                        episodePlayActivity.cachedCurrentEpisodeLocalDbId = id;
-
-                        activity.runOnUiThread(action);
-                    } else {
-                        throw new UnsupportedOperationException(TAG + ": INVALID_ID or activity not an EpisodePlayActivity isntance.");
-                    }
-                }
-            };
-        }
     }
 }
