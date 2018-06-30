@@ -20,6 +20,7 @@ import java.net.URLConnection;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.LocalDatabaseUtils;
 
 public class DownloadAudioService extends IntentService {
     private static final String ACTION_DOWNLOAD_AUDIO = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.episode_play.action.download_audio";

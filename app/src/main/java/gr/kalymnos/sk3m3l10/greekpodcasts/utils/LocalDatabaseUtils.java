@@ -54,6 +54,18 @@ public class LocalDatabaseUtils {
                 null);
     }
 
+    public static Cursor queryEpisode(@NonNull Context context, @NonNull int episodeLocalDbId, @NonNull int podcastLocalDbId) {
+        String selection = UserMetadataContract.EpisodeEntry._ID+ " = ? AND "
+                + UserMetadataContract.EpisodeEntry.COLUMN_NAME_PODCAST + " = ?";
+        String[] selectionArgs = new String[]{String.valueOf(episodeLocalDbId), String.valueOf(podcastLocalDbId)};
+
+        return context.getContentResolver().query(UserMetadataContract.EpisodeEntry.CONTENT_URI,
+                null,
+                selection,
+                selectionArgs,
+                null);
+    }
+
     public static int updatePodcastTask(@NonNull Context context, @NonNull int podcastLocalDatabaseId,
                                         @NonNull ContentValues values) {
         /*  SQL Update Statement
