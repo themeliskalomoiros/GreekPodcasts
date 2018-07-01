@@ -96,7 +96,7 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
         MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
         LocalDatabaseUtils.cacheCurrentEpisodeLocalDbIdTask(this, getCurrentEpisodePushId(),
                 getIntent().getExtras().getInt(Podcast.LOCAL_DB_ID_KEY),
-                () -> DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), cachedCurrentEpisodeLocalDbId, getCurrentEpisodeName(), getIntent().getIntExtra(Podcast.LOCAL_DB_ID_KEY, 0), this))
+                () -> DownloadAudioService.startActionDownloadAudio(this, getCurrentEpisodeUrl(), cachedCurrentEpisodeLocalDbId, getCurrentEpisodeName(), getIntent().getIntExtra(Podcast.LOCAL_DB_ID_KEY, 0), this,this))
                 .execute();
     }
 
@@ -200,6 +200,11 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onDownloadStarted() {
 
     }
 
