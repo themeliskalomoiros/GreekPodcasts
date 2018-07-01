@@ -47,7 +47,7 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
 
     @Override
     public void drawDownloadButton() {
-        download.setImageResource(R.drawable.ic_file_download_pink_40dp);
+        download.setImageResource(R.drawable.ic_delete_forever_pink_40dp);
     }
 
     @Override

@@ -1,10 +1,14 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities;
 
 import android.database.Cursor;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.widget.Toast;
+
+import java.io.File;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.main_screen.MainViewMvc;
@@ -27,9 +31,6 @@ public class MainActivity extends AppCompatActivity implements MainViewMvc.OnAct
     @Override
     public void onActionCreatePodcastClick() {
         //  TODO:   Implement the create podcast action
-//        Cursor cursor = getContentResolver().query(UserMetadataContract.PodcastWatchedEntry.CONTENT_URI,
-//                null,UserMetadataContract.PodcastWatchedEntry.COLUMN_NAME_STARRED+"!=?",new String[]{"0"},null);
-//
         Cursor cursor = getContentResolver().query(UserMetadataContract.EpisodeEntry.CONTENT_URI,
                 null,null,null,null);
 
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements MainViewMvc.OnAct
             String string = String.format("Episode with id %d and uri %s",cursor.getInt(idIndex),cursor.getString(uriIndex));
             Toast.makeText(this, string, Toast.LENGTH_SHORT).show();
         }
+
+        cursor.close();
     }
 
     private void initializeViewMvc() {
