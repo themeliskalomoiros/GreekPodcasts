@@ -15,8 +15,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataC
 public class LocalDatabaseUtils {
 
 
-    private static final int ONE_EPISODE = 1;
-    private static final int INVALID_ID = -1;
+    public static final int ONE_EPISODE = 1;
+    public static final int INVALID_ID = -1;
     private static final String TAG = LocalDatabaseUtils.class.getSimpleName();
 
 
