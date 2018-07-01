@@ -33,7 +33,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 
 public class EpisodePlayActivity extends AppCompatActivity implements EpisodePlayViewMvc.OnActionButtonsClickListener,
         EpisodePlayViewMvc.OnTransportControlsClickListener, EpisodePlayViewMvc.OnPodcasterClickListener, SeekBar.OnSeekBarChangeListener,
-        DownloadAudioService.OnDownloadAudioFileListener {
+        DownloadAudioService.OnDownloadAudioFileListener, DownloadAudioService.OnDeleteFileListener {
 
     private static final long SEEKBAR_UPDATE_INTERVAL = 500;
     private EpisodePlayViewMvc viewMvc;
@@ -213,6 +213,16 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
     public void onDownloadError(String errorMessage) {
         runOnUiThread(() -> Toast.makeText(this,errorMessage,Toast.LENGTH_LONG).show());
         runOnUiThread(() -> viewMvc.unDrawDownloadButton());
+    }
+
+    @Override
+    public void onDeleteCompleted() {
+        runOnUiThread(() -> viewMvc.unDrawDownloadButton());
+    }
+
+    @Override
+    public void onDeleteError() {
+
     }
 
     private class ConnectionCallback extends MediaBrowserCompat.ConnectionCallback {
