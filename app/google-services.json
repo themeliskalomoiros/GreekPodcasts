@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1000261804292",
+    "firebase_url": "https://thememogame-439e2.firebaseio.com",
+    "project_id": "thememogame-439e2",
+    "storage_bucket": "thememogame-439e2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000261804292:android:d4b3efaef5b2093b",
+        "android_client_info": {
+          "package_name": "gr.kalymnos.sk3m3l10.greekpodcasts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000261804292-f3p1ubpffooql8ikh2d3a0525a81i8tl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "gr.kalymnos.sk3m3l10.greekpodcasts",
+            "certificate_hash": "51a8b98284fac7a7075643260f75d5f79874d95a"
+          }
+        },
+        {
+          "client_id": "1000261804292-8e31v4r1u85ktfl4meteprs6u0l8p3jt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4ObKNh_hf21TYs_1N8ROdSa6hmAdUWPw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000261804292-8e31v4r1u85ktfl4meteprs6u0l8p3jt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
