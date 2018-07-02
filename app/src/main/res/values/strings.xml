@@ -21,7 +21,7 @@
     <string name="view_all_label">View All</string>
     <string name="personal_pic_content_description">This is your personal picture.</string>
     <string name="picture_label">Picture</string>
-    <string name="promotion_label">Promotion Label</string>
+    <string name="promotion_label">Promote Yourself</string>
     <string name="pick_category_explanation_hint">You may pick only one category</string>
     <string name="choose_poste_explanation_hint">Poster should be at least 500x500 pixels.</string>
     <string name="create_title_explanation_hint">Type an accurate title. Don\'t exceed the 30 char limit.</string>
