@@ -18,14 +18,16 @@ public class PortofolioViewMvcImpl implements PortofolioViewMvc {
     private Toolbar toolbar;
     private FloatingActionButton saveButton;
 
+    private PortofolioPagerAdapter pagerAdapter;
+
     public PortofolioViewMvcImpl(LayoutInflater inflater, ViewGroup parent, @NonNull FragmentManager fragmentManager) {
         this.rootView = inflater.inflate(R.layout.activity_portofolio, parent, false);
         initialize(fragmentManager);
     }
 
     private void initialize(FragmentManager fragmentManager) {
-        initializeViewPager(fragmentManager);
         initializeViews();
+        initializeViewPager(fragmentManager);
     }
 
     private void initializeViews() {
@@ -35,7 +37,11 @@ public class PortofolioViewMvcImpl implements PortofolioViewMvc {
     }
 
     private void initializeViewPager(FragmentManager fragmentManager) {
-        
+        String[] titles = {rootView.getContext().getString(R.string.portofolio_create_label),
+                rootView.getContext().getString(R.string.portofolio_published_label),
+                rootView.getContext().getString(R.string.portofolio_personal_label)};
+        pagerAdapter = new PortofolioPagerAdapter(fragmentManager, titles);
+        viewPager.setAdapter(pagerAdapter);
     }
 
     @Override

@@ -60,4 +60,7 @@
     <string name="downloading_label">Downloading...</string>
     <string name="download_completed">Download completed</string>
     <string name="download_error">Couldn\'t download the file</string>
+    <string name="portofolio_create_label">Create</string>
+    <string name="portofolio_published_label">Published</string>
+    <string name="portofolio_personal_label">Personal</string>
 </resources>
