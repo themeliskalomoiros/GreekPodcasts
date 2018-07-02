@@ -177,6 +177,11 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
     }
 
     @Override
+    public int getInfoContainerId() {
+        return R.id.about_podcast_container;
+    }
+
+    @Override
     public View getRootView() {
         return this.rootView;
     }

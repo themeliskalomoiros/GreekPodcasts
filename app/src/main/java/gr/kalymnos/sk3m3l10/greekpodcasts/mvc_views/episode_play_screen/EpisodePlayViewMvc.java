@@ -73,4 +73,6 @@ public interface EpisodePlayViewMvc extends ViewMvc {
     void setOnTransportControlsClickListener(OnTransportControlsClickListener listener);
 
     void setOnPodcasterClickListener(OnPodcasterClickListener listener);
+
+    int getInfoContainerId();
 }
