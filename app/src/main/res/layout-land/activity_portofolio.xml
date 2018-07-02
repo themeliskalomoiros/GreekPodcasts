@@ -17,13 +17,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/Toolbar" />
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar_layout"
+            style="@style/CollapsingToolbarLayout">
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabLayout"
-            style="@style/TabLayout" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar" />
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tabLayout"
+                style="@style/TabLayout" />
+
+        </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -31,5 +37,6 @@
         android:id="@+id/fab_save"
         style="@style/FAB"
         android:src="@drawable/ic_save_white_24dp"
-        android:layout_gravity="bottom|end"/>
+        app:layout_anchor="@id/toolbar"
+        app:layout_anchorGravity="bottom|end"/>
 </android.support.design.widget.CoordinatorLayout>

@@ -31,5 +31,6 @@
     <dimen name="portofolio_spiner_width">240dp</dimen>
     <dimen name="portofolio_description_width">140dp</dimen>
     <dimen name="progress_bar_size">40dp</dimen>
+    <dimen name="portofolio_tab_bottom_padding">16dp</dimen>
 
 </resources>
