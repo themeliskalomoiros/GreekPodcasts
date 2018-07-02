@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements MainViewMvc.OnAct
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        
+
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 this.startActivity(new Intent(this,PortofolioActivity.class));
