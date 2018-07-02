@@ -55,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements MainViewMvc.OnAct
 
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                //  Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                this.startActivity(new Intent(this,PortofolioActivity.class));
             }else{
                 //  Sign in failed. If response is null the user canceled the
                 //  sign-in flow using the back button. Otherwise check response.getError().getErrorCode()
