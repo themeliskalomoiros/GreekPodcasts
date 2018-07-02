@@ -54,7 +54,9 @@
 
         <service
             android:name=".mvc_controllers.activities.episode_play.DownloadAudioService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".mvc_controllers.activities.PortofolioActivity"></activity>
     </application>
 
 </manifest>
