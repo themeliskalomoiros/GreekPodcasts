@@ -211,23 +211,26 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onDownloadStarted() {
-
+        runOnUiThread(()-> Toast.makeText(this, "Download started", Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void onDownloadCompleted(String episodeName) {
+        //  TODO: Add a snackbar to display the message
         runOnUiThread(() -> Toast.makeText(this,"Download completed",Toast.LENGTH_SHORT).show());
         runOnUiThread(() -> viewMvc.drawDownloadButton());
     }
 
     @Override
     public void onDownloadError(String errorMessage) {
+        //  TODO: Add a snackbar to display the message
         runOnUiThread(() -> Toast.makeText(this,errorMessage,Toast.LENGTH_LONG).show());
         runOnUiThread(() -> viewMvc.unDrawDownloadButton());
     }
 
     @Override
     public void onDeleteCompleted() {
+        //  TODO: Add a snackbar to display the message
         runOnUiThread(() -> viewMvc.unDrawDownloadButton());
     }
 
