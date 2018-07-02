@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.PodcasterActivity;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.AboutPodcastFragment;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen.EpisodePlayViewMvcImpl;
@@ -102,7 +103,12 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onInfoClick() {
-        Toast.makeText(this, "clicked", Toast.LENGTH_SHORT).show();
+        AboutPodcastFragment fragment = new AboutPodcastFragment();
+        Bundle args = new Bundle();
+        args.putString(Podcast.DESCRIPTION_KEY,getIntent().getStringExtra(Podcast.DESCRIPTION_KEY));
+        fragment.setArguments(args);
+
+        getSupportFragmentManager().beginTransaction().replace(viewMvc.getInfoContainerId(),fragment).addToBackStack(null).commit();
     }
 
     @Override
