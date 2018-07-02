@@ -15,6 +15,7 @@ public class PortofolioActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewMvc = new PortofolioViewMvcImpl(LayoutInflater.from(this), null, this.getSupportFragmentManager());
+        setSupportActionBar(viewMvc.getToolbar());
         setContentView(viewMvc.getRootView());
     }
 
