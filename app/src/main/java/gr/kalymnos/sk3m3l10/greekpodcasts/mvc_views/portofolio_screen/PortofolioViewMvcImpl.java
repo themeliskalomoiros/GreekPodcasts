@@ -35,7 +35,7 @@ public class PortofolioViewMvcImpl implements PortofolioViewMvc {
     }
 
     private void initializeViewPager(FragmentManager fragmentManager) {
-
+        
     }
 
     @Override
