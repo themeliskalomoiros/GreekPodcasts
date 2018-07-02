@@ -2,6 +2,7 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +18,7 @@ public class PortofolioViewMvcImpl implements PortofolioViewMvc {
     private ViewPager viewPager;
     private Toolbar toolbar;
     private FloatingActionButton saveButton;
+    private TabLayout tabLayout;
 
     private PortofolioPagerAdapter pagerAdapter;
 
@@ -34,6 +36,7 @@ public class PortofolioViewMvcImpl implements PortofolioViewMvc {
         viewPager = rootView.findViewById(R.id.viewPager);
         toolbar = rootView.findViewById(R.id.toolbar);
         saveButton = rootView.findViewById(R.id.fab_save);
+        tabLayout = rootView.findViewById(R.id.tabLayout);
     }
 
     private void initializeViewPager(FragmentManager fragmentManager) {
@@ -42,6 +45,7 @@ public class PortofolioViewMvcImpl implements PortofolioViewMvc {
                 rootView.getContext().getString(R.string.portofolio_personal_label)};
         pagerAdapter = new PortofolioPagerAdapter(fragmentManager, titles);
         viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
