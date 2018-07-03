@@ -52,7 +52,6 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewMvc = new PortofolioCreateViewMvcImpl(inflater, container);
         viewMvc.setOnPosterClickListener(this);
-        viewMvc.enableSpinner(false);
         return viewMvc.getRootView();
     }
 
@@ -143,6 +142,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
             @Nullable
             @Override
             public List<Category> loadInBackground() {
+                //  TODO: Replace with real service
                 DataRepository repo = new StaticFakeDataRepo();
                 return repo.fetchAllCategories();
             }
@@ -161,7 +161,6 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
             }
             viewMvc.addCategoriesToSpinner(categoryTitles);
             viewMvc.setOnCategorySelectedListener(this);
-            viewMvc.enableSpinner(true);
         }
     }
 

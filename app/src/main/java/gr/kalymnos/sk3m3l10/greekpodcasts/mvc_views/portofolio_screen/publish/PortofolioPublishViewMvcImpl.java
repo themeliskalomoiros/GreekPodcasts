@@ -1,6 +1,5 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish;
 
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +23,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     private static final String TAG = PortofolioPublishViewMvcImpl.class.getSimpleName();
+
     private View rootView;
     private Spinner podcastSpinner, categorySpinner;
     private RecyclerView episodesRecyclerView;

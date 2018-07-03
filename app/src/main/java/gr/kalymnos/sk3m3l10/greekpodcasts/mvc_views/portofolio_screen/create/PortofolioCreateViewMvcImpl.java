@@ -52,11 +52,6 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     }
 
     @Override
-    public void enableSpinner(boolean enable) {
-        categorySpinner.setEnabled(enable);
-    }
-
-    @Override
     public void displayLoadingIndicator(boolean display) {
         if (display) {
             progressBar.setVisibility(View.VISIBLE);

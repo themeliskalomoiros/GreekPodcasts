@@ -22,8 +22,6 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
 
     int getPosterContainerWidth();
 
-    void enableSpinner(boolean enable);
-
     void displayLoadingIndicator(boolean display);
 
     void addCategoriesToSpinner(String[] titles);
