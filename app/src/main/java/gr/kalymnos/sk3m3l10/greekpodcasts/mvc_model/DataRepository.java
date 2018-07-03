@@ -31,5 +31,7 @@ public interface DataRepository {
 
     String fetchPodcasterName(String pushId);
 
-    void createUser(String pushId);
+    void createPodcaster(String pushId);
+
+    boolean podcasterExists(String pushId);
 }

@@ -136,8 +136,14 @@ public class StaticFakeDataRepo implements DataRepository {
     }
 
     @Override
-    public void createUser(String pushId) {
+    public void createPodcaster(String pushId) {
         sleep(SLEEP_TIME);
+    }
+
+    @Override
+    public boolean podcasterExists(String pushId) {
+        sleep(SLEEP_TIME);
+        return true;
     }
 
     private static void sleep(long timeMilli) {
