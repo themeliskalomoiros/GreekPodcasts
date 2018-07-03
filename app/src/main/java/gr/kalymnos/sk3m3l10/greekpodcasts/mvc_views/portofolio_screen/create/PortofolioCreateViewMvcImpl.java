@@ -45,6 +45,11 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     }
 
     @Override
+    public void enableSpinner(boolean enable) {
+        categorySpinner.setEnabled(enable);
+    }
+
+    @Override
     public void setOnPosterClickListener(OnPosterClickListener listener) {
         updatePodcastImageView.setOnClickListener(view -> {
             if (listener != null)
