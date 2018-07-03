@@ -53,7 +53,20 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public void setOnButtonsClickListener(OnButtonsClickListener listener) {
+        if (listener != null) {
+            //  Some views may exist only in land, so they could be null
+            if (addEpisodeButton != null) {
+                addEpisodeButton.setOnClickListener(view -> listener.onAddEpisodeClick());
+            }
 
+            if (viewAllEpisodesButton != null) {
+                viewAllEpisodesButton.setOnClickListener(view -> listener.onViewEpisodesClick());
+            }
+
+            editTitleButton.setOnClickListener(view -> listener.onEditPodcastClick(podcastSpinner.getSelectedItemPosition()));
+
+            editDescriptionButton.setOnClickListener(view -> listener.onEditDescriptionClick());
+        }
     }
 
     @Override
