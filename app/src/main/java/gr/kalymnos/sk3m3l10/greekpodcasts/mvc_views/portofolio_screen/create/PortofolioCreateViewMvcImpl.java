@@ -35,6 +35,16 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     }
 
     @Override
+    public int getPosterContainerHeight() {
+        return updatePodcastImageView.getHeight();
+    }
+
+    @Override
+    public int getPosterContainerWidth() {
+        return updatePodcastImageView.getWidth();
+    }
+
+    @Override
     public void setOnPosterClickListener(OnPosterClickListener listener) {
         updatePodcastImageView.setOnClickListener(view -> {
             if (listener != null)

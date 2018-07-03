@@ -12,5 +12,9 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
 
     void bindPoster(Bitmap poster);
 
+    int getPosterContainerHeight();
+
+    int getPosterContainerWidth();
+
     void setOnPosterClickListener(OnPosterClickListener listener);
 }
