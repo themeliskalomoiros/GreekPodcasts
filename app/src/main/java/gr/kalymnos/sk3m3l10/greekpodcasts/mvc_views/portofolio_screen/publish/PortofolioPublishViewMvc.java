@@ -12,9 +12,9 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
 
     interface OnButtonsClickListener {
 
-        void onEditPodcastClick(Podcast podcast);
+        void onEditPodcastClick(int itemPosition);
 
-        void onEditDescriptionClick(String description);
+        void onEditDescriptionClick();
 
         void onViewEpisodesClick();
 
