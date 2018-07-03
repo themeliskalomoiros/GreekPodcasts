@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
@@ -42,8 +44,11 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
-    public void bindPoster(Bitmap poster) {
-        posterImageView.setImageBitmap(poster);
+    public void bindPoster(String url) {
+        Picasso.get().load(url)
+                .placeholder(R.drawable.ic_headset_black_light_148dp)
+                .error(R.drawable.ic_error_black_light_148dp)
+                .into(posterImageView);
     }
 
     @Override

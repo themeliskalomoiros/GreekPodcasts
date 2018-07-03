@@ -35,7 +35,7 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
 
     void bindEpisodes(List<Episode> episodes);
 
-    void bindPoster(Bitmap poster);
+    void bindPoster(String url);
 
     void bindDescription(String description);
 
