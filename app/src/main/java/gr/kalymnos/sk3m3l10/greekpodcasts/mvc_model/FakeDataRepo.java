@@ -1,6 +1,8 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model;
 
+import android.app.Activity;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class FakeDataRepo implements DataRepository {
     private static final String IMG_URL_6 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXjdyaOkSl7qO07NTwHYJbzIuY7Mu9JFxISyyAnSYfsGwskL8K";
     private static final String IMG_URL_7 = "https://i2-prod.mirror.co.uk/incoming/article11840943.ece/ALTERNATES/s615/PAY-MATING-BUGS.jpg";
     private static final String IMG_URL_8 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMDNeRoMvOlbbPAmMxbdOa5ODFtkhCEZtQquA__k63RvET-HPfmg";
-    private static final String[] IMAGE_URLS = {IMG_URL,IMG_URL_2,IMG_URL_3,IMG_URL_4,IMG_URL_5,IMG_URL_6,IMG_URL_7,IMG_URL_8};
+    private static final String[] IMAGE_URLS = {IMG_URL, IMG_URL_2, IMG_URL_3, IMG_URL_4, IMG_URL_5, IMG_URL_6, IMG_URL_7, IMG_URL_8};
 
     private static final String EPISODE_URL_1 = "https://www.mfiles.co.uk/mp3-downloads/chopin-nocturne-op9-no2.mp3";
     private static final String EPISODE_URL_2 = "https://www.mfiles.co.uk/mp3-downloads/francisco-tarrega-lagrima.mp3";
@@ -88,8 +90,8 @@ public class FakeDataRepo implements DataRepository {
     public List<PromotionLink> fetchPromotionLinks(String podcasterId) {
         sleep(SLEEP_TIME);
         List<PromotionLink> links = new ArrayList<>();
-        links.add(new PromotionLink("Support me on Patreon", "https://www.patreon.com/powerplaychess",PUSH_ID,PUSH_ID));
-        links.add(new PromotionLink("Friend me on Facebook", "https://www.facebook.com/madonna/",PUSH_ID,PUSH_ID));
+        links.add(new PromotionLink("Support me on Patreon", "https://www.patreon.com/powerplaychess", PUSH_ID, PUSH_ID));
+        links.add(new PromotionLink("Friend me on Facebook", "https://www.facebook.com/madonna/", PUSH_ID, PUSH_ID));
         return links;
     }
 
@@ -98,7 +100,7 @@ public class FakeDataRepo implements DataRepository {
         sleep(SLEEP_TIME);
         return new Podcaster("panos@gmail.com", "Panos Sketos", "This is my personal statement as Panos " +
                 "Sketos and bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla "
-                , IMG_URL, PUSH_ID,System.currentTimeMillis());
+                , IMG_URL, PUSH_ID, System.currentTimeMillis());
     }
 
     @Override
@@ -107,9 +109,11 @@ public class FakeDataRepo implements DataRepository {
     }
 
     @Override
-    public void createPodcaster(String pushId) {
+    public void createPodcaster(@NonNull Activity activity, @NonNull String pushId, Runnable actionAfterCreation) {
         sleep(SLEEP_TIME);
+        activity.runOnUiThread(actionAfterCreation);
     }
+
 
     @Override
     public boolean podcasterExists(String pushId) {

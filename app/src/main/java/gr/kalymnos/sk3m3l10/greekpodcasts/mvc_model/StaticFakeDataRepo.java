@@ -1,6 +1,8 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model;
 
+import android.app.Activity;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -53,9 +55,9 @@ public class StaticFakeDataRepo implements DataRepository {
     public List<Podcast> fetchAllPodcasts() {
         sleep(SLEEP_TIME);
         Podcast p1 = new Podcast("All about the World Cup 2018", CATEGORY_ID, IMG_URL, "This is my description for the world cup and bla bla bklabla bla bklabla bla bklabla bla bklabla bla bkla."
-                , PODCASTER_ID, FIREBASE_ID_1,EPISODES_ID_1);
+                , PODCASTER_ID, FIREBASE_ID_1, EPISODES_ID_1);
         Podcast p2 = new Podcast("The Beautiful Kalymnos", CATEGORY_ID, IMG_URL_2, "Is Kalymnos the most beautiful island in the world? And bla bla bklabla bla bklabla bla bklabla bla bklabla bla bkla."
-                , PODCASTER_ID, FIREBASE_ID_2,EPISODES_ID_2);
+                , PODCASTER_ID, FIREBASE_ID_2, EPISODES_ID_2);
         List<Podcast> list = new ArrayList<>();
         list.add(p1);
         list.add(p2);
@@ -77,22 +79,22 @@ public class StaticFakeDataRepo implements DataRepository {
     public List<Episode> fetchEpisodes(String episodesId) {
         sleep(SLEEP_TIME);
         List<Episode> list = new ArrayList<>();
-        if (episodesId.equals(EPISODES_ID_1)){
-            Episode e1 = new Episode("Episode 1",EPISODE_URL_1,30,34,System.currentTimeMillis());
+        if (episodesId.equals(EPISODES_ID_1)) {
+            Episode e1 = new Episode("Episode 1", EPISODE_URL_1, 30, 34, System.currentTimeMillis());
             e1.setFirebasePushId(EPISODES_ID_1);
-            Episode e2 = new Episode("Episode 2",EPISODE_URL_2,20,34,System.currentTimeMillis());
+            Episode e2 = new Episode("Episode 2", EPISODE_URL_2, 20, 34, System.currentTimeMillis());
             e2.setFirebasePushId(EPISODES_ID_2);
-            Episode e3 = new Episode("Episode 3",EPISODE_URL_3,30,34,System.currentTimeMillis());
+            Episode e3 = new Episode("Episode 3", EPISODE_URL_3, 30, 34, System.currentTimeMillis());
             e3.setFirebasePushId(EPISODES_ID_3);
             list.add(e1);
             list.add(e2);
             list.add(e3);
-        }else{
-            Episode e4 = new Episode("Episode 4",EPISODE_URL_4,60,64,System.currentTimeMillis());
+        } else {
+            Episode e4 = new Episode("Episode 4", EPISODE_URL_4, 60, 64, System.currentTimeMillis());
             e4.setFirebasePushId(EPISODES_ID_4);
-            Episode e5 = new Episode("Episode 5",EPISODE_URL_5,50,64,System.currentTimeMillis());
+            Episode e5 = new Episode("Episode 5", EPISODE_URL_5, 50, 64, System.currentTimeMillis());
             e5.setFirebasePushId(EPISODES_ID_5);
-            Episode e6 = new Episode("Episode 6",EPISODE_URL_6,60,64,System.currentTimeMillis());
+            Episode e6 = new Episode("Episode 6", EPISODE_URL_6, 60, 64, System.currentTimeMillis());
             e6.setFirebasePushId(EPISODES_ID_6);
             list.add(e4);
             list.add(e5);
@@ -118,15 +120,15 @@ public class StaticFakeDataRepo implements DataRepository {
     public List<PromotionLink> fetchPromotionLinks(String podcasterId) {
         sleep(SLEEP_TIME);
         List<PromotionLink> links = new ArrayList<>();
-        links.add(new PromotionLink("Support me on Patreon", "https://www.patreon.com/powerplaychess",PUSH_ID,PUSH_ID));
-        links.add(new PromotionLink("Friend me on Facebook", "https://www.facebook.com/madonna/",PUSH_ID,PUSH_ID));
+        links.add(new PromotionLink("Support me on Patreon", "https://www.patreon.com/powerplaychess", PUSH_ID, PUSH_ID));
+        links.add(new PromotionLink("Friend me on Facebook", "https://www.facebook.com/madonna/", PUSH_ID, PUSH_ID));
         return links;
     }
 
     @Override
     public Podcaster fetchPodcaster(String pushId) {
         sleep(SLEEP_TIME);
-        return new Podcaster("papaki@email.com","Solomontas","Thats a personal statement motherfucker",IMG_URL_4,FIREBASE_ID_1,PUSH_ID,System.currentTimeMillis());
+        return new Podcaster("papaki@email.com", "Solomontas", "Thats a personal statement motherfucker", IMG_URL_4, FIREBASE_ID_1, PUSH_ID, System.currentTimeMillis());
     }
 
     @Override
@@ -136,8 +138,9 @@ public class StaticFakeDataRepo implements DataRepository {
     }
 
     @Override
-    public void createPodcaster(String pushId) {
+    public void createPodcaster(@NonNull Activity activity, @NonNull String pushId, Runnable actionAfterCreation) {
         sleep(SLEEP_TIME);
+        activity.runOnUiThread(actionAfterCreation);
     }
 
     @Override

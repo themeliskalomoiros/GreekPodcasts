@@ -1,6 +1,8 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model;
 
+import android.app.Activity;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 import java.util.Locale;
@@ -31,7 +33,7 @@ public interface DataRepository {
 
     String fetchPodcasterName(String pushId);
 
-    void createPodcaster(String pushId);
+    void createPodcaster(@NonNull Activity activity, @NonNull String pushId, Runnable actionAfterCreation);
 
     boolean podcasterExists(String pushId);
 }
