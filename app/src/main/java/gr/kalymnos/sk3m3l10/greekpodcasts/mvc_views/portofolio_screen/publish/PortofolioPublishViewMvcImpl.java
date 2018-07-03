@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     private TextView descriptionTextView;
     private ImageButton addEpisodeButton, editTitleButton, editDescriptionButton, viewAllEpisodesButton;
     private ArrayAdapter<String> podcastSpinnerAdapter, categorySpinnerAdapter;
+    private ProgressBar podcastBar, categoryBar, episodesBar;
 
     public PortofolioPublishViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
@@ -92,6 +94,33 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public void displayPodcastLoadingIndicator(boolean display) {
+        if (display){
+            podcastBar.setVisibility(View.VISIBLE);
+        }else{
+            podcastBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void displayCategoryLoadingIndicator(boolean display) {
+        if (display){
+            categoryBar.setVisibility(View.VISIBLE);
+        }else{
+            categoryBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void displayEpisodesLoadingIndicator(boolean display) {
+        if (display){
+            episodesBar.setVisibility(View.VISIBLE);
+        }else{
+            episodesBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }
@@ -107,5 +136,8 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
         editTitleButton = rootView.findViewById(R.id.edit_podcast_title_imagebutton);
         editDescriptionButton = rootView.findViewById(R.id.edit_description_imagebutton);
         viewAllEpisodesButton = rootView.findViewById(R.id.view_all_episodes_button);
+        episodesBar = rootView.findViewById(R.id.episodes_loading_indicator);
+        categoryBar = rootView.findViewById(R.id.category_loading_indicator);
+        podcastBar = rootView.findViewById(R.id.podcast_loading_indicator);
     }
 }
