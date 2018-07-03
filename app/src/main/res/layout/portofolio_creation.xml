@@ -115,6 +115,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/provide_description_label" />
 
+        <ProgressBar
+            android:id="@+id/pb_loading_indicator"
+            style="?android:attr/progressBarStyle"
+            android:visibility="invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/categories_spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/pick_category_label"
+            app:layout_constraintTop_toTopOf="@+id/pick_category_label" />
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
 
