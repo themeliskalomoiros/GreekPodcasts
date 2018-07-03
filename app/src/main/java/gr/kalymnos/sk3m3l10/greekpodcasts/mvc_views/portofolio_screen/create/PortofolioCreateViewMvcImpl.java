@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
@@ -16,6 +17,7 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     private EditText titleEditText, descriptionEditText;
     private Spinner categorySpinner;
     private ImageView updatePodcastImageView;
+    private ProgressBar progressBar;
 
     public PortofolioCreateViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
@@ -27,6 +29,7 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
         descriptionEditText = rootView.findViewById(R.id.description_editText);
         categorySpinner = rootView.findViewById(R.id.categories_spinner);
         updatePodcastImageView = rootView.findViewById(R.id.update_podcast_pic_imageview);
+        progressBar = rootView.findViewById(R.id.pb_loading_indicator);
     }
 
     @Override
@@ -47,6 +50,15 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     @Override
     public void enableSpinner(boolean enable) {
         categorySpinner.setEnabled(enable);
+    }
+
+    @Override
+    public void displayLoadingIndicator(boolean display) {
+        if (display){
+            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            progressBar.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override

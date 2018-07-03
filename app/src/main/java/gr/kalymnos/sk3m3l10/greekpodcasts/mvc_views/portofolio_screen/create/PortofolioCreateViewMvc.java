@@ -18,5 +18,7 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
 
     void enableSpinner(boolean enable);
 
+    void displayLoadingIndicator(boolean display);
+
     void setOnPosterClickListener(OnPosterClickListener listener);
 }
