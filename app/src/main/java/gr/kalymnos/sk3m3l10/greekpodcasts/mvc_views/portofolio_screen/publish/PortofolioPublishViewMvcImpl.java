@@ -159,19 +159,21 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public void displayEpisodesLoadingIndicator(boolean display) {
-        if (display) {
-            episodesBar.setVisibility(View.VISIBLE);
-        } else {
-            episodesBar.setVisibility(View.INVISIBLE);
+        if (episodesBar != null) {
+            if (display) {
+                episodesBar.setVisibility(View.VISIBLE);
+            } else {
+                episodesBar.setVisibility(View.INVISIBLE);
+            }
         }
     }
 
     @Override
     public int getSelectedPodcastPosition() {
-        if (podcastSpinner!=null && podcastSpinnerAdapter!=null){
+        if (podcastSpinner != null && podcastSpinnerAdapter != null) {
             return podcastSpinner.getSelectedItemPosition();
-        }else{
-            throw new UnsupportedOperationException(TAG+": podcastSpinner or podcastSpinnerAdapter is null.");
+        } else {
+            throw new UnsupportedOperationException(TAG + ": podcastSpinner or podcastSpinnerAdapter is null.");
         }
     }
 
