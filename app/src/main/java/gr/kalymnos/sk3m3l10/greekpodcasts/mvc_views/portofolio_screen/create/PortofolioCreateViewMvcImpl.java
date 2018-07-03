@@ -84,21 +84,18 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
 
     @Override
     public void setOnCategorySelectedListener(OnCategorySelectedListener listener) {
-        if (spinnerAdapter != null) {
-            if (listener != null)
-                categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        listener.onCategoryChosen(position);
-                    }
+        if (listener != null) {
+            categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    listener.onCategoryChosen(position);
+                }
 
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-                        listener.onNothingChosen();
-                    }
-                });
-        } else {
-            throw new UnsupportedOperationException(TAG + ": spinnerAdapter is null. Make sure first addCategoriesToSpinner() is called because it initializes the spinnerAdapter.");
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                    listener.onNothingChosen();
+                }
+            });
         }
     }
 

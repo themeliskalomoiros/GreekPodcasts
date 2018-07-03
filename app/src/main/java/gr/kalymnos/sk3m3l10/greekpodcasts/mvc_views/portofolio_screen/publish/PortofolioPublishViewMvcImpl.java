@@ -5,7 +5,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,12 +21,14 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 
 public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
+    private static final String TAG = PortofolioPublishViewMvcImpl.class.getSimpleName();
     private View rootView;
     private Spinner podcastSpinner, categorySpinner;
     private RecyclerView episodesRecyclerView;
     private ImageView posterImageView;
     private TextView descriptionTextView;
-    private ImageButton addEpisodeButton, editTitleButton, editDescriptionButton, viewAllEpisodesButton;
+    private ImageButton addEpisodeButton, editTitleButton, editDescriptionButton;
+    private Button viewAllEpisodesButton;
     private ArrayAdapter<String> podcastSpinnerAdapter, categorySpinnerAdapter;
     private ProgressBar podcastBar, categoryBar, episodesBar;
 
@@ -54,12 +58,36 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public void setOnPodcastSelectedListener(OnPodcastSelectedListener listener) {
+        if (listener != null) {
+            podcastSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    listener.onPodcastSelected(position);
+                }
 
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
     }
 
     @Override
     public void setOnCategorySelectedListener(OnCategorySelectedListener listener) {
+        if (listener != null) {
+            categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    listener.onCategorySelected(position);
+                }
 
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
     }
 
     @Override
@@ -95,27 +123,27 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public void displayPodcastLoadingIndicator(boolean display) {
-        if (display){
+        if (display) {
             podcastBar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             podcastBar.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void displayCategoryLoadingIndicator(boolean display) {
-        if (display){
+        if (display) {
             categoryBar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             categoryBar.setVisibility(View.INVISIBLE);
         }
     }
 
     @Override
     public void displayEpisodesLoadingIndicator(boolean display) {
-        if (display){
+        if (display) {
             episodesBar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             episodesBar.setVisibility(View.INVISIBLE);
         }
     }
