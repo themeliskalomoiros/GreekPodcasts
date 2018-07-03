@@ -23,11 +23,14 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
         void onPosterClick();
     }
 
-    interface OnSpinnerChosenListener {
+    interface OnPodcastSelectedListener {
 
-        void onPodcastChosen(int position);
+        void onPodcastSelected(int position);
+    }
 
-        void onCategoryChosen(int position);
+    interface OnCategorySelectedListener {
+
+        void onCategorySelected(int position);
     }
 
     void bindEpisodes(List<Episode> episodes);
@@ -38,9 +41,15 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
 
     void setOnButtonsClickListener(OnButtonsClickListener listener);
 
-    void setOnSpinnerChosenListener(OnSpinnerChosenListener listener);
+    void setOnPodcastSelectedListener(OnPodcastSelectedListener listener);
+
+    void setOnCategorySelectedListener(OnCategorySelectedListener listener);
 
     boolean onLand();
+
+    void addPodcastsToSpinner(String[] titles);
+
+    void addCategoriesToSpinner(String[] titles);
 
     void bindTitle(String title);
 }

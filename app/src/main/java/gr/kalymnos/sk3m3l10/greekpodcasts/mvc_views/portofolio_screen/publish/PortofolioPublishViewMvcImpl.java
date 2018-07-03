@@ -22,7 +22,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     private RecyclerView episodesRecyclerView;
     private ImageView posterImageView;
     private TextView descriptionTextView;
-    private ImageButton addEpisodeButton, editTitleButton, editDescriptionButton;
+    private ImageButton addEpisodeButton, editTitleButton, editDescriptionButton, viewAllEpisodesButton;
 
     public PortofolioPublishViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
@@ -49,7 +49,12 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
-    public void setOnSpinnerChosenListener(OnSpinnerChosenListener listener) {
+    public void setOnPodcastSelectedListener(OnPodcastSelectedListener listener) {
+
+    }
+
+    @Override
+    public void setOnCategorySelectedListener(OnCategorySelectedListener listener) {
 
     }
 
@@ -59,6 +64,16 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void addPodcastsToSpinner(String[] titles) {
+
+    }
+
+    @Override
+    public void addCategoriesToSpinner(String[] titles) {
+
     }
 
     @Override
@@ -74,12 +89,13 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     private void initializeViews(LayoutInflater inflater, ViewGroup parent) {
         rootView = inflater.inflate(R.layout.portofolio_published, parent, false);
         podcastSpinner = rootView.findViewById(R.id.choose_podcast_spinner);
-        podcastSpinner = rootView.findViewById(R.id.categories_spinner);
+        categorySpinner = rootView.findViewById(R.id.categories_spinner);
         episodesRecyclerView = rootView.findViewById(R.id.recycler_view);
         posterImageView = rootView.findViewById(R.id.podcast_pic_imageview);
         descriptionTextView = rootView.findViewById(R.id.description_textview);
         addEpisodeButton = rootView.findViewById(R.id.add_episode_imagebutton);
         editTitleButton = rootView.findViewById(R.id.edit_podcast_title_imagebutton);
         editDescriptionButton = rootView.findViewById(R.id.edit_description_imagebutton);
+        viewAllEpisodesButton = rootView.findViewById(R.id.view_all_episodes_button);
     }
 }
