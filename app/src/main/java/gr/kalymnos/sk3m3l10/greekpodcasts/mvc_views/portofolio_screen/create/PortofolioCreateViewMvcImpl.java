@@ -69,7 +69,7 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     public void addCategoriesToSpinner(String[] titles) {
         if (spinnerAdapter == null) {
             spinnerAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, titles);
-            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             categorySpinner.setAdapter(spinnerAdapter);
         }
     }
@@ -98,7 +98,7 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
                     }
                 });
         } else {
-            throw new UnsupportedOperationException(TAG + ": spinnerAdapter is null.");
+            throw new UnsupportedOperationException(TAG + ": spinnerAdapter is null. Make sure first addCategoriesToSpinner() is called because it initializes the spinnerAdapter.");
         }
     }
 
