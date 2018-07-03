@@ -1,0 +1,12 @@
+<!--    Overrides android's simple_spinner_dropdown_item.xml    -->
+
+<CheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    style="?android:attr/spinnerDropDownItemStyle"
+    android:textColor="@android:color/white"
+    android:background="@color/primaryColor"
+    android:singleLine="true"
+    android:padding="@dimen/default_text_padding"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="marquee"/>
