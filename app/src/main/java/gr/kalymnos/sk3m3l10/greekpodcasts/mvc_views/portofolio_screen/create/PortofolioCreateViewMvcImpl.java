@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -13,9 +15,11 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 
 public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
 
+    private static final String TAG = PortofolioCreateViewMvcImpl.class.getSimpleName();
     private View rootView;
     private EditText titleEditText, descriptionEditText;
     private Spinner categorySpinner;
+    private ArrayAdapter<String> spinnerAdapter;
     private ImageView updatePodcastImageView;
     private ProgressBar progressBar;
 
@@ -54,10 +58,19 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
 
     @Override
     public void displayLoadingIndicator(boolean display) {
-        if (display){
+        if (display) {
             progressBar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void addCategoriesToSpinner(String[] titles) {
+        if (spinnerAdapter == null) {
+            spinnerAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, titles);
+            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            categorySpinner.setAdapter(spinnerAdapter);
         }
     }
 
@@ -67,6 +80,26 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
             if (listener != null)
                 listener.onPosterClick();
         });
+    }
+
+    @Override
+    public void setOnCategorySelectedListener(OnCategorySelectedListener listener) {
+        if (spinnerAdapter != null) {
+            if (listener != null)
+                categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        listener.onCategoryChosen(position);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+                        listener.onNothingChosen();
+                    }
+                });
+        } else {
+            throw new UnsupportedOperationException(TAG + ": spinnerAdapter is null.");
+        }
     }
 
     @Override

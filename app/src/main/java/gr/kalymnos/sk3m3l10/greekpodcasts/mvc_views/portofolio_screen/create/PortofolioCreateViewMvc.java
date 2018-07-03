@@ -10,6 +10,12 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
         void onPosterClick();
     }
 
+    interface OnCategorySelectedListener {
+        void onCategoryChosen(int position);
+
+        void onNothingChosen();
+    }
+
     void bindPoster(Bitmap poster);
 
     int getPosterContainerHeight();
@@ -20,5 +26,9 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
 
     void displayLoadingIndicator(boolean display);
 
+    void addCategoriesToSpinner(String[] titles);
+
     void setOnPosterClickListener(OnPosterClickListener listener);
+
+    void setOnCategorySelectedListener(OnCategorySelectedListener listener);
 }
