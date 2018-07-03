@@ -149,6 +149,11 @@ public class StaticFakeDataRepo implements DataRepository {
         return true;
     }
 
+    @Override
+    public String getCurrentUserUid() {
+        return PODCASTER_ID;
+    }
+
     private static void sleep(long timeMilli) {
         try {
             Thread.sleep(timeMilli);

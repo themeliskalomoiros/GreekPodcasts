@@ -36,4 +36,6 @@ public interface DataRepository {
     void createPodcaster(@NonNull Activity activity, @NonNull String pushId, Runnable actionAfterCreation);
 
     boolean podcasterExists(String pushId);
+
+    String getCurrentUserUid();
 }
