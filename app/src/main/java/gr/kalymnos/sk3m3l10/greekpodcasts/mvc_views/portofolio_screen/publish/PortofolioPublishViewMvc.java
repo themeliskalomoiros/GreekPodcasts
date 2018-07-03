@@ -58,4 +58,6 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
     void displayCategoryLoadingIndicator(boolean display);
 
     void displayEpisodesLoadingIndicator(boolean display);
+
+    int getSelectedPodcastPosition();
 }

@@ -167,6 +167,15 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public int getSelectedPodcastPosition() {
+        if (podcastSpinner!=null && podcastSpinnerAdapter!=null){
+            return podcastSpinner.getSelectedItemPosition();
+        }else{
+            throw new UnsupportedOperationException(TAG+": podcastSpinner or podcastSpinnerAdapter is null.");
+        }
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }
