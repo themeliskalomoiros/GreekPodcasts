@@ -2,6 +2,7 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +24,18 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 
 public class PortofolioCreateFragment extends Fragment implements PortofolioCreateViewMvc.OnPosterClickListener {
 
+    private static final String TAG = PortofolioCreateFragment.class.getSimpleName();
+    private static final String POSTER_HEIGHT = "container height";
+    private static final String POSTER_WIDTH = "container width";
+
     private PortofolioCreateViewMvc viewMvc;
     private static final int RC_POSTER_PIC = 1331;
 
     //  Cache uri instead of Bitmap because the latter is too large (could be more than 5Mb) and
     //  throws an exception!
     private Uri cachedPosterUri;
+    private int cachedPosterContainerWidth;
+    private int cachedPosterContainerHeight;
 
     @Nullable
     @Override
@@ -42,6 +50,8 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null && savedInstanceState.containsKey(Podcast.POSTER_KEY)) {
             cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
+            cachedPosterContainerWidth = savedInstanceState.getInt(POSTER_WIDTH);
+            cachedPosterContainerHeight = savedInstanceState.getInt(POSTER_HEIGHT);
         }
     }
 
@@ -49,9 +59,13 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     public void onStart() {
         super.onStart();
         if (cachedPosterUri != null) {
-            Bitmap poster = BitmapUtils.bitmapFromUri(getContext().getContentResolver(),
-                    cachedPosterUri);
-            viewMvc.bindPoster(poster);
+            if (cachedPosterContainerHeight != 0 && cachedPosterContainerWidth != 0){
+                Bitmap originalBitmap = BitmapUtils.bitmapFromUri(getContext().getContentResolver(),
+                        cachedPosterUri);
+                Log.d(TAG, "width=" + viewMvc.getPosterContainerWidth() + ",height=" + viewMvc.getPosterContainerHeight());
+                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(originalBitmap, cachedPosterContainerWidth, cachedPosterContainerHeight);
+                viewMvc.bindPoster(thumbnail);
+            }
         }
     }
 
@@ -62,7 +76,12 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                 if (data != null) {
                     //  Get the URI of the selected file
                     cachedPosterUri = data.getData();
-                    viewMvc.bindPoster(BitmapUtils.bitmapFromUri(getContext().getContentResolver(), cachedPosterUri));
+                    Bitmap originalBitmap = BitmapUtils.bitmapFromUri(getContext().getContentResolver(), cachedPosterUri);
+                    Log.d(TAG, "width=" + viewMvc.getPosterContainerWidth() + ",height=" + viewMvc.getPosterContainerHeight());
+                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(originalBitmap,
+                            cachedPosterContainerWidth = viewMvc.getPosterContainerWidth(),
+                            cachedPosterContainerHeight = viewMvc.getPosterContainerHeight());
+                    viewMvc.bindPoster(thumbnail);
                 }
             }
         }
@@ -71,6 +90,8 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
+        outState.putInt(POSTER_HEIGHT,cachedPosterContainerHeight);
+        outState.putInt(POSTER_WIDTH,cachedPosterContainerWidth);
     }
 
     @Override
