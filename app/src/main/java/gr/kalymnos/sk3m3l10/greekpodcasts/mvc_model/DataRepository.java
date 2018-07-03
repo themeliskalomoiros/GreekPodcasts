@@ -30,4 +30,6 @@ public interface DataRepository {
     Podcaster fetchPodcaster(String pushId);
 
     String fetchPodcasterName(String pushId);
+
+    void createUser(String pushId);
 }

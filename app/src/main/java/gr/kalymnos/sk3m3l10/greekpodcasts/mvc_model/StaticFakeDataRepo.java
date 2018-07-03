@@ -135,6 +135,11 @@ public class StaticFakeDataRepo implements DataRepository {
         return "Solomontas";
     }
 
+    @Override
+    public void createUser(String pushId) {
+        sleep(SLEEP_TIME);
+    }
+
     private static void sleep(long timeMilli) {
         try {
             Thread.sleep(timeMilli);

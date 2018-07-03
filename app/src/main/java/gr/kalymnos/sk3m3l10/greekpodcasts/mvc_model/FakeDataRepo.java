@@ -106,6 +106,11 @@ public class FakeDataRepo implements DataRepository {
         return "Panos Sketos";
     }
 
+    @Override
+    public void createUser(String pushId) {
+        sleep(SLEEP_TIME);
+    }
+
     private static void sleep(long timeMilli) {
         try {
             Thread.sleep(timeMilli);
