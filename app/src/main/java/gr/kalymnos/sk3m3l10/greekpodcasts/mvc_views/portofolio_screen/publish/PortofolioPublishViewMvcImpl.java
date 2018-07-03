@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -23,6 +24,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     private ImageView posterImageView;
     private TextView descriptionTextView;
     private ImageButton addEpisodeButton, editTitleButton, editDescriptionButton, viewAllEpisodesButton;
+    private ArrayAdapter<String> podcastSpinnerAdapter, categorySpinnerAdapter;
 
     public PortofolioPublishViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
@@ -68,12 +70,20 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public void addPodcastsToSpinner(String[] titles) {
-
+        if (podcastSpinnerAdapter == null) {
+            podcastSpinnerAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, titles);
+            podcastSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            podcastSpinner.setAdapter(podcastSpinnerAdapter);
+        }
     }
 
     @Override
     public void addCategoriesToSpinner(String[] titles) {
-
+        if (categorySpinnerAdapter == null) {
+            categorySpinnerAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, titles);
+            categorySpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            categorySpinner.setAdapter(categorySpinnerAdapter);
+        }
     }
 
     @Override
