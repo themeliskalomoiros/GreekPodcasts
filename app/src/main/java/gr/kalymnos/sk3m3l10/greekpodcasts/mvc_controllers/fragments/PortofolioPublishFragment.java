@@ -30,6 +30,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private static final int PODCASTS_LOADER_ID = 121;
     private static final int EPISODES_LOADER_ID = 232;
     private static final int CATEGORIES_LOADER_ID = 343;
+    private static final String FORCE_LOAD_KEY = "force_load_key";
 
     private List<Podcast> cachedPodcasts;
     private List<Episode> cachedEpisodes;
@@ -102,6 +103,16 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
                     @Override
                     protected void onStartLoading() {
+                        Bundle args = getArguments();
+                        if (args != null && args.containsKey(FORCE_LOAD_KEY)) {
+                            if (getArguments().getBoolean(FORCE_LOAD_KEY)) {
+                                //  Force a load even if there are cached episodes
+                                viewMvc.displayEpisodesLoadingIndicator(true);
+                                forceLoad();
+                                return;
+                            }
+                        }
+
                         if (cachedEpisodes != null) {
                             deliverResult(cachedEpisodes);
                         } else {
@@ -212,7 +223,12 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     public void onPodcastSelected(int position) {
         if (cachedPodcasts != null && cachedPodcasts.size() > 0) {
             Podcast podcastSelected = cachedPodcasts.get(position);
+
             viewMvc.bindPoster(podcastSelected.getPosterUrl());
+
+            Bundle loaderArgs = new Bundle();
+            loaderArgs.putBoolean(FORCE_LOAD_KEY,true);
+            getLoaderManager().restartLoader(EPISODES_LOADER_ID, loaderArgs, this);
         }
     }
 
