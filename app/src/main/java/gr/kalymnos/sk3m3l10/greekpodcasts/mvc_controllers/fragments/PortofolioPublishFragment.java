@@ -23,7 +23,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
-public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object> {
+public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>, PortofolioPublishViewMvc.OnItemsSelectedListener {
 
     private static final String TAG = PortofolioPublishFragment.class.getSimpleName();
 
@@ -42,6 +42,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewMvc = new PortofolioPublishViewMvcImpl(inflater, container);
+        viewMvc.setOnItemsSelectedListener(this);
         return viewMvc.getRootView();
     }
 
@@ -204,6 +205,19 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onLoaderReset(@NonNull Loader<Object> loader) {
+
+    }
+
+    @Override
+    public void onPodcastSelected(int position) {
+        if (cachedPodcasts != null && cachedPodcasts.size() > 0) {
+            Podcast podcastSelected = cachedPodcasts.get(position);
+            viewMvc.bindPoster(podcastSelected.getPosterUrl());
+        }
+    }
+
+    @Override
+    public void onCategorySelected(int position) {
 
     }
 }
