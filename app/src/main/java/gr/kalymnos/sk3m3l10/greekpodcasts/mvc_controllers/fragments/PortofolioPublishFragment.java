@@ -186,7 +186,6 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
                         cachedEpisodes = (List<Episode>) data;
                         viewMvc.displayEpisodesLoadingIndicator(false);
                         viewMvc.bindEpisodes(cachedEpisodes);
-
                     } else {
                         throw new IllegalArgumentException(TAG + ": data should be of type List<Episode>.");
                     }
@@ -196,7 +195,6 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
                     if (data != null) {
                         cachedCategories = (List<Category>) data;
                         viewMvc.displayCategoryLoadingIndicator(false);
-
                         //  Create the titles array.
                         String[] titles = new String[cachedCategories.size()];
                         for (int i = 0; i < cachedCategories.size(); i++) {
