@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish;
 
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     private Button viewAllEpisodesButton;
     private ArrayAdapter<String> podcastSpinnerAdapter, categorySpinnerAdapter;
     private ProgressBar podcastBar, categoryBar, episodesBar;
+    private EpisodesAdapter episodesAdapter;
 
     public PortofolioPublishViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
@@ -40,7 +42,11 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public void bindEpisodes(List<Episode> episodes) {
-
+        if (episodesAdapter != null) {
+            if (episodes != null && episodes.size() > 0){
+                episodesAdapter.addEpisodes(episodes);
+            }
+        }
     }
 
     @Override
@@ -186,7 +192,6 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
         rootView = inflater.inflate(R.layout.portofolio_published, parent, false);
         podcastSpinner = rootView.findViewById(R.id.choose_podcast_spinner);
         categorySpinner = rootView.findViewById(R.id.categories_spinner);
-        episodesRecyclerView = rootView.findViewById(R.id.recycler_view);
         posterImageView = rootView.findViewById(R.id.podcast_pic_imageview);
         descriptionTextView = rootView.findViewById(R.id.description_textview);
         addEpisodeButton = rootView.findViewById(R.id.add_episode_imagebutton);
@@ -196,5 +201,18 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
         episodesBar = rootView.findViewById(R.id.episodes_loading_indicator);
         categoryBar = rootView.findViewById(R.id.category_loading_indicator);
         podcastBar = rootView.findViewById(R.id.podcast_loading_indicator);
+        initializeRecyclerView();
+    }
+
+    private void initializeRecyclerView() {
+        episodesRecyclerView = rootView.findViewById(R.id.recycler_view);
+        if (episodesRecyclerView != null) {
+            //  RecyclerView does not exists on portrait layout
+            episodesAdapter = new EpisodesAdapter(rootView.getContext());
+            LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), LinearLayoutManager.VERTICAL, false);
+            episodesRecyclerView.setLayoutManager(layoutManager);
+            episodesRecyclerView.setHasFixedSize(true);
+            episodesRecyclerView.setAdapter(episodesAdapter);
+        }
     }
 }

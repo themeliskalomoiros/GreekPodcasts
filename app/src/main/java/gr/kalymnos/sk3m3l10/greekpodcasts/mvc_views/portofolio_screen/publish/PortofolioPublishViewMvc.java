@@ -39,12 +39,6 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
 
     void bindDescription(String description);
 
-    void setOnButtonsClickListener(OnButtonsClickListener listener);
-
-    void setOnPodcastSelectedListener(OnPodcastSelectedListener listener);
-
-    void setOnCategorySelectedListener(OnCategorySelectedListener listener);
-
     boolean onLand();
 
     void addPodcastsToSpinner(String[] titles);
@@ -60,4 +54,10 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
     void displayEpisodesLoadingIndicator(boolean display);
 
     int getSelectedPodcastPosition();
+
+    void setOnButtonsClickListener(OnButtonsClickListener listener);
+
+    void setOnPodcastSelectedListener(OnPodcastSelectedListener listener);
+
+    void setOnCategorySelectedListener(OnCategorySelectedListener listener);
 }

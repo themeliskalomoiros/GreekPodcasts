@@ -113,7 +113,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
                     @Override
                     public Object loadInBackground() {
                         if (cachedPodcasts != null) {
-                            return repo.fetchEpisodes(cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
+                            return repo.fetchEpisodes(cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getEpisodesId());
                         } else {
                             throw new UnsupportedOperationException(TAG + ": cachedPodcasts are null.");
                         }
@@ -173,6 +173,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
                     if (data != null) {
                         cachedEpisodes = (List<Episode>) data;
                         viewMvc.displayEpisodesLoadingIndicator(false);
+                        viewMvc.bindEpisodes(cachedEpisodes);
 
                     } else {
                         throw new IllegalArgumentException(TAG + ": data should be of type List<Episode>.");
