@@ -43,7 +43,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     @Override
     public void bindEpisodes(List<Episode> episodes) {
         if (episodesAdapter != null) {
-            if (episodes != null && episodes.size() > 0){
+            if (episodes != null && episodes.size() > 0) {
                 episodesAdapter.addEpisodes(episodes);
             }
         }
@@ -103,6 +103,35 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
             categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    listener.onCategorySelected(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void setOnItemsSelectedListener(OnItemsSelectedListener listener) {
+        if (listener != null) {
+            podcastSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                    listener.onPodcastSelected(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+
+                }
+            });
+
+            categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                     listener.onCategorySelected(position);
                 }
 

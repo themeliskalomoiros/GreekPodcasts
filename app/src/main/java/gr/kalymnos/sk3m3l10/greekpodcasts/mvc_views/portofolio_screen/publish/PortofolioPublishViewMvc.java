@@ -33,6 +33,13 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
         void onCategorySelected(int position);
     }
 
+    interface OnItemsSelectedListener {
+
+        void onPodcastSelected(int position);
+
+        void onCategorySelected(int position);
+    }
+
     void bindEpisodes(List<Episode> episodes);
 
     void bindPoster(String url);
@@ -60,4 +67,6 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
     void setOnPodcastSelectedListener(OnPodcastSelectedListener listener);
 
     void setOnCategorySelectedListener(OnCategorySelectedListener listener);
+
+    void setOnItemsSelectedListener(OnItemsSelectedListener listener);
 }
