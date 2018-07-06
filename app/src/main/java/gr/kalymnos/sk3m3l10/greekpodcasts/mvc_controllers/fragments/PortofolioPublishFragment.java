@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -219,12 +220,23 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     @Override
     public void onPodcastSelected(int position) {
         if (cachedPodcasts != null && cachedPodcasts.size() > 0) {
-            Podcast podcastSelected = cachedPodcasts.get(position);
 
+            Podcast podcastSelected = cachedPodcasts.get(position);
             viewMvc.bindPoster(podcastSelected.getPosterUrl());
+            viewMvc.bindDescription(podcastSelected.getDescription());
+
+            if (cachedCategories != null && cachedCategories.size() > 0) {
+                for (int i = 0; i < cachedCategories.size(); i++) {
+                    if (podcastSelected.getCategoryId().equals(cachedCategories.get(i).getFirebasePushId())){
+                        //  Found a cached category which matches the podcasts category id, choose it on spinner
+                        viewMvc.setCategorySelection(i);
+                        break;
+                    }
+                }
+            }
 
             Bundle loaderArgs = new Bundle();
-            loaderArgs.putBoolean(FORCE_LOAD_KEY,true);
+            loaderArgs.putBoolean(FORCE_LOAD_KEY, true);
             getLoaderManager().restartLoader(EPISODES_LOADER_ID, loaderArgs, this);
         }
     }

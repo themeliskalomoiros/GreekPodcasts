@@ -23,7 +23,6 @@ public class StaticFakeDataRepo implements DataRepository {
     private static final String IMG_URL_3 = "https://images.pexels.com/photos/219998/pexels-photo-219998.jpeg?auto=compress&cs=tinysrgb&h=350";
     private static final String IMG_URL_4 = "https://images.pexels.com/photos/33044/sunflower-sun-summer-yellow.jpg?auto=compress&cs=tinysrgb&h=350";
 
-    private static final String CATEGORY_ID = "category id";
     private static final String PODCASTER_ID = "podcaster id";
     private static final String EPISODES_ID_1 = "episodes id 1";
     private static final String EPISODES_ID_2 = "episodes id 2";
@@ -40,6 +39,12 @@ public class StaticFakeDataRepo implements DataRepository {
     private static final String CATEGORY_4 = "Arts & Entertainment";
     private static final String CATEGORY_5 = "Music";
     private static final String CATEGORY_6 = "Sports";
+    private static final String CATEGORY_ID_1 = "category id 1";
+    private static final String CATEGORY_ID_2 = "category id 2";
+    private static final String CATEGORY_ID_3 = "category id 3";
+    private static final String CATEGORY_ID_4 = "category id 4";
+    private static final String CATEGORY_ID_5 = "category id 5";
+    private static final String CATEGORY_ID_6 = "category id 6";
 
 
     private static final String EPISODE_URL_1 = "https://www.mfiles.co.uk/mp3-downloads/chopin-nocturne-op9-no2.mp3";
@@ -54,9 +59,9 @@ public class StaticFakeDataRepo implements DataRepository {
     @Override
     public List<Podcast> fetchAllPodcasts() {
         sleep(SLEEP_TIME);
-        Podcast p1 = new Podcast("All about the World Cup 2018", CATEGORY_ID, IMG_URL, "This is my description for the world cup and bla bla bklabla bla bklabla bla bklabla bla bklabla bla bkla."
+        Podcast p1 = new Podcast("All about the World Cup 2018", CATEGORY_ID_3, IMG_URL, "This is my description for the world cup and bla bla bklabla bla bklabla bla bklabla bla bklabla bla bkla."
                 , PODCASTER_ID, FIREBASE_ID_1, EPISODES_ID_1);
-        Podcast p2 = new Podcast("The Beautiful Kalymnos", CATEGORY_ID, IMG_URL_2, "Is Kalymnos the most beautiful island in the world? And bla bla bklabla bla bklabla bla bklabla bla bklabla bla bkla."
+        Podcast p2 = new Podcast("The Beautiful Kalymnos", CATEGORY_ID_5, IMG_URL_2, "Is Kalymnos the most beautiful island in the world? And bla bla bklabla bla bklabla bla bklabla bla bklabla bla bkla."
                 , PODCASTER_ID, FIREBASE_ID_2, EPISODES_ID_2);
         List<Podcast> list = new ArrayList<>();
         list.add(p1);
@@ -107,12 +112,12 @@ public class StaticFakeDataRepo implements DataRepository {
     public List<Category> fetchAllCategories() {
         sleep(SLEEP_TIME);
         List<Category> categories = new ArrayList<>();
-        categories.add(new Category(CATEGORY_1, DESCRIPTION, IMG_URL_2));
-        categories.add(new Category(CATEGORY_2, DESCRIPTION, IMG_URL_2));
-        categories.add(new Category(CATEGORY_3, DESCRIPTION, IMG_URL_2));
-        categories.add(new Category(CATEGORY_4, DESCRIPTION, IMG_URL_2));
-        categories.add(new Category(CATEGORY_5, DESCRIPTION, IMG_URL_2));
-        categories.add(new Category(CATEGORY_6, DESCRIPTION, IMG_URL_2));
+        categories.add(new Category(CATEGORY_1, DESCRIPTION, IMG_URL_2,CATEGORY_ID_1));
+        categories.add(new Category(CATEGORY_2, DESCRIPTION, IMG_URL_2,CATEGORY_ID_2));
+        categories.add(new Category(CATEGORY_3, DESCRIPTION, IMG_URL_2,CATEGORY_ID_3));
+        categories.add(new Category(CATEGORY_4, DESCRIPTION, IMG_URL_2,CATEGORY_ID_4));
+        categories.add(new Category(CATEGORY_5, DESCRIPTION, IMG_URL_2,CATEGORY_ID_5));
+        categories.add(new Category(CATEGORY_6, DESCRIPTION, IMG_URL_2,CATEGORY_ID_6));
         return categories;
     }
 
