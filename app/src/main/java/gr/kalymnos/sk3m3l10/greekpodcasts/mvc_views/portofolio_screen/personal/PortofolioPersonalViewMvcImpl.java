@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.personal;
 
 import android.graphics.Bitmap;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcaster_screen.PromotionLinksAdapter;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 
 public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc {
@@ -21,8 +23,9 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     private ImageView personalPic;
     private ImageButton editNameButton, editStatementButton, editPromotionButton;
     private RecyclerView promotionRecyclerView;
+    private PromotionLinksAdapter adapter;
 
-    public PortofolioPersonalViewMvcImpl(LayoutInflater inflater, ViewGroup parent){
+    public PortofolioPersonalViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
     }
 
@@ -38,7 +41,10 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
 
     @Override
     public void bindPromotionLinks(List<PromotionLink> promotionLinks) {
-
+        if (promotionLinks != null && promotionLinks.size() > 0) {
+            adapter.addPromotionLinks(promotionLinks);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -52,13 +58,21 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     private void initializeViews(LayoutInflater inflater, ViewGroup parent) {
-        rootView = inflater.inflate(R.layout.portofolio_personal,parent,false);
+        rootView = inflater.inflate(R.layout.portofolio_personal, parent, false);
         nameTextView = rootView.findViewById(R.id.name_textview);
         statementTextView = rootView.findViewById(R.id.personal_statement_textview);
         personalPic = rootView.findViewById(R.id.personal_pic_imageview);
         editNameButton = rootView.findViewById(R.id.edit_name_imagebutton);
         editStatementButton = rootView.findViewById(R.id.edit_personal_statement_imagebutton);
         editPromotionButton = rootView.findViewById(R.id.edit_promotion_imagebutton);
+        initializeRecyclerView();
+    }
+
+    private void initializeRecyclerView() {
         promotionRecyclerView = rootView.findViewById(R.id.recycler_view);
+        adapter = new PromotionLinksAdapter(rootView.getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), LinearLayoutManager.VERTICAL, false);
+        promotionRecyclerView.setHasFixedSize(true);
+        promotionRecyclerView.setAdapter(adapter);
     }
 }
