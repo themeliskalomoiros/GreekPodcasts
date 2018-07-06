@@ -1,4 +1,4 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

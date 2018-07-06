@@ -1,4 +1,4 @@
-package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
+package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -6,9 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.PortofolioCreateFragment;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.PortofolioPersonalFragment;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.PortofolioPublishFragment;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.PortofolioCreateFragment;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.PortofolioPersonalFragment;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.PortofolioPublishFragment;
 
 public class PortofolioPagerAdapter extends FragmentPagerAdapter {
 
