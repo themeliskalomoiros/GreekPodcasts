@@ -105,6 +105,11 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     }
 
     @Override
+    public ImageView getPosterImageView() {
+        return updatePodcastImageView;
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }
