@@ -145,6 +145,11 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public void setCategorySelection(int position) {
+        categorySpinner.setSelection(position);
+    }
+
+    @Override
     public boolean onLand() {
         if (episodesRecyclerView != null) {
             return true;
