@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -191,6 +192,16 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                 && viewMvc.getDescriptionText().length() > MIN_DESCRIPTION_LENGTH
                 && viewMvc.getDescriptionText().length() <= MAX_DESCRIPTION_LENGTH;
 
+        byte[] posterData = BitmapUtils.getBytesFromImageView(viewMvc.getPosterImageView());
+        boolean imageDataExists = posterData != null && posterData.length > 0;
+
+        if (isTitleValid && isDescriptionValid && imageDataExists) {
+            //  TODO: make the save operation
+            Toast.makeText(getContext(), "Save completed", Toast.LENGTH_SHORT).show();
+        }else{
+            //  TODO: pop-up a message explaining why the save cannot be done.
+            Toast.makeText(getContext(), "Could not save", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

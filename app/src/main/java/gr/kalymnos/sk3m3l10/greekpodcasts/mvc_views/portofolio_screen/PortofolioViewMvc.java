@@ -14,5 +14,9 @@ public interface PortofolioViewMvc extends ViewMvc {
 
     Toolbar getToolbar();
 
+    int getCurrentTabItem();
+
+    int getViewPagerId();
+
     void setOnActionSaveClickListener(OnActionSaveClickListener listener);
 }

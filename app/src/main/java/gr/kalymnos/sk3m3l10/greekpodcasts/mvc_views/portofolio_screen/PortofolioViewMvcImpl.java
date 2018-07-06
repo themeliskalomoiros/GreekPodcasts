@@ -54,8 +54,21 @@ public class PortofolioViewMvcImpl implements PortofolioViewMvc {
     }
 
     @Override
-    public void setOnActionSaveClickListener(OnActionSaveClickListener listener) {
+    public int getCurrentTabItem() {
+        return viewPager.getCurrentItem();
+    }
 
+    @Override
+    public int getViewPagerId() {
+        return viewPager.getId();
+    }
+
+    @Override
+    public void setOnActionSaveClickListener(OnActionSaveClickListener listener) {
+        saveButton.setOnClickListener(view -> {
+            if (listener!=null)
+                listener.onSaveClick();
+        });
     }
 
     @Override
