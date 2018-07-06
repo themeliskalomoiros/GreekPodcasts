@@ -6,7 +6,9 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.widget.ImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class BitmapUtils {
@@ -24,5 +26,16 @@ public class BitmapUtils {
             Log.d(TAG, e.getMessage());
             return null;
         }
+    }
+
+    public static byte[] getBytesFromImageView(ImageView imageView) {
+        //  Get the bitmap
+        imageView.setDrawingCacheEnabled(true);
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        return byteArrayOutputStream.toByteArray();
     }
 }
