@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,7 +31,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 
 public class PortofolioCreateFragment extends Fragment implements PortofolioCreateViewMvc.OnPosterClickListener,
         PortofolioCreateViewMvc.OnCategorySelectedListener, LoaderManager.LoaderCallbacks<List<Category>>,
-ChangeSaver{
+        ChangeSaver {
 
     private static final String TAG = PortofolioCreateFragment.class.getSimpleName();
     private static final String POSTER_HEIGHT = "container height";
@@ -182,6 +183,19 @@ ChangeSaver{
 
     @Override
     public void save() {
+        boolean isTitleValid = !TextUtils.isEmpty(viewMvc.getTitleText())
+                && viewMvc.getTitleText().length() > MIN_TITLE_LENGTH
+                && viewMvc.getTitleText().length() <= MAX_TITLE_LENGTH;
 
+        boolean isDescriptionValid = !TextUtils.isEmpty(viewMvc.getDescriptionText())
+                && viewMvc.getDescriptionText().length() > MIN_DESCRIPTION_LENGTH
+                && viewMvc.getDescriptionText().length() <= MAX_DESCRIPTION_LENGTH;
+
+
+    }
+
+    @Override
+    public String getConfirmationMessage() {
+        return null;
     }
 }

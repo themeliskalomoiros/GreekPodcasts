@@ -250,4 +250,9 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     public void save() {
 
     }
+
+    @Override
+    public String getConfirmationMessage() {
+        return null;
+    }
 }

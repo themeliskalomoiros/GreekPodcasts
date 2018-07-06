@@ -157,4 +157,9 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     public void save() {
 
     }
+
+    @Override
+    public String getConfirmationMessage() {
+        return null;
+    }
 }
