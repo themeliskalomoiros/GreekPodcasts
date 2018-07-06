@@ -126,6 +126,11 @@ public class FakeDataRepo implements DataRepository {
         return "podcaster id";
     }
 
+    @Override
+    public void createNewPodcast(Podcast podcast) {
+
+    }
+
     private static void sleep(long timeMilli) {
         try {
             Thread.sleep(timeMilli);

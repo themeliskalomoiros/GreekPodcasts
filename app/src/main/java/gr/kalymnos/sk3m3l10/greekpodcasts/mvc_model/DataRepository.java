@@ -38,4 +38,6 @@ public interface DataRepository {
     boolean podcasterExists(String pushId);
 
     String getCurrentUserUid();
+
+    void createNewPodcast(Podcast podcast);
 }
