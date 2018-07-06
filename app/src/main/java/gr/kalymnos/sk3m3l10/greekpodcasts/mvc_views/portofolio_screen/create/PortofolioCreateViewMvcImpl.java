@@ -95,6 +95,16 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     }
 
     @Override
+    public String getTitleText() {
+        return titleEditText.getText().toString();
+    }
+
+    @Override
+    public String getDescriptionText() {
+        return descriptionEditText.getText().toString();
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }

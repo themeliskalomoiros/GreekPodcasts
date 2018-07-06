@@ -29,4 +29,8 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
     void setOnPosterClickListener(OnPosterClickListener listener);
 
     void setOnCategorySelectedListener(OnCategorySelectedListener listener);
+
+    String getTitleText();
+
+    String getDescriptionText();
 }
