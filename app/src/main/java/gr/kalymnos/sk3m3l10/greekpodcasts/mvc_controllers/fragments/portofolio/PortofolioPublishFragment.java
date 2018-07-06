@@ -23,7 +23,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
-public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>, PortofolioPublishViewMvc.OnItemsSelectedListener {
+public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
+        PortofolioPublishViewMvc.OnItemsSelectedListener,ChangeSaver {
 
     private static final String TAG = PortofolioPublishFragment.class.getSimpleName();
 
@@ -242,6 +243,11 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onCategorySelected(int position) {
+
+    }
+
+    @Override
+    public void save() {
 
     }
 }

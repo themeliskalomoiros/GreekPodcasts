@@ -28,7 +28,9 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 
-public class PortofolioCreateFragment extends Fragment implements PortofolioCreateViewMvc.OnPosterClickListener, PortofolioCreateViewMvc.OnCategorySelectedListener, LoaderManager.LoaderCallbacks<List<Category>> {
+public class PortofolioCreateFragment extends Fragment implements PortofolioCreateViewMvc.OnPosterClickListener,
+        PortofolioCreateViewMvc.OnCategorySelectedListener, LoaderManager.LoaderCallbacks<List<Category>>,
+ChangeSaver{
 
     private static final String TAG = PortofolioCreateFragment.class.getSimpleName();
     private static final String POSTER_HEIGHT = "container height";
@@ -176,5 +178,10 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     @Override
     public void onNothingChosen() {
         //  TODO: Do something when no item from the spinner is chosen (optional)
+    }
+
+    @Override
+    public void save() {
+
     }
 }

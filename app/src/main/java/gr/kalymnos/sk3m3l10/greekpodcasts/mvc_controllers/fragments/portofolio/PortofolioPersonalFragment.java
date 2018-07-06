@@ -26,7 +26,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 
-public class PortofolioPersonalFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object> {
+public class PortofolioPersonalFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
+        ChangeSaver {
 
     private static final int PROMOTION_LOADER_ID = 100;
     private static final int PODCASTER_LOADER_ID = 200;
@@ -58,8 +59,8 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
             cachedPromotionLinks = savedInstanceState.getParcelableArrayList(PromotionLink.PROMOTION_LINKS_KEY);
         }
 
-        getLoaderManager().restartLoader(PROMOTION_LOADER_ID,null,this);
-        getLoaderManager().restartLoader(PODCASTER_LOADER_ID,null,this);
+        getLoaderManager().restartLoader(PROMOTION_LOADER_ID, null, this);
+        getLoaderManager().restartLoader(PODCASTER_LOADER_ID, null, this);
     }
 
     @Override
@@ -149,6 +150,11 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     @Override
     public void onLoaderReset(@NonNull Loader<Object> loader) {
+
+    }
+
+    @Override
+    public void save() {
 
     }
 }
