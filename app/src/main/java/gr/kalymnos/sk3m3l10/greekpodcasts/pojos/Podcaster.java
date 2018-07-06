@@ -5,7 +5,8 @@ import android.os.Parcelable;
 
 public class Podcaster implements Parcelable {
 
-    public static final String PUSH_ID_KEY = "podcaster key";
+    public static final String PUSH_ID_KEY = "podcaster push id  key";
+    public static final String PODCASTER_KEY = "podcaster key";
     private String email, username, personalStatement, imageUrl, firebasePushId, promotionLinksId;
     private long joinedDate;
 

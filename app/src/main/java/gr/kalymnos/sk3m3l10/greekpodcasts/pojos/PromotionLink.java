@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class PromotionLink implements Parcelable{
+    public static final String PROMOTION_LINKS_KEY = "promotion links key";
 
     /*  Promotion Link is an object that the Podcaster defines to promote himself.
      *   Example: The title could be "Support me on Patreon" and the url "www.patreon.com/user5" */

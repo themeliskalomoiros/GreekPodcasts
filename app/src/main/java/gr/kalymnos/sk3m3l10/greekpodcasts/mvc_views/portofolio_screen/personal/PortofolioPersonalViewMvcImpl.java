@@ -94,6 +94,7 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
         promotionRecyclerView = rootView.findViewById(R.id.recycler_view);
         adapter = new PromotionLinksAdapter(rootView.getContext());
         LinearLayoutManager layoutManager = new LinearLayoutManager(rootView.getContext(), LinearLayoutManager.VERTICAL, false);
+        promotionRecyclerView.setLayoutManager(layoutManager);
         promotionRecyclerView.setHasFixedSize(true);
         promotionRecyclerView.setAdapter(adapter);
     }
