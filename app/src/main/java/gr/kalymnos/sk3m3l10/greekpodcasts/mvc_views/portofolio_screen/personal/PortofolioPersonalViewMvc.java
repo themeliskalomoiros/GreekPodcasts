@@ -25,4 +25,6 @@ public interface PortofolioPersonalViewMvc extends ViewMvc {
     void bindPromotionLinks(List<PromotionLink> promotionLinks);
 
     void setOnButtonsClickListener(OnButtonsClickListener listener);
+
+    void displayLoadingIndicator(boolean display);
 }

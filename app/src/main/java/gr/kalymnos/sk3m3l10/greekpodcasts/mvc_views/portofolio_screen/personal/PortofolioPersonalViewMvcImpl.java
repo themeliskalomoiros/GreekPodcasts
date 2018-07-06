@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     private TextView nameTextView, statementTextView;
     private ImageView personalPic;
     private ImageButton editNameButton, editStatementButton, editPromotionButton;
+    private ProgressBar progressBar;
     private RecyclerView promotionRecyclerView;
     private PromotionLinksAdapter adapter;
 
@@ -53,6 +55,15 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
+    public void displayLoadingIndicator(boolean display) {
+        if (display){
+            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }
@@ -65,6 +76,7 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
         editNameButton = rootView.findViewById(R.id.edit_name_imagebutton);
         editStatementButton = rootView.findViewById(R.id.edit_personal_statement_imagebutton);
         editPromotionButton = rootView.findViewById(R.id.edit_promotion_imagebutton);
+        progressBar = rootView.findViewById(R.id.pb_loading_indicator);
         initializeRecyclerView();
     }
 
