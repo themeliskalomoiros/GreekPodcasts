@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
@@ -37,8 +39,11 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
-    public void bindPodcastPoster(Bitmap poster) {
-        personalPic.setImageBitmap(poster);
+    public void bindPodcastPoster(String url) {
+        Picasso.get().load(url)
+                .placeholder(R.drawable.ic_headset_black_light_148dp)
+                .error(R.drawable.ic_error_black_light_148dp)
+                .into(personalPic);
     }
 
     @Override
@@ -56,11 +61,16 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
 
     @Override
     public void displayLoadingIndicator(boolean display) {
-        if (display){
+        if (display) {
             progressBar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             progressBar.setVisibility(View.INVISIBLE);
         }
+    }
+
+    @Override
+    public void bindPersonalStatement(String statement) {
+        statementTextView.setText(statement);
     }
 
     @Override
