@@ -45,6 +45,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
         if (episodesAdapter != null) {
             if (episodes != null && episodes.size() > 0) {
                 episodesAdapter.addEpisodes(episodes);
+                episodesAdapter.notifyDataSetChanged();
             }
         }
     }

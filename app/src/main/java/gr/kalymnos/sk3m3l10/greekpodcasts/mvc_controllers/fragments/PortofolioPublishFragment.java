@@ -74,7 +74,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @NonNull
     @Override
-    public Loader<Object> onCreateLoader(int id, @Nullable Bundle args) {
+    public Loader<Object> onCreateLoader(int id, @Nullable Bundle loaderArgs) {
         //  TODO: Replace with real service
         DataRepository repo = new StaticFakeDataRepo();
 
@@ -103,9 +103,8 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
                     @Override
                     protected void onStartLoading() {
-                        Bundle args = getArguments();
-                        if (args != null && args.containsKey(FORCE_LOAD_KEY)) {
-                            if (getArguments().getBoolean(FORCE_LOAD_KEY)) {
+                        if (loaderArgs != null && loaderArgs.containsKey(FORCE_LOAD_KEY)) {
+                            if (loaderArgs.getBoolean(FORCE_LOAD_KEY)) {
                                 //  Force a load even if there are cached episodes
                                 viewMvc.displayEpisodesLoadingIndicator(true);
                                 forceLoad();
