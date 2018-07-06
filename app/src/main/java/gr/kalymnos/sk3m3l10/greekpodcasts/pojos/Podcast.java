@@ -4,6 +4,29 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Podcast implements Parcelable{
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPodcasterId(String podcasterId) {
+        this.podcasterId = podcasterId;
+    }
+
+    public void setEpisodesId(String episodesId) {
+        this.episodesId = episodesId;
+    }
 
     public static final String PODCASTS_KEY = "podcasts_key";
     public static final String PODCAST_KEY = "podcast_key";

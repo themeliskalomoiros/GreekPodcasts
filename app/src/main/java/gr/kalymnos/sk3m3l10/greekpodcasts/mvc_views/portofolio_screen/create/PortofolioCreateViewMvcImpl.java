@@ -110,6 +110,11 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     }
 
     @Override
+    public int getCategoryPosition() {
+        return categorySpinner.getSelectedItemPosition();
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }

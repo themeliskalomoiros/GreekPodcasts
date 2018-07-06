@@ -36,4 +36,6 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
     String getDescriptionText();
 
     ImageView getPosterImageView();
+
+    int getCategoryPosition();
 }
