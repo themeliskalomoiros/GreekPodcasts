@@ -24,7 +24,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
 public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
-        PortofolioPublishViewMvc.OnItemsSelectedListener,ChangeSaver {
+        PortofolioPublishViewMvc.OnItemsSelectedListener, ChangeSaver, PortofolioPublishViewMvc.OnButtonsClickListener{
 
     private static final String TAG = PortofolioPublishFragment.class.getSimpleName();
 
@@ -37,14 +37,17 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private List<Episode> cachedEpisodes;
     private List<Category> cachedCategories;
 
-
     private PortofolioPublishViewMvc viewMvc;
+
+    private DataRepository repo;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewMvc = new PortofolioPublishViewMvcImpl(inflater, container);
         viewMvc.setOnItemsSelectedListener(this);
+        //  TODO: Replace with a real service
+        repo = new StaticFakeDataRepo();
         return viewMvc.getRootView();
     }
 
@@ -76,9 +79,6 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     @NonNull
     @Override
     public Loader<Object> onCreateLoader(int id, @Nullable Bundle loaderArgs) {
-        //  TODO: Replace with real service
-        DataRepository repo = new StaticFakeDataRepo();
-
         switch (id) {
             case PODCASTS_LOADER_ID:
                 return new AsyncTaskLoader<Object>(getContext()) {
@@ -227,7 +227,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
             if (cachedCategories != null && cachedCategories.size() > 0) {
                 for (int i = 0; i < cachedCategories.size(); i++) {
-                    if (podcastSelected.getCategoryId().equals(cachedCategories.get(i).getFirebasePushId())){
+                    if (podcastSelected.getCategoryId().equals(cachedCategories.get(i).getFirebasePushId())) {
                         //  Found a cached category which matches the podcasts category id, choose it on spinner
                         viewMvc.setCategorySelection(i);
                         break;
@@ -254,5 +254,30 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     @Override
     public String getConfirmationMessage() {
         return null;
+    }
+
+    @Override
+    public void onEditPodcastClick(int itemPosition) {
+        
+    }
+
+    @Override
+    public void onEditDescriptionClick() {
+
+    }
+
+    @Override
+    public void onViewEpisodesClick() {
+
+    }
+
+    @Override
+    public void onAddEpisodeClick() {
+
+    }
+
+    @Override
+    public void onPosterClick() {
+
     }
 }
