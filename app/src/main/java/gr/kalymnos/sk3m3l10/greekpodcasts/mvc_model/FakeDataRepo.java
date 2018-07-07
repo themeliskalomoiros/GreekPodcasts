@@ -131,6 +131,11 @@ public class FakeDataRepo implements DataRepository {
 
     }
 
+    @Override
+    public void setOnCreatedPodcastListener(OnCreatedPodcastListener listener) {
+        
+    }
+
     private static void sleep(long timeMilli) {
         try {
             Thread.sleep(timeMilli);

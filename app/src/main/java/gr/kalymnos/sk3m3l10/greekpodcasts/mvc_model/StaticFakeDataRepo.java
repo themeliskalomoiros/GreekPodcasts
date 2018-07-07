@@ -14,7 +14,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 
-public class StaticFakeDataRepo implements DataRepository {
+public class StaticFakeDataRepo implements DataRepository{
 
     private static final long SLEEP_TIME = 500;
 
@@ -55,6 +55,8 @@ public class StaticFakeDataRepo implements DataRepository {
     private static final String EPISODE_URL_6 = "https://www.mfiles.co.uk/mp3-downloads/edvard-grieg-peer-gynt1-morning-mood-piano.mp3";
     private static final String DESCRIPTION = "This is a descriptions and bla bla bla.";
     private static final String PUSH_ID = "Promotion push id";
+
+    private OnCreatedPodcastListener onCreatedPodcastListener;
 
     @Override
     public List<Podcast> fetchAllPodcasts() {
@@ -161,6 +163,11 @@ public class StaticFakeDataRepo implements DataRepository {
 
     @Override
     public void createNewPodcast(Podcast podcast) {
+        sleep(SLEEP_TIME);
+    }
+
+    @Override
+    public void setOnCreatedPodcastListener(OnCreatedPodcastListener listener) {
 
     }
 
