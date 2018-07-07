@@ -32,7 +32,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 
 public class PortofolioCreateFragment extends Fragment implements PortofolioCreateViewMvc.OnPosterClickListener,
         PortofolioCreateViewMvc.OnCategorySelectedListener, LoaderManager.LoaderCallbacks<List<Category>>,
-        ChangeSaver {
+        ChangeSaver, DataRepository.OnCreatedPodcastListener {
 
     private static final String TAG = PortofolioCreateFragment.class.getSimpleName();
     private static final String POSTER_HEIGHT = "container height";
@@ -50,11 +50,16 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
 
     private List<Category> cachedCategories;
 
+    private DataRepository repo;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewMvc = new PortofolioCreateViewMvcImpl(inflater, container);
         viewMvc.setOnPosterClickListener(this);
+        //  TODO: Replace with a real service
+        repo = new StaticFakeDataRepo();
+        repo.setOnCreatedPodcastListener(this);
         return viewMvc.getRootView();
     }
 
@@ -145,8 +150,6 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
             @Nullable
             @Override
             public List<Category> loadInBackground() {
-                //  TODO: Replace with real service
-                DataRepository repo = new StaticFakeDataRepo();
                 return repo.fetchAllCategories();
             }
         };
@@ -196,9 +199,15 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
         boolean imageDataExists = posterData != null && posterData.length > 0;
 
         if (isTitleValid && isDescriptionValid && imageDataExists) {
-            //  TODO: make the save operation
-            Toast.makeText(getContext(), "Save completed", Toast.LENGTH_SHORT).show();
-        }else{
+
+            //  Initialize a podcast with as many info we have so far...
+            Podcast podcastToBeCreated = new Podcast();
+            podcastToBeCreated.setTitle(viewMvc.getTitleText());
+            podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
+            podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getCategoryPosition()).getFirebasePushId());
+
+            repo.createNewPodcast(podcastToBeCreated);
+        } else {
             //  TODO: pop-up a message explaining why the save cannot be done.
             Toast.makeText(getContext(), "Could not save", Toast.LENGTH_SHORT).show();
         }
@@ -208,5 +217,16 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     @Override
     public String getConfirmationMessage() {
         return null;
+    }
+
+    @Override
+    public void onPodcastCreationSuccess(String podcastPushId) {
+        byte[] posterData = BitmapUtils.getBytesFromImageView(viewMvc.getPosterImageView());
+        repo.uploadImage(podcastPushId,posterData);
+    }
+
+    @Override
+    public void onPodcastCreationFailure(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }
