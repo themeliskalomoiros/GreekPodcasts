@@ -18,11 +18,11 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 public interface DataRepository {
 
     interface OnCreatedPodcastListener {
+
         void onPodcastCreationSuccess(String podcastPushId);
-
         void onPodcastCreationFailure(String message);
-    }
 
+    }
     List<Podcast> fetchAllPodcasts();
 
     List<Podcast> fetchPodcastsFromPodcaster(String podcasterPushId);
@@ -48,4 +48,6 @@ public interface DataRepository {
     void createNewPodcast(Podcast podcast);
 
     void setOnCreatedPodcastListener(OnCreatedPodcastListener listener);
+
+    void uploadImage(String podcastPushId, byte[] posterData);
 }

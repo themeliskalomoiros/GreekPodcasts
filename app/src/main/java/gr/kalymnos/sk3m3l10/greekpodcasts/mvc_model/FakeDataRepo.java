@@ -136,6 +136,11 @@ public class FakeDataRepo implements DataRepository {
         
     }
 
+    @Override
+    public void uploadImage(String podcastPushId, byte[] posterData) {
+
+    }
+
     private static void sleep(long timeMilli) {
         try {
             Thread.sleep(timeMilli);

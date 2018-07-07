@@ -14,7 +14,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 
-public class StaticFakeDataRepo implements DataRepository{
+public class StaticFakeDataRepo implements DataRepository {
 
     private static final long SLEEP_TIME = 500;
 
@@ -114,12 +114,12 @@ public class StaticFakeDataRepo implements DataRepository{
     public List<Category> fetchAllCategories() {
         sleep(SLEEP_TIME);
         List<Category> categories = new ArrayList<>();
-        categories.add(new Category(CATEGORY_1, DESCRIPTION, IMG_URL_2,CATEGORY_ID_1));
-        categories.add(new Category(CATEGORY_2, DESCRIPTION, IMG_URL_2,CATEGORY_ID_2));
-        categories.add(new Category(CATEGORY_3, DESCRIPTION, IMG_URL_2,CATEGORY_ID_3));
-        categories.add(new Category(CATEGORY_4, DESCRIPTION, IMG_URL_2,CATEGORY_ID_4));
-        categories.add(new Category(CATEGORY_5, DESCRIPTION, IMG_URL_2,CATEGORY_ID_5));
-        categories.add(new Category(CATEGORY_6, DESCRIPTION, IMG_URL_2,CATEGORY_ID_6));
+        categories.add(new Category(CATEGORY_1, DESCRIPTION, IMG_URL_2, CATEGORY_ID_1));
+        categories.add(new Category(CATEGORY_2, DESCRIPTION, IMG_URL_2, CATEGORY_ID_2));
+        categories.add(new Category(CATEGORY_3, DESCRIPTION, IMG_URL_2, CATEGORY_ID_3));
+        categories.add(new Category(CATEGORY_4, DESCRIPTION, IMG_URL_2, CATEGORY_ID_4));
+        categories.add(new Category(CATEGORY_5, DESCRIPTION, IMG_URL_2, CATEGORY_ID_5));
+        categories.add(new Category(CATEGORY_6, DESCRIPTION, IMG_URL_2, CATEGORY_ID_6));
         return categories;
     }
 
@@ -164,11 +164,28 @@ public class StaticFakeDataRepo implements DataRepository{
     @Override
     public void createNewPodcast(Podcast podcast) {
         sleep(SLEEP_TIME);
+        //  Just a fake condition to mimic that the operation was successful or not
+        boolean isPodcastCreated = true;
+        podcast.setFirebasePushId(FIREBASE_ID_1);
+        if (isPodcastCreated) {
+            if (onCreatedPodcastListener != null) {
+                onCreatedPodcastListener.onPodcastCreationSuccess(podcast.getFirebasePushId());
+            }
+        } else {
+            if (onCreatedPodcastListener != null) {
+                onCreatedPodcastListener.onPodcastCreationFailure("Podcast was not created!");
+            }
+        }
     }
 
     @Override
     public void setOnCreatedPodcastListener(OnCreatedPodcastListener listener) {
+        onCreatedPodcastListener = listener;
+    }
 
+    @Override
+    public void uploadImage(String podcastPushId, byte[] posterData) {
+        sleep(2000);
     }
 
     private static void sleep(long timeMilli) {
