@@ -5,12 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?colorPrimary"
     android:paddingBottom="@dimen/portofolio_tab_bottom_padding">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?colorPrimary">
 
         <TextView
             android:id="@+id/category_label"
@@ -182,5 +182,23 @@
             app:layout_constraintEnd_toEndOf="@+id/categories_spinner"
             app:layout_constraintStart_toStartOf="@+id/categories_spinner"
             app:layout_constraintTop_toTopOf="@+id/categories_spinner" />
+
+        <FrameLayout
+            android:id="@+id/all_episodes_fragment_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="64dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="64dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </FrameLayout>
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

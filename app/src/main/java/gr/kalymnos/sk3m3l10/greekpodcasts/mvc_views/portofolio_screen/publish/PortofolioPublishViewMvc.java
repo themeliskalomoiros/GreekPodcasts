@@ -71,4 +71,6 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
     void setOnItemsSelectedListener(OnItemsSelectedListener listener);
 
     void setCategorySelection(int position);
+
+    int getAllEpisodesContainerId();
 }

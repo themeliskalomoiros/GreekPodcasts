@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -35,6 +36,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     private ArrayAdapter<String> podcastSpinnerAdapter, categorySpinnerAdapter;
     private ProgressBar podcastBar, categoryBar, episodesBar;
     private EpisodesAdapter episodesAdapter;
+    private FrameLayout allEpisodesFragmentContainer;
 
     public PortofolioPublishViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
@@ -150,6 +152,14 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public int getAllEpisodesContainerId() {
+        if (allEpisodesFragmentContainer != null) {
+            return allEpisodesFragmentContainer.getId();
+        }
+        return 0;
+    }
+
+    @Override
     public boolean onLand() {
         if (episodesRecyclerView != null) {
             return true;
@@ -236,6 +246,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
         episodesBar = rootView.findViewById(R.id.episodes_loading_indicator);
         categoryBar = rootView.findViewById(R.id.category_loading_indicator);
         podcastBar = rootView.findViewById(R.id.podcast_loading_indicator);
+        allEpisodesFragmentContainer = rootView.findViewById(R.id.all_episodes_fragment_container);
         initializeRecyclerView();
     }
 
