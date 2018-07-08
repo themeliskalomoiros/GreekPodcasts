@@ -13,7 +13,7 @@ import java.util.List;
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 
-class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.EpisodeHolder> {
+public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.EpisodeHolder> {
 
     private Context context;
     private List<Episode> episodes;

@@ -11,6 +11,7 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
 public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
-        PortofolioPublishViewMvc.OnItemsSelectedListener, ChangeSaver, PortofolioPublishViewMvc.OnButtonsClickListener{
+        PortofolioPublishViewMvc.OnItemsSelectedListener, ChangeSaver, PortofolioPublishViewMvc.OnButtonsClickListener {
 
     private static final String TAG = PortofolioPublishFragment.class.getSimpleName();
 
@@ -46,6 +47,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewMvc = new PortofolioPublishViewMvcImpl(inflater, container);
         viewMvc.setOnItemsSelectedListener(this);
+        viewMvc.setOnButtonsClickListener(this);
         //  TODO: Replace with a real service
         repo = new StaticFakeDataRepo();
         return viewMvc.getRootView();
@@ -258,7 +260,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onEditPodcastClick(int itemPosition) {
-        
+
     }
 
     @Override
@@ -268,7 +270,16 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onViewEpisodesClick() {
-
+        if (cachedEpisodes != null) {
+            boolean fragmentExists = getFragmentManager().findFragmentById(viewMvc.getAllEpisodesContainerId()) != null;
+            if (!fragmentExists) {
+                Bundle args = new Bundle();
+                args.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
+                ViewAllEpisodesFragment episodesFragment = new ViewAllEpisodesFragment();
+                episodesFragment.setArguments(args);
+                getFragmentManager().beginTransaction().addToBackStack(null).replace(viewMvc.getAllEpisodesContainerId(), episodesFragment).commit();
+            }
+        }
     }
 
     @Override
