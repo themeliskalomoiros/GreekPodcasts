@@ -63,4 +63,6 @@
     <string name="portofolio_create_label">Create</string>
     <string name="portofolio_published_label">Published</string>
     <string name="portofolio_personal_label">Personal</string>
+    <string name="all_episodes_label">All Episodes</string>
+    <string name="add_new_episode_label">Add new episode</string>
 </resources>
