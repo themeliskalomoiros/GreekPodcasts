@@ -2,6 +2,7 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -186,6 +187,11 @@ public class StaticFakeDataRepo implements DataRepository {
     @Override
     public void uploadImage(String podcastPushId, byte[] posterData) {
         sleep(2000);
+    }
+
+    @Override
+    public void uploadAudio(Uri audioUri) {
+        sleep(SLEEP_TIME);
     }
 
     private static void sleep(long timeMilli) {

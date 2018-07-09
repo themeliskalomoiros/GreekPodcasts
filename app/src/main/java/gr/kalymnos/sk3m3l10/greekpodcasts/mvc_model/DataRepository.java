@@ -2,6 +2,7 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model;
 
 import android.app.Activity;
 import android.database.Cursor;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.List;
@@ -18,11 +19,16 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 public interface DataRepository {
 
     interface OnCreatedPodcastListener {
-
         void onPodcastCreationSuccess(String podcastPushId);
+
         void onPodcastCreationFailure(String message);
 
     }
+
+    interface OnAudioUploadSuccessListener{
+        void onSuccess();
+    }
+
     List<Podcast> fetchAllPodcasts();
 
     List<Podcast> fetchPodcastsFromPodcaster(String podcasterPushId);
@@ -50,4 +56,6 @@ public interface DataRepository {
     void setOnCreatedPodcastListener(OnCreatedPodcastListener listener);
 
     void uploadImage(String podcastPushId, byte[] posterData);
+
+    void uploadAudio(Uri audioUri);
 }
