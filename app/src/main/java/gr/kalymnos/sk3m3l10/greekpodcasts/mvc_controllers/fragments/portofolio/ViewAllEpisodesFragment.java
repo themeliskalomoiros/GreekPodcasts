@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,13 +15,14 @@ import android.widget.ImageButton;
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish.EpisodesAdapter;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
 /*  This fragment is not a controller, it just displays a list of episodes*/
 
 public class ViewAllEpisodesFragment extends Fragment {
 
-    interface OnAddButtonClickListener {
-        void onViewAllEpisodesFragmentAddButtonClicked();
+    public interface OnAddButtonClickListener {
+        void onViewAllEpisodesFragmentAddButtonClicked(String podcastPushId);
     }
 
     private OnAddButtonClickListener callback;
@@ -35,6 +37,7 @@ public class ViewAllEpisodesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.view_all_episodes_fragment, container, false);
         addEpisodeButton = root.findViewById(R.id.add_episode_imagebutton);
+        addEpisodeButton.setOnClickListener(view -> callback.onViewAllEpisodesFragmentAddButtonClicked(getArguments().getString(Podcast.PUSH_ID_KEY)));
         //  Recycler View initialization
         episodesRecyclerView = root.findViewById(R.id.recycler_view);
         episodesAdapter = new EpisodesAdapter(getContext());
@@ -50,5 +53,19 @@ public class ViewAllEpisodesFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         episodesAdapter.addEpisodes(getArguments().getParcelableArrayList(Episode.EPISODES_KEY));
         episodesAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            callback = (OnAddButtonClickListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnAddButtonClickListener");
+        }
     }
 }

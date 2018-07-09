@@ -19,10 +19,11 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/click_the_icon_to_update_label"
-        app:layout_constraintBottom_toBottomOf="@+id/insert_audio_imageview"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/insert_audio_imageview"
-        app:layout_constraintTop_toTopOf="@+id/insert_audio_imageview" />
+        app:layout_constraintBottom_toTopOf="@+id/upload_audio_fab"
+        app:layout_constraintEnd_toStartOf="@+id/upload_audio_fab"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/insert_audio_imageview"
+        app:layout_constraintTop_toBottomOf="@+id/insert_audio_imageview" />
 
     <ImageView
         android:id="@+id/insert_audio_imageview"

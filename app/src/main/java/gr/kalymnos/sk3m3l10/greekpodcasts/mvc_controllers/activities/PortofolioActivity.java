@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -8,11 +9,13 @@ import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.ChangeSaver;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.ViewAllEpisodesFragment;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.PortofolioViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.PortofolioViewMvcImpl;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FragmentUtils;
 
-public class PortofolioActivity extends AppCompatActivity implements PortofolioViewMvc.OnActionSaveClickListener {
+public class PortofolioActivity extends AppCompatActivity implements PortofolioViewMvc.OnActionSaveClickListener, ViewAllEpisodesFragment.OnAddButtonClickListener {
 
     private static final String TAG = PortofolioActivity.class.getSimpleName();
     private PortofolioViewMvc viewMvc;
@@ -38,5 +41,12 @@ public class PortofolioActivity extends AppCompatActivity implements PortofolioV
                 throw new UnsupportedOperationException(TAG + ": all PortofolioActivity's fragments must implement " + ChangeSaver.class.getSimpleName());
             }
         }
+    }
+
+    @Override
+    public void onViewAllEpisodesFragmentAddButtonClicked(String podcastPushId) {
+        Intent intent = new Intent(this, AddEpisodeActivity.class);
+        intent.putExtra(Podcast.PUSH_ID_KEY, podcastPushId);
+        startActivity(intent);
     }
 }

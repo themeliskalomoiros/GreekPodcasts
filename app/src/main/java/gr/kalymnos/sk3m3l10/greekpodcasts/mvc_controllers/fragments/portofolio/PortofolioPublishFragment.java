@@ -277,7 +277,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
             if (!fragmentExists) {
                 Bundle args = new Bundle();
                 args.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
-                args.putString(Podcast.PUSH_ID_KEY,cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
+                args.putString(Podcast.PUSH_ID_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
                 ViewAllEpisodesFragment episodesFragment = new ViewAllEpisodesFragment();
                 episodesFragment.setArguments(args);
                 getFragmentManager().beginTransaction().addToBackStack(null).replace(viewMvc.getAllEpisodesContainerId(), episodesFragment).commit();
@@ -288,7 +288,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     @Override
     public void onAddEpisodeClick() {
         Bundle extras = new Bundle();
-        extras.putString(Podcast.PUSH_ID_KEY,cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
+        extras.putString(Podcast.PUSH_ID_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
         Intent intent = new Intent(getContext(), AddEpisodeActivity.class);
         intent.putExtras(extras);
         getContext().startActivity(intent);
