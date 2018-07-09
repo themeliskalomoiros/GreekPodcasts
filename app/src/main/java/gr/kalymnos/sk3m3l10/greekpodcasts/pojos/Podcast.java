@@ -3,7 +3,15 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.pojos;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Podcast implements Parcelable{
+public class Podcast implements Parcelable {
+
+    public static final String PUSH_ID_KEY = "push id key";
+    public static final String PODCASTS_KEY = "podcasts_key";
+    public static final String PODCAST_KEY = "podcast_key";
+    public static final String POSTER_KEY = "poster_key";
+    public static final String DESCRIPTION_KEY = "description key";
+    public static final String LOCAL_DB_ID_KEY = "local db key";
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -27,12 +35,6 @@ public class Podcast implements Parcelable{
     public void setEpisodesId(String episodesId) {
         this.episodesId = episodesId;
     }
-
-    public static final String PODCASTS_KEY = "podcasts_key";
-    public static final String PODCAST_KEY = "podcast_key";
-    public static final String POSTER_KEY = "poster_key";
-    public static final String DESCRIPTION_KEY = "description key";
-    public static final String LOCAL_DB_ID_KEY = "local db key";
 
     private String title, categoryId, posterUrl, description, podcasterId, firebasePushId, episodesId;
     private int localDbId;
