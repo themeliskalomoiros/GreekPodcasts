@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.AddEpisodeActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish.PortofolioPublishViewMvc;
@@ -285,7 +287,11 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onAddEpisodeClick() {
-
+        Bundle extras = new Bundle();
+        extras.putString(Podcast.PUSH_ID_KEY,cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
+        Intent intent = new Intent(getContext(), AddEpisodeActivity.class);
+        intent.putExtras(extras);
+        getContext().startActivity(intent);
     }
 
     @Override
