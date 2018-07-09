@@ -8,6 +8,19 @@
     android:background="?colorPrimary">
 
     <TextView
+        android:id="@+id/chosen_audio_file_name"
+        style="@style/Portofolio_EditText_Hint"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:textColor="?colorAccent"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/click_to_insert_audio_label"
+        app:layout_constraintEnd_toEndOf="@+id/click_to_insert_audio_label"
+        app:layout_constraintStart_toStartOf="@+id/click_to_insert_audio_label"
+        app:layout_constraintTop_toTopOf="@+id/click_to_insert_audio_label"
+        tools:text="File for upload: file4.mp3" />
+
+    <TextView
         android:id="@+id/click_to_insert_audio_label"
         style="@style/Portofolio_EditText_Hint"
         android:layout_width="0dp"
@@ -31,13 +44,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginTop="32dp"
         android:contentDescription="@string/personal_pic_content_description"
+        android:src="@drawable/ic_headset_mic_light_black_140dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/insert_title_edit_text"
         app:layout_constraintTop_toBottomOf="@+id/insert_title_edit_text"
         app:layout_constraintVertical_bias="0.0" />
@@ -100,7 +110,8 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
+        android:hint="@string/insert_title_here_label"
+        android:textColorHint="@color/primaryLightColor"
         app:layout_constraintEnd_toEndOf="@+id/title_label"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/insert_title_label"

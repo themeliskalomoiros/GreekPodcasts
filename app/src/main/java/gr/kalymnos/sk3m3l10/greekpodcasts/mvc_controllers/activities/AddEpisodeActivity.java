@@ -14,6 +14,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.add_episode.AddEpisodeViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.add_episode.AddEpisodeViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
 public class AddEpisodeActivity extends AppCompatActivity implements AddEpisodeViewMvc.OnActionsClickListener {
 
@@ -38,6 +39,16 @@ public class AddEpisodeActivity extends AppCompatActivity implements AddEpisodeV
         if (requestCode == RC_AUDIO_PIC) {
             if (resultCode == RESULT_OK && data != null) {
                 cachedAudioUri = data.getData();
+                viewMvc.bindFileName(FileUtils.fileName(getContentResolver(),cachedAudioUri));
+                viewMvc.displayAudioHint(false);
+                viewMvc.displayFileName(true);
+                viewMvc.drawHeadsetMic(true);
+            }else{
+                cachedAudioUri=null;
+                viewMvc.bindFileName(null);
+                viewMvc.displayAudioHint(true);
+                viewMvc.displayFileName(false);
+                viewMvc.drawHeadsetMic(false);
             }
         }
     }

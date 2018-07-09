@@ -7,7 +7,7 @@
     <string name="podcast_poster_content_description">This is the poster of the podcast on the quick media player.</string>
     <string name="personal_statement_label">Personal Statement</string>
     <string name="podcast_title_label">Podcast Title</string>
-    <string name="insert_title_label">Insert title here...</string>
+    <string name="insert_title_here_label">Write your title here...</string>
     <string name="choose_poster_label">Choose the poster</string>
     <string name="click_the_icon_label">Click the icon</string>
     <string name="pick_category_label">Pick a Category</string>
@@ -66,4 +66,5 @@
     <string name="all_episodes_label">All Episodes</string>
     <string name="add_new_episode_label">Add new episode</string>
     <string name="podcast_label">Podcast</string>
+    <string name="insert_title_label">Insert the title</string>
 </resources>

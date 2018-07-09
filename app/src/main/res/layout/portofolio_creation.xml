@@ -35,7 +35,7 @@
             android:layout_marginLeft="24dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:hint="@string/insert_title_label"
+            android:hint="@string/insert_title_here_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/podcast_title_label" />
 

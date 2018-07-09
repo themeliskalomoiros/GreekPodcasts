@@ -14,4 +14,12 @@ public interface AddEpisodeViewMvc extends ViewMvc {
     String getInsertedTitle();
 
     void setOnActionsClickListener(OnActionsClickListener listener);
+
+    void bindFileName(String filename);
+
+    void displayAudioHint(boolean display);
+
+    void displayFileName(boolean display);
+
+    void drawHeadsetMic(boolean draw);
 }
