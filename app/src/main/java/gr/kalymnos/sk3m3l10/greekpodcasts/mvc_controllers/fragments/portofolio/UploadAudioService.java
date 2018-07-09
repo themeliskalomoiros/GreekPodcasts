@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.content.Context;
 import android.net.Uri;
 
-public class UploadAudioService extends IntentService {
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
+
+public class UploadAudioService extends IntentService implements DataRepository.OnAudioUploadSuccessListener{
 
     private static final String ACTION_UPLOAD_AUDIO = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.action.upload_audio";
     private static final String EXTRA_AUDIO_URI = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.audio_uri";
@@ -33,6 +36,14 @@ public class UploadAudioService extends IntentService {
     }
 
     private void handleActionUploadAudio(Uri audioUri) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        //  TODO: Replace with a real service
+        DataRepository repo = new StaticFakeDataRepo();
+        repo.setOnAudioUploadSuccessListener(this);
+        repo.uploadAudio(audioUri);
+    }
+
+    @Override
+    public void onSuccess() {
+        //  TODO: Do something when audio upload is complete.
     }
 }
