@@ -57,7 +57,11 @@
             android:exported="false" />
 
         <activity android:name=".mvc_controllers.activities.PortofolioActivity" />
-        <activity android:name=".mvc_controllers.activities.AddEpisodeActivity"></activity>
+        <activity android:name=".mvc_controllers.activities.AddEpisodeActivity" />
+
+        <service
+            android:name=".mvc_controllers.fragments.portofolio.UploadAudioService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
