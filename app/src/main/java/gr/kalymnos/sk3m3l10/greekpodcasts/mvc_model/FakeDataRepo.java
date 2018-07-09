@@ -147,6 +147,11 @@ public class FakeDataRepo implements DataRepository {
 
     }
 
+    @Override
+    public void setOnAudioUploadSuccessListener(OnAudioUploadSuccessListener listener) {
+
+    }
+
     private static void sleep(long timeMilli) {
         try {
             Thread.sleep(timeMilli);

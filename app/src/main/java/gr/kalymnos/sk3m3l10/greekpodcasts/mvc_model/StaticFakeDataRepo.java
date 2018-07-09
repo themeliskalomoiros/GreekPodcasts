@@ -58,6 +58,7 @@ public class StaticFakeDataRepo implements DataRepository {
     private static final String PUSH_ID = "Promotion push id";
 
     private OnCreatedPodcastListener onCreatedPodcastListener;
+    private OnAudioUploadSuccessListener onAudioUploadSuccessListener;
 
     @Override
     public List<Podcast> fetchAllPodcasts() {
@@ -192,6 +193,13 @@ public class StaticFakeDataRepo implements DataRepository {
     @Override
     public void uploadAudio(Uri audioUri) {
         sleep(SLEEP_TIME);
+        if (onAudioUploadSuccessListener!=null)
+            onAudioUploadSuccessListener.onSuccess();
+    }
+
+    @Override
+    public void setOnAudioUploadSuccessListener(OnAudioUploadSuccessListener listener) {
+        onAudioUploadSuccessListener=listener;
     }
 
     private static void sleep(long timeMilli) {

@@ -58,4 +58,6 @@ public interface DataRepository {
     void uploadImage(String podcastPushId, byte[] posterData);
 
     void uploadAudio(Uri audioUri);
+
+    void setOnAudioUploadSuccessListener(OnAudioUploadSuccessListener listener);
 }
