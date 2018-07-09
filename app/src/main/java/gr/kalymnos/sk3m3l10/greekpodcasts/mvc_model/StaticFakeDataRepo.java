@@ -191,7 +191,7 @@ public class StaticFakeDataRepo implements DataRepository {
     }
 
     @Override
-    public void uploadAudio(Uri audioUri) {
+    public void uploadAudio(Uri audioUri, String podcastPushId) {
         sleep(SLEEP_TIME);
         if (onAudioUploadSuccessListener!=null)
             onAudioUploadSuccessListener.onSuccess();

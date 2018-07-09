@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.List;
-import java.util.Locale;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
@@ -57,7 +56,7 @@ public interface DataRepository {
 
     void uploadImage(String podcastPushId, byte[] posterData);
 
-    void uploadAudio(Uri audioUri);
+    void uploadAudio(Uri audioUri, String podcastPushId);
 
     void setOnAudioUploadSuccessListener(OnAudioUploadSuccessListener listener);
 }
