@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
@@ -51,6 +52,6 @@ public class UploadAudioService extends IntentService implements DataRepository.
     @Override
     public void onSuccess() {
         //  TODO: Do something when audio upload is complete.
-        Toast.makeText(this, "Uploaded", Toast.LENGTH_SHORT).show();
+        
     }
 }

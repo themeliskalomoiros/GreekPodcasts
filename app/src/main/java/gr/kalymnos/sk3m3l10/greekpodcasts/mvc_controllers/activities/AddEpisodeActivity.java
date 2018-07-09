@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
@@ -12,12 +13,15 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.add_episode.AddEpisodeViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.add_episode.AddEpisodeViewMvcImpl;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
 public class AddEpisodeActivity extends AppCompatActivity implements AddEpisodeViewMvc.OnActionsClickListener {
 
     private static final int RC_AUDIO_PIC = 1442;
     private AddEpisodeViewMvc viewMvc;
     private DataRepository repo;
+
+    private Uri cachedAudioUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +37,7 @@ public class AddEpisodeActivity extends AppCompatActivity implements AddEpisodeV
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_AUDIO_PIC) {
             if (resultCode == RESULT_OK && data != null) {
-                Uri audioUri = data.getData();
-                UploadAudioService.startActionUploadAudio(this, audioUri);
+                cachedAudioUri = data.getData();
             }
         }
     }
@@ -50,6 +53,8 @@ public class AddEpisodeActivity extends AppCompatActivity implements AddEpisodeV
 
     @Override
     public void onUploadActionClick() {
-
+        if (!TextUtils.isEmpty(viewMvc.getInsertedTitle()) && cachedAudioUri != null) {
+            UploadAudioService.startActionUploadAudio(this, cachedAudioUri,getIntent().getExtras().getString(Podcast.PUSH_ID_KEY));
+        }
     }
 }
