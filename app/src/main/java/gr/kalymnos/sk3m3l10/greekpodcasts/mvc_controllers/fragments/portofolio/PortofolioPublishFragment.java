@@ -12,7 +12,6 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +42,10 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private PortofolioPublishViewMvc viewMvc;
 
     private DataRepository repo;
+
+    private InsertTextDialogFragment titleDialog, descriptionDialog;
+    private InsertTextDialogFragment.OnInsertedTextDialogListener titleInsertedListener = text -> viewMvc.bindTitle(text),
+            descriptionInsertedListener = text -> viewMvc.bindDescription(text);
 
     @Nullable
     @Override
@@ -262,12 +265,30 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onEditPodcastClick(int itemPosition) {
-
+        titleDialog = createDialog(viewMvc.getTitleDialogTitleRes());
+        titleDialog.setOnInsertedTextDialogListener(titleInsertedListener);
+        titleDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getTitleDialogTitleRes()));
     }
 
     @Override
     public void onEditDescriptionClick() {
+        descriptionDialog = createDialog(viewMvc.getDescriptionDialogTitleRes());
+        descriptionDialog.setOnInsertedTextDialogListener(descriptionInsertedListener);
+        descriptionDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getDescriptionDialogTitleRes()));
+    }
 
+    private InsertTextDialogFragment createDialog(int titleRes) {
+        Bundle args = new Bundle();
+        args.putInt(InsertTextDialogFragment.TITLE_KEY, titleRes);
+
+        InsertTextDialogFragment dialogFragment = new InsertTextDialogFragment();
+        dialogFragment.setArguments(args);
+
+        return dialogFragment;
+    }
+
+    private String getDialogFragmentTag(int titleRes) {
+        return InsertTextDialogFragment.TAG + String.valueOf(titleRes);
     }
 
     @Override
