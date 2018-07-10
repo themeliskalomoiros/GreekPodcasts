@@ -160,6 +160,16 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public int getTitleDialogTitleRes() {
+        return R.string.insert_new_title_label;
+    }
+
+    @Override
+    public int getDescriptionDialogTitleRes() {
+        return R.string.insert_description_label;
+    }
+
+    @Override
     public boolean onLand() {
         if (episodesRecyclerView != null) {
             return true;

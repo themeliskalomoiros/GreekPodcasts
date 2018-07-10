@@ -66,5 +66,5 @@
     <string name="all_episodes_label">All Episodes</string>
     <string name="add_new_episode_label">Add new episode</string>
     <string name="podcast_label">Podcast</string>
-    <string name="insert_title_label">Insert the title</string>
+    <string name="insert_new_title_label">Insert new title</string>
 </resources>

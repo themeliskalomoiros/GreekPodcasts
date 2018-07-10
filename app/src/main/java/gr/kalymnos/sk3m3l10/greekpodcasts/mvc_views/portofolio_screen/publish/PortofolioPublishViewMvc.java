@@ -73,4 +73,8 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
     void setCategorySelection(int position);
 
     int getAllEpisodesContainerId();
+
+    int getTitleDialogTitleRes();
+
+    int getDescriptionDialogTitleRes();
 }
