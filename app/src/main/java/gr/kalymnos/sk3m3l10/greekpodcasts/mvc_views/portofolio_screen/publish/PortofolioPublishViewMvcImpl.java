@@ -179,11 +179,10 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public void addPodcastsToSpinner(String[] titles) {
-        if (podcastSpinnerAdapter == null) {
             podcastSpinnerAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, titles);
             podcastSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             podcastSpinner.setAdapter(podcastSpinnerAdapter);
-        }
+            podcastSpinnerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -193,11 +192,6 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
             categorySpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             categorySpinner.setAdapter(categorySpinnerAdapter);
         }
-    }
-
-    @Override
-    public void bindTitle(String title) {
-
     }
 
     @Override

@@ -52,8 +52,6 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
 
     void addCategoriesToSpinner(String[] titles);
 
-    void bindTitle(String title);
-
     void displayPodcastLoadingIndicator(boolean display);
 
     void displayCategoryLoadingIndicator(boolean display);
