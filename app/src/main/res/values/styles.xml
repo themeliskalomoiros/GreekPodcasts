@@ -176,4 +176,9 @@
     </style>
 
     <dimen name="half_default_text_padding">4dp</dimen>
+
+    <style name="InsertTextDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
 </resources>
