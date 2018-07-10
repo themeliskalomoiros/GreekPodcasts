@@ -44,18 +44,22 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private DataRepository repo;
 
     private InsertTextDialogFragment titleDialog, descriptionDialog;
-    private InsertTextDialogFragment.OnInsertedTextDialogListener titleInsertedListener = text -> viewMvc.bindTitle(text),
+    private InsertTextDialogFragment.OnInsertedTextDialogListener titleInsertedListener = text -> {
+        if (cachedPodcasts!=null){
+
+            String[] originalTitles = createPodcastTitles();
+            //  Swap the new title
+            originalTitles[viewMvc.getSelectedPodcastPosition()] = text;
+
+            viewMvc.addPodcastsToSpinner(originalTitles);
+        }
+    },
             descriptionInsertedListener = text -> viewMvc.bindDescription(text);
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewMvc = new PortofolioPublishViewMvcImpl(inflater, container);
-        viewMvc.setOnItemsSelectedListener(this);
-        viewMvc.setOnButtonsClickListener(this);
-        //  TODO: Replace with a real service
-        repo = new StaticFakeDataRepo();
-        return viewMvc.getRootView();
+        return initialize(inflater, container);
     }
 
     @Override
@@ -81,6 +85,15 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
         outState.putParcelableArrayList(Podcast.PODCASTS_KEY, (ArrayList<? extends Parcelable>) cachedPodcasts);
         outState.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
         outState.putParcelableArrayList(Category.CATEGORIES_KEY, (ArrayList<? extends Parcelable>) cachedCategories);
+    }
+
+    private View initialize(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
+        viewMvc = new PortofolioPublishViewMvcImpl(inflater, container);
+        viewMvc.setOnItemsSelectedListener(this);
+        viewMvc.setOnButtonsClickListener(this);
+        //  TODO: Replace with a real service
+        repo = new StaticFakeDataRepo();
+        return viewMvc.getRootView();
     }
 
     @NonNull
@@ -172,13 +185,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
                         cachedPodcasts = (List<Podcast>) data;
                         viewMvc.displayPodcastLoadingIndicator(false);
 
-                        //  Create the titles array.
-                        String[] titles = new String[cachedPodcasts.size()];
-                        for (int i = 0; i < cachedPodcasts.size(); i++) {
-                            titles[i] = cachedPodcasts.get(i).getTitle();
-                        }
-
-                        viewMvc.addPodcastsToSpinner(titles);
+                        viewMvc.addPodcastsToSpinner(createPodcastTitles());
 
                         //  Make sure that when episodes are fetched, cachedPodcasts will not be null.
                         getLoaderManager().restartLoader(EPISODES_LOADER_ID, null, PortofolioPublishFragment.this);
@@ -217,6 +224,15 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
                     throw new UnsupportedOperationException(TAG + ": unknown loader id.");
             }
         }
+    }
+
+    @NonNull
+    private String[] createPodcastTitles() {
+        String[] titles = new String[cachedPodcasts.size()];
+        for (int i = 0; i < cachedPodcasts.size(); i++) {
+            titles[i] = cachedPodcasts.get(i).getTitle();
+        }
+        return titles;
     }
 
     @Override
