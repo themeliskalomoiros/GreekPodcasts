@@ -1,6 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.personal;
 
-import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc {
 
     private View rootView;
-    private TextView nameTextView, statementTextView;
+    private TextView nameTextView, statementTextView, imageHintTextView, imageFileNameTextView;
     private ImageView personalPic;
     private ImageButton editNameButton, editStatementButton, editPromotionButton;
     private ProgressBar progressBar;
@@ -34,12 +34,20 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
+    public void bindImage(Uri uri) {
+        Picasso.get().load(uri)
+                .placeholder(R.drawable.ic_headset_black_light_148dp)
+                .error(R.drawable.ic_error_black_light_148dp)
+                .into(personalPic);
+    }
+
+    @Override
     public void bindPodcasterName(String name) {
         nameTextView.setText(name);
     }
 
     @Override
-    public void bindPodcastPoster(String url) {
+    public void bindImage(String url) {
         Picasso.get().load(url)
                 .placeholder(R.drawable.ic_headset_black_light_148dp)
                 .error(R.drawable.ic_error_black_light_148dp)
@@ -55,8 +63,13 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
-    public void setOnButtonsClickListener(OnButtonsClickListener listener) {
-
+    public void setOnViewsClickListener(OnViewsClickListener listener) {
+        if (listener != null) {
+            personalPic.setOnClickListener(pic -> listener.onImageClick());
+            editStatementButton.setOnClickListener(button -> listener.onEditPersonalStatementClick());
+            editNameButton.setOnClickListener(button -> listener.onEditPodcasterName());
+            editPromotionButton.setOnClickListener(button -> listener.onEditPromotionLinkClick());
+        }
     }
 
     @Override
@@ -74,6 +87,29 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
+    public void displayImageHint(boolean display) {
+        if (display) {
+            imageHintTextView.setVisibility(View.VISIBLE);
+        } else {
+            imageHintTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void displayImageFileName(boolean display) {
+        if (display) {
+            imageFileNameTextView.setVisibility(View.VISIBLE);
+        } else {
+            imageFileNameTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void bindImageFileName(String fileName) {
+        imageFileNameTextView.setText(fileName);
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }
@@ -87,6 +123,8 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
         editStatementButton = rootView.findViewById(R.id.edit_personal_statement_imagebutton);
         editPromotionButton = rootView.findViewById(R.id.edit_promotion_imagebutton);
         progressBar = rootView.findViewById(R.id.pb_loading_indicator);
+        imageHintTextView = rootView.findViewById(R.id.click_to_import_new_pic_hint);
+        imageFileNameTextView = rootView.findViewById(R.id.chosen_image_file_name);
         initializeRecyclerView();
     }
 

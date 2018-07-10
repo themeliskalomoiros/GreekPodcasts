@@ -29,14 +29,13 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.create.Por
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
 public class PortofolioCreateFragment extends Fragment implements PortofolioCreateViewMvc.OnPosterClickListener,
         PortofolioCreateViewMvc.OnCategorySelectedListener, LoaderManager.LoaderCallbacks<List<Category>>,
         ChangeSaver, DataRepository.OnCreatedPodcastListener {
 
     private static final String TAG = PortofolioCreateFragment.class.getSimpleName();
-    private static final String POSTER_HEIGHT = "container height";
-    private static final String POSTER_WIDTH = "container width";
     private static final int LOADER_ID = 121;
 
     private PortofolioCreateViewMvc viewMvc;
@@ -45,8 +44,6 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     //  Cache uri instead of Bitmap because the latter is too large (could be more than 5Mb) and
     //  throws an exception!
     private Uri cachedPosterUri;
-    private int cachedPosterContainerWidth;
-    private int cachedPosterContainerHeight;
 
     private List<Category> cachedCategories;
 
@@ -68,13 +65,10 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
         super.onActivityCreated(savedInstanceState);
 
         boolean isValidBundle = savedInstanceState != null && savedInstanceState.containsKey(Podcast.POSTER_KEY)
-                && savedInstanceState.containsKey(POSTER_WIDTH) && savedInstanceState.containsKey(POSTER_HEIGHT)
                 && savedInstanceState.containsKey(Category.CATEGORIES_KEY);
 
         if (isValidBundle) {
             cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
-            cachedPosterContainerWidth = savedInstanceState.getInt(POSTER_WIDTH);
-            cachedPosterContainerHeight = savedInstanceState.getInt(POSTER_HEIGHT);
             cachedCategories = savedInstanceState.getParcelableArrayList(Category.CATEGORIES_KEY);
         }
 
@@ -85,39 +79,29 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     public void onStart() {
         super.onStart();
         if (cachedPosterUri != null) {
-            if (cachedPosterContainerHeight != 0 && cachedPosterContainerWidth != 0) {
-                Bitmap originalBitmap = BitmapUtils.bitmapFromUri(getContext().getContentResolver(),
-                        cachedPosterUri);
-                Log.d(TAG, "width=" + viewMvc.getPosterContainerWidth() + ",height=" + viewMvc.getPosterContainerHeight());
-                Bitmap thumbnail = ThumbnailUtils.extractThumbnail(originalBitmap, cachedPosterContainerWidth, cachedPosterContainerHeight);
-                viewMvc.bindPoster(thumbnail);
-            }
+            String fileName = FileUtils.fileName(getContext().getContentResolver(), cachedPosterUri);
+            viewMvc.bindImageFileName(fileName);
+            viewMvc.displayImageHint(false);
+            viewMvc.displayImageFileName(true);
+            viewMvc.bindPoster(cachedPosterUri);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == RC_POSTER_PIC) {
-            if (resultCode == getActivity().RESULT_OK) {
-                if (data != null) {
-                    //  Get the URI of the selected file
-                    cachedPosterUri = data.getData();
-                    Bitmap originalBitmap = BitmapUtils.bitmapFromUri(getContext().getContentResolver(), cachedPosterUri);
-                    Log.d(TAG, "width=" + viewMvc.getPosterContainerWidth() + ",height=" + viewMvc.getPosterContainerHeight());
-                    Bitmap thumbnail = ThumbnailUtils.extractThumbnail(originalBitmap,
-                            cachedPosterContainerWidth = viewMvc.getPosterContainerWidth(),
-                            cachedPosterContainerHeight = viewMvc.getPosterContainerHeight());
-                    viewMvc.bindPoster(thumbnail);
-                }
+            boolean imageFileFetched = resultCode == getActivity().RESULT_OK && data != null;
+            if (imageFileFetched) {
+                cachedPosterUri = data.getData();
             }
         }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
-        outState.putInt(POSTER_HEIGHT, cachedPosterContainerHeight);
-        outState.putInt(POSTER_WIDTH, cachedPosterContainerWidth);
+        if (cachedPosterUri != null) {
+            outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
+        }
         outState.putParcelableArrayList(Category.CATEGORIES_KEY, (ArrayList<? extends Parcelable>) cachedCategories);
     }
 
@@ -222,7 +206,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     @Override
     public void onPodcastCreationSuccess(String podcastPushId) {
         byte[] posterData = BitmapUtils.getBytesFromImageView(viewMvc.getPosterImageView());
-        repo.uploadImage(podcastPushId,posterData);
+        repo.uploadImage(podcastPushId, posterData);
     }
 
     @Override

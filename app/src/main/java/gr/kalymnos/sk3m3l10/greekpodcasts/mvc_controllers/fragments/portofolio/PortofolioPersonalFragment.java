@@ -1,5 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -12,9 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,16 +24,19 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.personal.P
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
 public class PortofolioPersonalFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
-        ChangeSaver {
+        ChangeSaver, PortofolioPersonalViewMvc.OnViewsClickListener {
 
     private static final int PROMOTION_LOADER_ID = 100;
     private static final int PODCASTER_LOADER_ID = 200;
     private static final String TAG = PortofolioPersonalFragment.class.getSimpleName();
+    private static final int RC_POSTER_PIC = 1313;
 
     private List<PromotionLink> cachedPromotionLinks;
     private Podcaster cachedPodcaster;
+    private Uri cachedPosterUri;
 
     private PortofolioPersonalViewMvc viewMvc;
 
@@ -43,6 +45,7 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewMvc = new PortofolioPersonalViewMvcImpl(inflater, container);
+        viewMvc.setOnViewsClickListener(this);
         return viewMvc.getRootView();
     }
 
@@ -57,6 +60,7 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
         if (isValidState) {
             cachedPodcaster = savedInstanceState.getParcelable(Podcaster.PODCASTER_KEY);
             cachedPromotionLinks = savedInstanceState.getParcelableArrayList(PromotionLink.PROMOTION_LINKS_KEY);
+            cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
         }
 
         getLoaderManager().restartLoader(PROMOTION_LOADER_ID, null, this);
@@ -64,9 +68,34 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (cachedPosterUri != null) {
+            String fileName = FileUtils.fileName(getContext().getContentResolver(), cachedPosterUri);
+            viewMvc.bindImage(cachedPosterUri);
+            viewMvc.bindImageFileName(fileName);
+            viewMvc.displayImageHint(false);
+            viewMvc.displayImageFileName(true);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_POSTER_PIC) {
+            boolean imageFileFetched = resultCode == getActivity().RESULT_OK && data != null;
+            if (imageFileFetched) {
+                cachedPosterUri = data.getData();
+            }
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelableArrayList(PromotionLink.PROMOTION_LINKS_KEY, (ArrayList<? extends Parcelable>) cachedPromotionLinks);
         outState.putParcelable(Podcaster.PODCASTER_KEY, cachedPodcaster);
+        if (cachedPosterUri != null) {
+            outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
+        }
     }
 
     @NonNull
@@ -137,7 +166,9 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
                     if (data instanceof Podcaster) {
                         cachedPodcaster = (Podcaster) data;
                         viewMvc.bindPodcasterName(cachedPodcaster.getUsername());
-                        viewMvc.bindPodcastPoster(cachedPodcaster.getImageUrl());
+                        if (cachedPosterUri == null) {
+                            viewMvc.bindImage(cachedPodcaster.getImageUrl());
+                        }
                         viewMvc.bindPersonalStatement(cachedPodcaster.getPersonalStatement());
                     }
                     break;
@@ -161,5 +192,30 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     @Override
     public String getConfirmationMessage() {
         return null;
+    }
+
+    @Override
+    public void onEditPodcasterName() {
+
+    }
+
+    @Override
+    public void onEditPersonalStatementClick() {
+
+    }
+
+    @Override
+    public void onEditPromotionLinkClick() {
+
+    }
+
+    @Override
+    public void onImageClick() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(intent, RC_POSTER_PIC);
+        }
     }
 }

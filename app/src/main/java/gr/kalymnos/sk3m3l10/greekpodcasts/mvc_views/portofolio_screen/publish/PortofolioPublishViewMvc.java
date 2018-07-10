@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 import java.util.List;
 
@@ -44,6 +45,8 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
 
     void bindPoster(String url);
 
+    void bindPoster(Uri uri);
+
     void bindDescription(String description);
 
     boolean onLand();
@@ -75,4 +78,14 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
     int getTitleDialogTitleRes();
 
     int getDescriptionDialogTitleRes();
+
+    void displayImageHint(boolean display);
+
+    void displayImageFileName(boolean display);
+
+    int getPosterContainerWidth();
+
+    int getPosterContainerHeight();
+
+    void bindImageFileName(String name);
 }

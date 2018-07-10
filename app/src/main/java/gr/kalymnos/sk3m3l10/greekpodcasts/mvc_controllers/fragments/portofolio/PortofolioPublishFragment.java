@@ -1,6 +1,9 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -24,6 +27,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish.Po
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
 public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
         PortofolioPublishViewMvc.OnItemsSelectedListener, ChangeSaver, PortofolioPublishViewMvc.OnButtonsClickListener {
@@ -35,6 +40,9 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private static final int CATEGORIES_LOADER_ID = 343;
     private static final String FORCE_LOAD_KEY = "force_load_key";
 
+    private static final int RC_POSTER_PIC = 1323;
+    private Uri cachedPosterUri;
+
     private List<Podcast> cachedPodcasts;
     private List<Episode> cachedEpisodes;
     private List<Category> cachedCategories;
@@ -45,7 +53,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     private InsertTextDialogFragment titleDialog, descriptionDialog;
     private InsertTextDialogFragment.OnInsertedTextDialogListener titleInsertedListener = text -> {
-        if (cachedPodcasts!=null){
+        if (cachedPodcasts != null) {
 
             String[] originalTitles = createPodcastTitles();
             //  Swap the new title
@@ -74,6 +82,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
             cachedPodcasts = savedInstanceState.getParcelableArrayList(Podcast.PODCASTS_KEY);
             cachedEpisodes = savedInstanceState.getParcelableArrayList(Episode.EPISODES_KEY);
             cachedCategories = savedInstanceState.getParcelableArrayList(Category.CATEGORIES_KEY);
+            cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
         }
 
         getLoaderManager().restartLoader(PODCASTS_LOADER_ID, null, this);
@@ -81,10 +90,37 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (cachedPosterUri != null) {
+            viewMvc.bindPoster(cachedPosterUri);
+            String fileName = FileUtils.fileName(getContext().getContentResolver(),cachedPosterUri);
+            viewMvc.displayImageHint(false);
+            viewMvc.displayImageFileName(true);
+            viewMvc.bindImageFileName(fileName);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_POSTER_PIC) {
+            boolean pictureDataFetched = resultCode == getActivity().RESULT_OK && data != null;
+
+            if (pictureDataFetched) {
+                cachedPosterUri = data.getData();
+            }
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelableArrayList(Podcast.PODCASTS_KEY, (ArrayList<? extends Parcelable>) cachedPodcasts);
         outState.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
         outState.putParcelableArrayList(Category.CATEGORIES_KEY, (ArrayList<? extends Parcelable>) cachedCategories);
+        outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
+        if (cachedPosterUri != null) {
+            cachedPosterUri = outState.getParcelable(Podcast.POSTER_KEY);
+        }
     }
 
     private View initialize(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
@@ -245,7 +281,9 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
         if (cachedPodcasts != null && cachedPodcasts.size() > 0) {
 
             Podcast podcastSelected = cachedPodcasts.get(position);
-            viewMvc.bindPoster(podcastSelected.getPosterUrl());
+            if (cachedPosterUri == null) {
+                viewMvc.bindPoster(podcastSelected.getPosterUrl());
+            }
             viewMvc.bindDescription(podcastSelected.getDescription());
 
             if (cachedCategories != null && cachedCategories.size() > 0) {
@@ -333,6 +371,11 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onPosterClick() {
-
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(intent, RC_POSTER_PIC);
+        }
     }
 }

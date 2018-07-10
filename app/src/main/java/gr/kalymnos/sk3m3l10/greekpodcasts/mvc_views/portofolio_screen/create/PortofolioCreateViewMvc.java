@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.create;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.ViewMvc;
@@ -17,7 +18,7 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
         void onNothingChosen();
     }
 
-    void bindPoster(Bitmap poster);
+    void bindPoster(Uri uri);
 
     int getPosterContainerHeight();
 
@@ -38,4 +39,10 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
     ImageView getPosterImageView();
 
     int getCategoryPosition();
+
+    void displayImageHint(boolean display);
+
+    void displayImageFileName(boolean display);
+
+    void bindImageFileName(String fileName);
 }

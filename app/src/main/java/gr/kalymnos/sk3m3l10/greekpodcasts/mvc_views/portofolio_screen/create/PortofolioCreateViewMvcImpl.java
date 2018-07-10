@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.create;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 
@@ -22,6 +26,7 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     private ArrayAdapter<String> spinnerAdapter;
     private ImageView updatePodcastImageView;
     private ProgressBar progressBar;
+    private TextView imageHintTextView, imageFileNameTextView;
 
     public PortofolioCreateViewMvcImpl(LayoutInflater inflater, ViewGroup parent) {
         initializeViews(inflater, parent);
@@ -34,11 +39,16 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
         categorySpinner = rootView.findViewById(R.id.categories_spinner);
         updatePodcastImageView = rootView.findViewById(R.id.update_podcast_pic_imageview);
         progressBar = rootView.findViewById(R.id.pb_loading_indicator);
+        imageHintTextView = rootView.findViewById(R.id.click_the_icon_label);
+        imageFileNameTextView = rootView.findViewById(R.id.chosen_image_file_name);
     }
 
     @Override
-    public void bindPoster(Bitmap poster) {
-        updatePodcastImageView.setImageBitmap(poster);
+    public void bindPoster(Uri uri) {
+        Picasso.get().load(uri)
+                .placeholder(R.drawable.ic_headset_black_light_148dp)
+                .error(R.drawable.ic_error_black_light_148dp)
+                .into(updatePodcastImageView);
     }
 
     @Override
@@ -112,6 +122,29 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     @Override
     public int getCategoryPosition() {
         return categorySpinner.getSelectedItemPosition();
+    }
+
+    @Override
+    public void displayImageHint(boolean display) {
+        if (display) {
+            imageHintTextView.setVisibility(View.VISIBLE);
+        } else {
+            imageHintTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void displayImageFileName(boolean display) {
+        if (display) {
+            imageFileNameTextView.setVisibility(View.VISIBLE);
+        } else {
+            imageFileNameTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void bindImageFileName(String fileName) {
+        imageFileNameTextView.setText(fileName);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -30,7 +33,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     private Spinner podcastSpinner, categorySpinner;
     private RecyclerView episodesRecyclerView;
     private ImageView posterImageView;
-    private TextView descriptionTextView;
+    private TextView descriptionTextView, imageHintTextView, imageFileNameTextView;
     private ImageButton addEpisodeButton, editTitleButton, editDescriptionButton;
     private Button viewAllEpisodesButton;
     private ArrayAdapter<String> podcastSpinnerAdapter, categorySpinnerAdapter;
@@ -61,6 +64,14 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public void bindPoster(Uri uri) {
+        Picasso.get().load(uri)
+                .placeholder(R.drawable.ic_headset_black_light_148dp)
+                .error(R.drawable.ic_error_black_light_148dp)
+                .into(posterImageView);
+    }
+
+    @Override
     public void bindDescription(String description) {
         descriptionTextView.setText(description);
     }
@@ -80,6 +91,8 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
             editTitleButton.setOnClickListener(view -> listener.onEditPodcastClick(podcastSpinner.getSelectedItemPosition()));
 
             editDescriptionButton.setOnClickListener(view -> listener.onEditDescriptionClick());
+
+            posterImageView.setOnClickListener(view -> listener.onPosterClick());
         }
     }
 
@@ -170,6 +183,39 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public void displayImageHint(boolean display) {
+        if (display) {
+            imageHintTextView.setVisibility(View.VISIBLE);
+        } else {
+            imageHintTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public void displayImageFileName(boolean display) {
+        if (display) {
+            imageFileNameTextView.setVisibility(View.VISIBLE);
+        } else {
+            imageFileNameTextView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    @Override
+    public int getPosterContainerWidth() {
+        return posterImageView.getWidth();
+    }
+
+    @Override
+    public int getPosterContainerHeight() {
+        return posterImageView.getHeight();
+    }
+
+    @Override
+    public void bindImageFileName(String name) {
+        imageFileNameTextView.setText(name);
+    }
+
+    @Override
     public boolean onLand() {
         if (episodesRecyclerView != null) {
             return true;
@@ -179,10 +225,10 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public void addPodcastsToSpinner(String[] titles) {
-            podcastSpinnerAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, titles);
-            podcastSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-            podcastSpinner.setAdapter(podcastSpinnerAdapter);
-            podcastSpinnerAdapter.notifyDataSetChanged();
+        podcastSpinnerAdapter = new ArrayAdapter<String>(rootView.getContext(), android.R.layout.simple_spinner_item, titles);
+        podcastSpinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+        podcastSpinner.setAdapter(podcastSpinnerAdapter);
+        podcastSpinnerAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -251,6 +297,8 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
         categoryBar = rootView.findViewById(R.id.category_loading_indicator);
         podcastBar = rootView.findViewById(R.id.podcast_loading_indicator);
         allEpisodesFragmentContainer = rootView.findViewById(R.id.all_episodes_fragment_container);
+        imageFileNameTextView = rootView.findViewById(R.id.chosen_image_file_name);
+        imageHintTextView = rootView.findViewById(R.id.click_the_icon_label);
         initializeRecyclerView();
     }
 
