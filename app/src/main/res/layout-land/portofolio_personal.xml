@@ -160,5 +160,18 @@
             app:layout_constraintStart_toStartOf="@+id/recycler_view"
             app:layout_constraintTop_toTopOf="@+id/recycler_view" />
 
+        <TextView
+            android:id="@+id/chosen_image_file_name"
+            style="@style/Portofolio_EditText_Hint"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textColor="?colorAccent"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/click_to_import_new_pic_hint"
+            app:layout_constraintEnd_toEndOf="@+id/click_to_import_new_pic_hint"
+            app:layout_constraintStart_toStartOf="@+id/click_to_import_new_pic_hint"
+            app:layout_constraintTop_toTopOf="@+id/click_to_import_new_pic_hint"
+            tools:text="File for upload: file4.mp3" />
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>

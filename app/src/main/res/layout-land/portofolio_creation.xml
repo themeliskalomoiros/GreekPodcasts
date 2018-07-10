@@ -202,5 +202,17 @@
             app:layout_constraintStart_toEndOf="@+id/pick_category_label"
             app:layout_constraintTop_toTopOf="@+id/pick_category_label" />
 
+        <TextView
+            android:id="@+id/chosen_image_file_name"
+            style="@style/Portofolio_EditText_Hint"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:textColor="?colorAccent"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/click_the_icon_label"
+            app:layout_constraintEnd_toEndOf="@+id/click_the_icon_label"
+            app:layout_constraintStart_toStartOf="@+id/click_the_icon_label"
+            app:layout_constraintTop_toTopOf="@+id/click_the_icon_label" />
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v4.widget.NestedScrollView>
