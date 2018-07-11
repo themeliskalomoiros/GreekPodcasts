@@ -67,4 +67,6 @@
     <string name="add_new_episode_label">Add new episode</string>
     <string name="podcast_label">Podcast</string>
     <string name="insert_new_title_label">Insert new title</string>
+    <string name="insert_podcaster_name_title">Write your name</string>
+    <string name="insert_personal_statement_title">Leave a personal statement</string>
 </resources>

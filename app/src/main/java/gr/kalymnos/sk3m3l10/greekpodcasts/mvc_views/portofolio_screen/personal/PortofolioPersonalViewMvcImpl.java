@@ -110,6 +110,16 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
+    public int getNameDialogTitleRes() {
+        return R.string.insert_podcaster_name_title;
+    }
+
+    @Override
+    public int getPersonalStatementDialogTitleRes() {
+        return R.string.insert_personal_statement_title;
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }

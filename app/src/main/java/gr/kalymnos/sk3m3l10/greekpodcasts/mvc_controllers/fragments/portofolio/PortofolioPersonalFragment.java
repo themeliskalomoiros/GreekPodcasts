@@ -40,6 +40,11 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     private PortofolioPersonalViewMvc viewMvc;
 
+    private InsertTextDialogFragment nameDialog, statementDialog;
+    private InsertTextDialogFragment.OnInsertedTextDialogListener
+            nameInsertedListener = text -> viewMvc.bindPodcasterName(text),
+            statementInsertedListener = text -> viewMvc.bindPersonalStatement(text);
+
 
     @Nullable
     @Override
@@ -196,12 +201,20 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     @Override
     public void onEditPodcasterName() {
-
+        if (nameDialog == null) {
+            nameDialog = createDialog(viewMvc.getNameDialogTitleRes());
+            nameDialog.setOnInsertedTextDialogListener(nameInsertedListener);
+        }
+        nameDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getNameDialogTitleRes()));
     }
 
     @Override
     public void onEditPersonalStatementClick() {
-
+        if (statementDialog == null) {
+            statementDialog = createDialog(viewMvc.getPersonalStatementDialogTitleRes());
+            statementDialog.setOnInsertedTextDialogListener(statementInsertedListener);
+        }
+        statementDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getPersonalStatementDialogTitleRes()));
     }
 
     @Override
@@ -227,5 +240,9 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
         dialogFragment.setArguments(args);
 
         return dialogFragment;
+    }
+
+    private String getDialogFragmentTag(int titleRes) {
+        return InsertTextDialogFragment.TAG + String.valueOf(titleRes);
     }
 }
