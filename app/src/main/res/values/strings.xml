@@ -69,4 +69,7 @@
     <string name="insert_new_title_label">Insert new title</string>
     <string name="insert_podcaster_name_title">Write your name</string>
     <string name="insert_personal_statement_title">Leave a personal statement</string>
+    <string name="add_promotion_label">Add Promotion Link</string>
+    <string name="promotion_link_title_label">Title:</string>
+    <string name="promotion_link_url_label">Url:</string>
 </resources>

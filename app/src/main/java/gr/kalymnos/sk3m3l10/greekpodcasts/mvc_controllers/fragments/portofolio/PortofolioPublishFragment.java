@@ -1,8 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -27,7 +25,6 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish.Po
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
-import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
 public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
@@ -52,7 +49,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private DataRepository repo;
 
     private InsertTextDialogFragment titleDialog, descriptionDialog;
-    private InsertTextDialogFragment.OnInsertedTextDialogListener titleInsertedListener = text -> {
+    private InsertTextDialogFragment.OnInsertedTextListener titleInsertedListener = text -> {
         if (cachedPodcasts != null) {
 
             String[] originalTitles = createPodcastTitles();
@@ -94,7 +91,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
         super.onStart();
         if (cachedPosterUri != null) {
             viewMvc.bindPoster(cachedPosterUri);
-            String fileName = FileUtils.fileName(getContext().getContentResolver(),cachedPosterUri);
+            String fileName = FileUtils.fileName(getContext().getContentResolver(), cachedPosterUri);
             viewMvc.displayImageHint(false);
             viewMvc.displayImageFileName(true);
             viewMvc.bindImageFileName(fileName);
@@ -319,15 +316,19 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onEditPodcastClick(int itemPosition) {
-        titleDialog = createDialog(viewMvc.getTitleDialogTitleRes());
-        titleDialog.setOnInsertedTextDialogListener(titleInsertedListener);
+        if (titleDialog == null) {
+            titleDialog = createDialog(viewMvc.getTitleDialogTitleRes());
+            titleDialog.setOnInsertedTextListener(titleInsertedListener);
+        }
         titleDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getTitleDialogTitleRes()));
     }
 
     @Override
     public void onEditDescriptionClick() {
-        descriptionDialog = createDialog(viewMvc.getDescriptionDialogTitleRes());
-        descriptionDialog.setOnInsertedTextDialogListener(descriptionInsertedListener);
+        if (descriptionDialog == null) {
+            descriptionDialog = createDialog(viewMvc.getDescriptionDialogTitleRes());
+            descriptionDialog.setOnInsertedTextListener(descriptionInsertedListener);
+        }
         descriptionDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getDescriptionDialogTitleRes()));
     }
 

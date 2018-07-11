@@ -1,6 +1,5 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,11 +15,11 @@ public class InsertTextDialogFragment extends DialogFragment {
     public static final String TITLE_KEY = "title key";
     public static final String TAG = InsertTextDialogFragment.class.getSimpleName();
 
-    interface OnInsertedTextDialogListener {
+    interface OnInsertedTextListener {
         void onTextInserted(String text);
     }
 
-    private OnInsertedTextDialogListener callback;
+    private OnInsertedTextListener callback;
 
     @NonNull
     @Override
@@ -61,7 +60,7 @@ public class InsertTextDialogFragment extends DialogFragment {
         }
     }
 
-    public void setOnInsertedTextDialogListener(OnInsertedTextDialogListener callback) {
+    public void setOnInsertedTextListener(OnInsertedTextListener callback) {
         this.callback = callback;
     }
 }
