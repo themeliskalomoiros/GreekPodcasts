@@ -218,4 +218,14 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
             startActivityForResult(intent, RC_POSTER_PIC);
         }
     }
+
+    private InsertTextDialogFragment createDialog(int titleRes) {
+        Bundle args = new Bundle();
+        args.putInt(InsertTextDialogFragment.TITLE_KEY, titleRes);
+
+        InsertTextDialogFragment dialogFragment = new InsertTextDialogFragment();
+        dialogFragment.setArguments(args);
+
+        return dialogFragment;
+    }
 }
