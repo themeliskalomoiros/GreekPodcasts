@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -306,7 +307,21 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void save() {
+        boolean dataExists = cachedPosterUri != null && cachedPodcasts != null && cachedCategories != null
+                && cachedPodcasts.size() > 0 && cachedCategories.size() > 0;
 
+        if (dataExists) {
+            Podcast selectedPodcast = cachedPodcasts.get(viewMvc.getSelectedPodcastPosition());
+            boolean validTitle = !TextUtils.isEmpty(selectedPodcast.getTitle());
+            boolean validPoster = viewMvc.posterExists();
+            boolean validDescription = !TextUtils.isEmpty(getString(viewMvc.getDescriptionDialogTitleRes()));
+            boolean userFilledInEverything = validTitle && validPoster && validDescription;
+
+            if (userFilledInEverything){
+                //  TODO:   Update podcast with the new values
+            }
+
+        }
     }
 
     @Override

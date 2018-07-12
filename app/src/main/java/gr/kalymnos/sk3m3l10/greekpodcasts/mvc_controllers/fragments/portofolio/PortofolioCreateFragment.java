@@ -179,8 +179,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                 && viewMvc.getDescriptionText().length() > MIN_DESCRIPTION_LENGTH
                 && viewMvc.getDescriptionText().length() <= MAX_DESCRIPTION_LENGTH;
 
-        byte[] posterData = BitmapUtils.getBytesFromImageView(viewMvc.getPosterImageView());
-        boolean imageDataExists = posterData != null && posterData.length > 0;
+        boolean imageDataExists = viewMvc.getPosterImageView().getDrawable() != null;
 
         if (isTitleValid && isDescriptionValid && imageDataExists) {
 

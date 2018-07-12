@@ -63,6 +63,8 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
 
     int getSelectedPodcastPosition();
 
+    int getSelectedCategoryPosition();
+
     void setOnButtonsClickListener(OnButtonsClickListener listener);
 
     void setOnPodcastSelectedListener(OnPodcastSelectedListener listener);
@@ -86,6 +88,8 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
     int getPosterContainerWidth();
 
     int getPosterContainerHeight();
+
+    boolean posterExists();
 
     void bindImageFileName(String name);
 }

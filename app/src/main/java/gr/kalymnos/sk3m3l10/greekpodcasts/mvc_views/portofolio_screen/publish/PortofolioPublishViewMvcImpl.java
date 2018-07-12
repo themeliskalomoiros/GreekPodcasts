@@ -211,6 +211,11 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public boolean posterExists() {
+        return posterImageView.getDrawable() != null;
+    }
+
+    @Override
     public void bindImageFileName(String name) {
         imageFileNameTextView.setText(name);
     }
@@ -273,6 +278,15 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     public int getSelectedPodcastPosition() {
         if (podcastSpinner != null && podcastSpinnerAdapter != null) {
             return podcastSpinner.getSelectedItemPosition();
+        } else {
+            throw new UnsupportedOperationException(TAG + ": podcastSpinner or podcastSpinnerAdapter is null.");
+        }
+    }
+
+    @Override
+    public int getSelectedCategoryPosition() {
+        if (categorySpinner != null && categorySpinnerAdapter != null) {
+            return categorySpinner.getSelectedItemPosition();
         } else {
             throw new UnsupportedOperationException(TAG + ": podcastSpinner or podcastSpinnerAdapter is null.");
         }
