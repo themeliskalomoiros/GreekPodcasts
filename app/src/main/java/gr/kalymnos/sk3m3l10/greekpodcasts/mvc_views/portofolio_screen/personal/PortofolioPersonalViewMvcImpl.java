@@ -120,6 +120,11 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
+    public int getNoTitleOrUrlMessageId() {
+        return R.string.no_title_or_url;
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }

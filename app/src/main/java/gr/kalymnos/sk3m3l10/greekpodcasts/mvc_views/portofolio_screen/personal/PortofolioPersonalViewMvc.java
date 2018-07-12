@@ -43,4 +43,6 @@ public interface PortofolioPersonalViewMvc extends ViewMvc {
     int getNameDialogTitleRes();
 
     int getPersonalStatementDialogTitleRes();
+
+    int getNoTitleOrUrlMessageId();
 }

@@ -10,9 +10,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,9 +43,27 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     private PortofolioPersonalViewMvc viewMvc;
 
     private InsertTextDialogFragment nameDialog, statementDialog;
-    private InsertTextDialogFragment.OnInsertedTextDialogListener
+    private InsertTextDialogFragment.OnInsertedTextListener
             nameInsertedListener = text -> viewMvc.bindPodcasterName(text),
             statementInsertedListener = text -> viewMvc.bindPersonalStatement(text);
+    private PromotionLinkDialogFragment promotionDialog;
+    private PromotionLinkDialogFragment.OnInsertedTextListener promotionInsertedTextListener =
+            (title, url) -> {
+                if (cachedPromotionLinks != null) {
+                    boolean hasTitleAndUrl = !TextUtils.isEmpty(title) && !TextUtils.isEmpty(url);
+
+                    if (hasTitleAndUrl) {
+                        //  Update Ui
+                        PromotionLink newPromotionLink = new PromotionLink(title, url, cachedPodcaster.getFirebasePushId());
+                        cachedPromotionLinks.add(newPromotionLink);
+                        viewMvc.bindPromotionLinks(cachedPromotionLinks);
+
+                        //  TODO: The new promotion link must be uploaded
+                    } else {
+                        Toast.makeText(getContext(), viewMvc.getNoTitleOrUrlMessageId(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
 
 
     @Nullable
@@ -203,7 +223,7 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     public void onEditPodcasterName() {
         if (nameDialog == null) {
             nameDialog = createDialog(viewMvc.getNameDialogTitleRes());
-            nameDialog.setOnInsertedTextDialogListener(nameInsertedListener);
+            nameDialog.setOnInsertedTextListener(nameInsertedListener);
         }
         nameDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getNameDialogTitleRes()));
     }
@@ -212,14 +232,18 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     public void onEditPersonalStatementClick() {
         if (statementDialog == null) {
             statementDialog = createDialog(viewMvc.getPersonalStatementDialogTitleRes());
-            statementDialog.setOnInsertedTextDialogListener(statementInsertedListener);
+            statementDialog.setOnInsertedTextListener(statementInsertedListener);
         }
         statementDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getPersonalStatementDialogTitleRes()));
     }
 
     @Override
     public void onEditPromotionLinkClick() {
-
+        if (promotionDialog == null) {
+            promotionDialog = new PromotionLinkDialogFragment();
+            promotionDialog.setOnInsertedTextListener(promotionInsertedTextListener);
+        }
+        promotionDialog.show(getFragmentManager(), getPromotionDialogFragmentTag());
     }
 
     @Override
@@ -244,5 +268,9 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     private String getDialogFragmentTag(int titleRes) {
         return InsertTextDialogFragment.TAG + String.valueOf(titleRes);
+    }
+
+    private String getPromotionDialogFragmentTag() {
+        return InsertTextDialogFragment.TAG + "_promotion_dialog_tag";
     }
 }

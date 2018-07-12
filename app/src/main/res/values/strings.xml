@@ -72,4 +72,5 @@
     <string name="add_promotion_label">Add Promotion Link</string>
     <string name="promotion_link_title_label">Title:</string>
     <string name="promotion_link_url_label">Url:</string>
+    <string name="no_title_or_url">Both title and URL needed.</string>
 </resources>
