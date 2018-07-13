@@ -61,7 +61,17 @@
 
         <service
             android:name=".mvc_controllers.fragments.portofolio.UploadAudioService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <receiver android:name=".widget.PlaybackWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/playback_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

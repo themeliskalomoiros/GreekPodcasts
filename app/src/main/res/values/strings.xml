@@ -73,4 +73,6 @@
     <string name="promotion_link_title_label">Title:</string>
     <string name="promotion_link_url_label">Url:</string>
     <string name="no_title_or_url">Both title and URL needed.</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
