@@ -211,7 +211,13 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     @Override
     public void save() {
+        boolean nameIsValid = !TextUtils.isEmpty(viewMvc.getPodcasterName());
+        boolean pictureIsValid = viewMvc.pictureExists() && cachedPosterUri != null;
+        boolean statementIsValid = !TextUtils.isEmpty(viewMvc.getPersonalStatement());
 
+        if (nameIsValid && pictureIsValid && statementIsValid){
+            //  TODO: Upload the image and when finished create the podcaster and upload it
+        }
     }
 
     @Override

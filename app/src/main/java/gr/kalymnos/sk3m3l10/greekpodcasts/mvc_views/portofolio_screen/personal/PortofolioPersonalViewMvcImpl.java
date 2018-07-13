@@ -125,6 +125,21 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
+    public String getPodcasterName() {
+        return nameTextView.getText().toString();
+    }
+
+    @Override
+    public String getPersonalStatement() {
+        return statementTextView.getText().toString();
+    }
+
+    @Override
+    public boolean pictureExists() {
+        return personalPic.getDrawable() != null;
+    }
+
+    @Override
     public View getRootView() {
         return rootView;
     }

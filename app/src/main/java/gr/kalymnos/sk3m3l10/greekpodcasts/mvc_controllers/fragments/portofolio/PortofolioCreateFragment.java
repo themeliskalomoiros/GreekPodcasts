@@ -179,15 +179,19 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                 && viewMvc.getDescriptionText().length() > MIN_DESCRIPTION_LENGTH
                 && viewMvc.getDescriptionText().length() <= MAX_DESCRIPTION_LENGTH;
 
-        boolean imageDataExists = viewMvc.getPosterImageView().getDrawable() != null;
+        boolean imageDataExists = viewMvc.getPosterImageView().getDrawable() != null
+                && cachedPosterUri != null;
 
         if (isTitleValid && isDescriptionValid && imageDataExists) {
+
+            //  TODO: Important: First the image must be uploaded so we can get its url and then save the podcast
 
             //  Initialize a podcast with as many info we have so far...
             Podcast podcastToBeCreated = new Podcast();
             podcastToBeCreated.setTitle(viewMvc.getTitleText());
             podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
             podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getCategoryPosition()).getFirebasePushId());
+
 
             repo.createNewPodcast(podcastToBeCreated);
         } else {

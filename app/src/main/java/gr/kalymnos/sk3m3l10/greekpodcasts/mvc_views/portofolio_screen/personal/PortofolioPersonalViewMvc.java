@@ -19,9 +19,10 @@ public interface PortofolioPersonalViewMvc extends ViewMvc {
 
         void onImageClick();
 
-
     }
+
     void bindImage(Uri uri);
+
     void bindPodcasterName(String name);
 
     void bindImage(String url);
@@ -45,4 +46,10 @@ public interface PortofolioPersonalViewMvc extends ViewMvc {
     int getPersonalStatementDialogTitleRes();
 
     int getNoTitleOrUrlMessageId();
+
+    String getPodcasterName();
+
+    String getPersonalStatement();
+
+    boolean pictureExists();
 }
