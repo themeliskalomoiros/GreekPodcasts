@@ -77,7 +77,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MediaButtonReceiver.handleIntent(session,intent);
+        MediaButtonReceiver.handleIntent(session, intent);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -329,7 +329,9 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
         @Override
         public void onPlay() {
-            player.play();
+            if (PlaybackUtils.validStateToPlay(reportedPlayerState)) {
+                player.play();
+            }
         }
 
         @Override
@@ -469,7 +471,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                     .putString(MediaMetadataCompat.METADATA_KEY_DATE, DateUtils.dateRFC3339(item.getDescription().getExtras().getLong(Episode.DATE_KEY)))
                     .putLong(MediaMetadataCompat.METADATA_KEY_DURATION, duration)
                     .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, mediaId)
-                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI,item.getDescription().getMediaUri().toString())
+                    .putString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI, item.getDescription().getMediaUri().toString())
                     .build());
         }
 
