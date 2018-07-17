@@ -57,14 +57,20 @@ public class AllCategoriesFragment extends Fragment implements OnCategoryItemCli
 
     @Override
     public void onCategoryItemClick(int position) {
-        getContext().startActivity(getAllCategoryEpisodesActivityIntent(position));
+        if (getAllCategoryEpisodesActivityIntent(position) != null) {
+            getContext().startActivity(getAllCategoryEpisodesActivityIntent(position));
+        }
     }
 
     @NonNull
     private Intent getAllCategoryEpisodesActivityIntent(int position) {
-        Bundle extras = new Bundle();
-        extras.putParcelable(Category.CATEGORY_KEY,cachedCategories.get(position));
-        return new Intent(getContext(), AllCategoryEpisodesActivity.class);
+        if (cachedCategories != null) {
+            Intent intent = new Intent(getContext(), AllCategoryEpisodesActivity.class);
+            intent.putExtra(Category.CATEGORY_KEY, cachedCategories.get(position));
+            return intent;
+        }
+
+        return null;
     }
 
     @NonNull
