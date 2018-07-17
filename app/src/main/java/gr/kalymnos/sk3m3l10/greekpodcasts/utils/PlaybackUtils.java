@@ -32,13 +32,13 @@ public class PlaybackUtils {
                 return stateBuilder.setState(PlaybackStateCompat.STATE_PLAYING, currentPosition, playbackSpeed)
                         .setActions(PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_PLAY_PAUSE
                                 | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SEEK_TO
-                                | PlaybackStateCompat.ACTION_PLAY)
+                                | PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
                         .build();
             case PAUSED:
                 return stateBuilder.setState(PlaybackStateCompat.STATE_PAUSED, currentPosition, playbackSpeed)
                         .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE
                                 | PlaybackStateCompat.ACTION_STOP | PlaybackStateCompat.ACTION_SEEK_TO
-                                | PlaybackStateCompat.ACTION_PAUSE)
+                                | PlaybackStateCompat.ACTION_PAUSE | PlaybackStateCompat.ACTION_SKIP_TO_NEXT | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
                         .build();
             case STOPPED:
                 return stateBuilder.setState(PlaybackStateCompat.STATE_STOPPED, currentPosition, playbackSpeed)

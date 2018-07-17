@@ -6,6 +6,7 @@ import android.os.Parcelable;
 /*  Podcast Category    */
 public class Category implements Parcelable {
     public static final String CATEGORIES_KEY = "categories_key";
+    public static final String CATEGORY_KEY = "category_key";
 
     private String title, explanation, imageUrl, firebasePushId;
 

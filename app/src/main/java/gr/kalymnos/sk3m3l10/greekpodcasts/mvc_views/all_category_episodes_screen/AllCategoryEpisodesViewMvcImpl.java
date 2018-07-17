@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import java.util.List;
+
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
 public class AllCategoryEpisodesViewMvcImpl implements AllCategoryEpisodesViewMvc {
 
@@ -25,6 +28,16 @@ public class AllCategoryEpisodesViewMvcImpl implements AllCategoryEpisodesViewMv
         toolbar = rootView.findViewById(R.id.toolbar);
         recyclerView = rootView.findViewById(R.id.recycler_view);
         progressBar = rootView.findViewById(R.id.pb_loading_indicator);
+    }
+
+    @Override
+    public void bindPodcasts(List<Podcast> podcasts) {
+
+    }
+
+    @Override
+    public void setOnPodcastItemClickListener(OnPodcastItemClickListener listener) {
+
     }
 
     @Override

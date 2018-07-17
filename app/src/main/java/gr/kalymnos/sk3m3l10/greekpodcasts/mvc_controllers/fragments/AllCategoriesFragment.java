@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -9,11 +10,11 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.AllCategoryEpisodesActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_categories.AllCategoriesViewMvc;
@@ -56,8 +57,14 @@ public class AllCategoriesFragment extends Fragment implements OnCategoryItemCli
 
     @Override
     public void onCategoryItemClick(int position) {
-        //  TODO: Do something when the item is clicked.
-        Toast.makeText(this.getContext(), "Category clicked", Toast.LENGTH_SHORT).show();
+        getContext().startActivity(getAllCategoryEpisodesActivityIntent(position));
+    }
+
+    @NonNull
+    private Intent getAllCategoryEpisodesActivityIntent(int position) {
+        Bundle extras = new Bundle();
+        extras.putParcelable(Category.CATEGORY_KEY,cachedCategories.get(position));
+        return new Intent(getContext(), AllCategoryEpisodesActivity.class);
     }
 
     @NonNull

@@ -85,7 +85,7 @@ public class PlaybackWidget extends AppWidgetProvider {
         PendingIntent previousPendingIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
         views.setOnClickPendingIntent(R.id.player_previous, previousPendingIntent);
 
-        PendingIntent nextPendingIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS);
+        PendingIntent nextPendingIntent = MediaButtonReceiver.buildMediaButtonPendingIntent(context, PlaybackStateCompat.ACTION_SKIP_TO_NEXT);
         views.setOnClickPendingIntent(R.id.player_next, nextPendingIntent);
     }
 }
