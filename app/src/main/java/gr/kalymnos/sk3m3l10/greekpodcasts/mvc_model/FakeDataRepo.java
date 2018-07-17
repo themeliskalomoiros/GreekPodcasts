@@ -64,6 +64,11 @@ public class FakeDataRepo implements DataRepository {
     }
 
     @Override
+    public List<Podcast> fetchPodcastsFromCategory(String categoryPushId) {
+        return null;
+    }
+
+    @Override
     public List<Podcast> fetchStarredPodcasts(Cursor starredPodcastsCursor) {
         return fetchAllPodcasts();
     }

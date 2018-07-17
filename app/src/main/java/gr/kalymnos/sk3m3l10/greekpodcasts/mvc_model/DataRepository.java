@@ -32,6 +32,8 @@ public interface DataRepository {
 
     List<Podcast> fetchPodcastsFromPodcaster(String podcasterPushId);
 
+    List<Podcast> fetchPodcastsFromCategory(String categoryPushId);
+
     List<Podcast> fetchStarredPodcasts(Cursor starredPodcastsCursor);
 
     List<Episode> fetchEpisodes(String episodesId);

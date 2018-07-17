@@ -79,6 +79,11 @@ public class StaticFakeDataRepo implements DataRepository {
     }
 
     @Override
+    public List<Podcast> fetchPodcastsFromCategory(String categoryPushId) {
+        return fetchAllPodcasts();
+    }
+
+    @Override
     public List<Podcast> fetchStarredPodcasts(Cursor starredPodcastsCursor) {
         sleep(SLEEP_TIME);
         return fetchAllPodcasts();
