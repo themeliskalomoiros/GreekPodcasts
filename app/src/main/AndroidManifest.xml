@@ -73,7 +73,7 @@
                 android:resource="@xml/playback_widget_info" />
         </receiver>
 
-        <activity android:name=".mvc_controllers.activities.AllCategoryEpisodesActivity"></activity>
+        <activity android:name=".mvc_controllers.activities.AllCategoryEpisodesActivity" />
     </application>
 
 </manifest>
