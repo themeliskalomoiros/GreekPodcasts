@@ -1,8 +1,12 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.playback_service;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -24,6 +28,9 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -38,6 +45,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.DateUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
+import gr.kalymnos.sk3m3l10.greekpodcasts.widget.PlaybackWidget;
 
 public class PlaybackService extends MediaBrowserServiceCompat implements PlaybackInfoListener {
 
@@ -49,6 +57,8 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     private static final String SESSION_TAG = "MyMediaSession";
     private static final float DEFAULT_PLAYBACK_SPEED = 1f;
     private static final int FOREGROUND_ID = 112;
+
+    private static final String ACTION_UPDATE_WIDGETS = PlaybackService.class.getCanonicalName() + "action_update_widgets";
 
 
     private MediaSessionCompat session;
@@ -77,8 +87,29 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        boolean isActionToUpdateWidgets = intent != null && intent.getAction() != null && intent.getAction().equals(ACTION_UPDATE_WIDGETS);
+
+        if (isActionToUpdateWidgets) {
+            handleActionUpdateWidgets();
+        }
+
         MediaButtonReceiver.handleIntent(session, intent);
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    private void handleActionUpdateWidgets() {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, PlaybackWidget.class));
+        MediaControllerCompat mediaController = session.getController();
+        if (mediaController != null) {
+            PlaybackStateCompat playbackState = mediaController.getPlaybackState();
+            MediaMetadataCompat metaData = mediaController.getMetadata();
+
+            if (playbackState != null && metaData != null) {
+                PlaybackWidget.updateAllWidgets(this, appWidgetManager, appWidgetIds, playbackState.getState(), metaData.getDescription().getTitle().toString(), metaData.getDescription().getIconBitmap());
+            }
+
+        }
     }
 
     @Nullable
@@ -300,6 +331,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                 || reportedPlayerState == State.COMPLETED) {
             int currentPosition = PlaybackUtils.validStateToGetPosition(state) ? player.getCurrentPosition() : 0;
             session.setPlaybackState(PlaybackUtils.getPlaybackStateFromPlayerState(state, currentPosition, DEFAULT_PLAYBACK_SPEED, stateBuilder));
+            startServiceToUpdateWidgets(this);
         }
     }
 
@@ -318,6 +350,12 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     @Override
     public void onErrorHappened(String errorMessage) {
 
+    }
+
+    public static void startServiceToUpdateWidgets(Context context) {
+        Intent intent = new Intent(context, PlaybackService.class);
+        intent.setAction(ACTION_UPDATE_WIDGETS);
+        context.startService(intent);
     }
 
     private class MediaSessionCallback extends MediaSessionCompat.Callback {
@@ -342,9 +380,8 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                         if (PlaybackUtils.validStateToPlay(reportedPlayerState)) {
                             //  Start this service to be alive. For now it was bound and we don't
                             //  want the playback to stop when all clients unbind
-                            startService(new Intent(PlaybackService.this, PlaybackService.class));
+                            startServiceToUpdateWidgets(PlaybackService.this);
                             session.setActive(true);
-
 
                             //  Only onPlaybackPrepared() calls this method, so the media is already prepared to be played
                             player.play();
