@@ -38,7 +38,7 @@ public interface PortofolioCreateViewMvc extends ViewMvc {
 
     ImageView getPosterImageView();
 
-    int getCategoryPosition();
+    int getSelectedCategoryPosition();
 
     void displayImageHint(boolean display);
 
