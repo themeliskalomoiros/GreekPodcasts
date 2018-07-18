@@ -40,12 +40,12 @@ public class StaticFakeDataRepo implements DataRepository {
     private static final String CATEGORY_4 = "Arts & Entertainment";
     private static final String CATEGORY_5 = "Music";
     private static final String CATEGORY_6 = "Sports";
-    private static final String CATEGORY_ID_1 = "category id 1";
-    private static final String CATEGORY_ID_2 = "category id 2";
-    private static final String CATEGORY_ID_3 = "category id 3";
-    private static final String CATEGORY_ID_4 = "category id 4";
-    private static final String CATEGORY_ID_5 = "category id 5";
-    private static final String CATEGORY_ID_6 = "category id 6";
+    private static final String CATEGORY_ID_1 = "education";
+    private static final String CATEGORY_ID_2 = "news_politics";
+    private static final String CATEGORY_ID_3 = "stories";
+    private static final String CATEGORY_ID_4 = "arts";
+    private static final String CATEGORY_ID_5 = "music";
+    private static final String CATEGORY_ID_6 = "sports";
 
 
     private static final String EPISODE_URL_1 = "https://www.mfiles.co.uk/mp3-downloads/chopin-nocturne-op9-no2.mp3";
