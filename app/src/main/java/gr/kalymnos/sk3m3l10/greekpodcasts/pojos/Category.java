@@ -7,6 +7,7 @@ import android.os.Parcelable;
 public class Category implements Parcelable {
     public static final String CATEGORIES_KEY = "categories_key";
     public static final String CATEGORY_KEY = "category_key";
+    public static final String FIREBASE_ROOT_CHILD_NAME = "Categories";
 
     private String title, explanation, imageUrl, firebasePushId;
 
