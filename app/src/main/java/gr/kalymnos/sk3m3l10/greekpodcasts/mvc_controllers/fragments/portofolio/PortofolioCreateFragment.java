@@ -16,12 +16,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.create.PortofolioCreateViewMvc;
@@ -49,6 +53,9 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
 
     private DataRepository repo;
 
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseStorage firebaseStorage;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,6 +64,8 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
         //  TODO: Replace with a real service
         repo = new StaticFakeDataRepo();
         repo.setOnCreatedPodcastListener(this);
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
         return viewMvc.getRootView();
     }
 
@@ -172,20 +181,34 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     @Override
     public void save() {
         if (isValidStateToSave()) {
+            //  Getting the push id from the start in order to save the picture at Storage and then
+            // save the Podcast at Database
+            String podcastPushId = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTS).push().getKey();
+            StorageReference posterStorageRef = firebaseStorage.getReference()
+                    .child(ChildNames.CHILD_NAME_PODCASTS)
+                    .child(podcastPushId)
+                    .child(ChildNames.CHILD_NAME_POSTER);
 
-            //  TODO: Important: First the image must be uploaded so we can get its url and then save the podcast
+            posterStorageRef.putFile(cachedPosterUri).addOnSuccessListener(taskSnapshot -> {
 
-            //  Initialize a podcast with as many info we have so far...
-            Podcast podcastToBeCreated = new Podcast();
-            podcastToBeCreated.setTitle(viewMvc.getTitleText());
-            podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
-            podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
+                Podcast podcastToBeCreated = new Podcast();
+                podcastToBeCreated.setTitle(viewMvc.getTitleText());
+                podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
+                podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
+                podcastToBeCreated.setPosterUrl(taskSnapshot.getDownloadUrl().toString());
 
+                DatabaseReference podcastRef = firebaseDatabase.getReference()
+                        .child(ChildNames.CHILD_NAME_PODCASTS)
+                        .child(podcastPushId);
 
-            repo.createNewPodcast(podcastToBeCreated);
+                podcastRef.setValue(podcastToBeCreated).addOnSuccessListener(aVoid -> {
+                    //  TODO:   Snackbar to inform user that the podcast was uploaded
+                });
+            });
+
         } else {
             //  TODO: pop-up a message explaining why the save cannot be done.
-            Toast.makeText(getContext(), "Could not save", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Complete all fields and insert a picture to save", Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -201,12 +224,8 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
 
         boolean imageDataExists = viewMvc.getPosterImageView().getDrawable() != null
                 && cachedPosterUri != null;
-        return isTitleValid && isDescriptionValid && imageDataExists;
-    }
 
-    private StorageReference getPodcast() {
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        return storageReference.child(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
+        return isTitleValid && isDescriptionValid && imageDataExists;
     }
 
     @Override
