@@ -307,20 +307,16 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void save() {
-        boolean dataExists = cachedPosterUri != null && cachedPodcasts != null && cachedCategories != null
-                && cachedPodcasts.size() > 0 && cachedCategories.size() > 0;
-
-        if (dataExists) {
+        if (isValidStateToSave()) {
             Podcast selectedPodcast = cachedPodcasts.get(viewMvc.getSelectedPodcastPosition());
             boolean validTitle = !TextUtils.isEmpty(selectedPodcast.getTitle());
             boolean validPoster = viewMvc.posterExists();
             boolean validDescription = !TextUtils.isEmpty(getString(viewMvc.getDescriptionDialogTitleRes()));
             boolean userFilledInEverything = validTitle && validPoster && validDescription;
 
-            if (userFilledInEverything){
+            if (userFilledInEverything) {
                 //  TODO:   Update podcast with the new values
             }
-
         }
     }
 
@@ -331,7 +327,8 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public boolean isValidStateToSave() {
-        return false;
+        return cachedPosterUri != null && cachedPodcasts != null && cachedCategories != null
+                && cachedPodcasts.size() > 0 && cachedCategories.size() > 0;
     }
 
     @Override
