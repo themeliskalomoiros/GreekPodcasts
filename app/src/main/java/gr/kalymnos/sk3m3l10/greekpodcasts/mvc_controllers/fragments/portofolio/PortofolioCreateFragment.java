@@ -1,8 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,11 +11,13 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -171,6 +171,26 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
 
     @Override
     public void save() {
+        if (isValidStateToSave()) {
+
+            //  TODO: Important: First the image must be uploaded so we can get its url and then save the podcast
+
+            //  Initialize a podcast with as many info we have so far...
+            Podcast podcastToBeCreated = new Podcast();
+            podcastToBeCreated.setTitle(viewMvc.getTitleText());
+            podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
+            podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
+
+
+            repo.createNewPodcast(podcastToBeCreated);
+        } else {
+            //  TODO: pop-up a message explaining why the save cannot be done.
+            Toast.makeText(getContext(), "Could not save", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public boolean isValidStateToSave() {
         boolean isTitleValid = !TextUtils.isEmpty(viewMvc.getTitleText())
                 && viewMvc.getTitleText().length() > MIN_TITLE_LENGTH
                 && viewMvc.getTitleText().length() <= MAX_TITLE_LENGTH;
@@ -181,24 +201,12 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
 
         boolean imageDataExists = viewMvc.getPosterImageView().getDrawable() != null
                 && cachedPosterUri != null;
+        return isTitleValid && isDescriptionValid && imageDataExists;
+    }
 
-        if (isTitleValid && isDescriptionValid && imageDataExists) {
-
-            //  TODO: Important: First the image must be uploaded so we can get its url and then save the podcast
-
-            //  Initialize a podcast with as many info we have so far...
-            Podcast podcastToBeCreated = new Podcast();
-            podcastToBeCreated.setTitle(viewMvc.getTitleText());
-            podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
-            podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getCategoryPosition()).getFirebasePushId());
-
-
-            repo.createNewPodcast(podcastToBeCreated);
-        } else {
-            //  TODO: pop-up a message explaining why the save cannot be done.
-            Toast.makeText(getContext(), "Could not save", Toast.LENGTH_SHORT).show();
-        }
-
+    private StorageReference getPodcast() {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        return storageReference.child(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
     }
 
     @Override

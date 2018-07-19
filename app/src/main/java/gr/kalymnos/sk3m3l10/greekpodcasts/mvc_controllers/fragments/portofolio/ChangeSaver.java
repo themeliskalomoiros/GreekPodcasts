@@ -10,4 +10,6 @@ public interface ChangeSaver {
     void save();
 
     String getConfirmationMessage();
+
+    boolean isValidStateToSave();
 }

@@ -330,6 +330,11 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     }
 
     @Override
+    public boolean isValidStateToSave() {
+        return false;
+    }
+
+    @Override
     public void onEditPodcastClick(int itemPosition) {
         if (titleDialog == null) {
             titleDialog = createDialog(viewMvc.getTitleDialogTitleRes());

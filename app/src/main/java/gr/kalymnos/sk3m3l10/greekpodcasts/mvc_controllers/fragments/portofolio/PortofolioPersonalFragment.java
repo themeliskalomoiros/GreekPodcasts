@@ -226,6 +226,11 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     }
 
     @Override
+    public boolean isValidStateToSave() {
+        return false;
+    }
+
+    @Override
     public void onEditPodcasterName() {
         if (nameDialog == null) {
             nameDialog = createDialog(viewMvc.getNameDialogTitleRes());
