@@ -10,18 +10,15 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
-import android.widget.Toast;
 
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.FakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcaster_screen.PodcasterViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcaster_screen.PodcasterViewMvc.OnPromotionLinkClickListener;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcaster_screen.PodcasterViewMvcImpl;
-import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.DateUtils;
