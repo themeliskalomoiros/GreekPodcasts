@@ -61,6 +61,11 @@ public class StaticFakeDataRepo implements DataRepository {
     private OnAudioUploadSuccessListener onAudioUploadSuccessListener;
 
     @Override
+    public void setOnAllPodcastsFetchedSuccessListener(OnAllPodcastsFetchedSuccessListener listener) {
+
+    }
+
+    @Override
     public List<Podcast> fetchAllPodcasts() {
         sleep(SLEEP_TIME);
         Podcast p1 = new Podcast("All about the World Cup 2018", CATEGORY_ID_3, IMG_URL, "This is my description for the world cup and bla bla bklabla bla bklabla bla bklabla bla bklabla bla bkla."

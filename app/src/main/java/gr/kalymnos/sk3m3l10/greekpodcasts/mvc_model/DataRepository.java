@@ -24,9 +24,15 @@ public interface DataRepository {
 
     }
 
-    interface OnAudioUploadSuccessListener{
+    interface OnAudioUploadSuccessListener {
         void onSuccess();
     }
+
+    interface OnAllPodcastsFetchedSuccessListener {
+        void onAllPodcastsFetchedSuccess(List<Podcast> podcasts);
+    }
+
+    void setOnAllPodcastsFetchedSuccessListener(OnAllPodcastsFetchedSuccessListener listener);
 
     List<Podcast> fetchAllPodcasts();
 
