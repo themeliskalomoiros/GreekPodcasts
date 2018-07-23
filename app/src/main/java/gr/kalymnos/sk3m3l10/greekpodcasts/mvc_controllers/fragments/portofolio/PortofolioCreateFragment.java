@@ -17,8 +17,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -33,6 +36,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.create.Por
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.create.PortofolioCreateViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
@@ -182,32 +186,51 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
     @Override
     public void save() {
         if (isValidStateToSave()) {
-            //  Getting the push id from the start in order to save the picture at Storage and then
-            // save the Podcast at Database
-            String podcastPushId = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTS).push().getKey();
-            StorageReference posterStorageRef = firebaseStorage.getReference()
-                    .child(ChildNames.CHILD_NAME_PODCASTS)
-                    .child(podcastPushId)
-                    .child(ChildNames.CHILD_NAME_POSTER);
 
-            posterStorageRef.putFile(cachedPosterUri).addOnSuccessListener(taskSnapshot -> {
+            String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            DatabaseReference podcasterRef = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTERS).child(userId);
+            podcasterRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Podcaster podcaster = dataSnapshot.getValue(Podcaster.class);
+                    if (podcaster == null) {
+                        //  TODO:   Instead of a toast display a snackbar
+                        Toast.makeText(getContext(), "Create profile first.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //  Getting the push id from the start in order to save the picture at Storage and then
+                        // save the Podcast at Database
+                        String podcastPushId = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTS).push().getKey();
+                        StorageReference posterStorageRef = firebaseStorage.getReference()
+                                .child(ChildNames.CHILD_NAME_PODCASTS)
+                                .child(podcastPushId)
+                                .child(ChildNames.CHILD_NAME_POSTER);
 
-                Podcast podcastToBeCreated = new Podcast();
-                podcastToBeCreated.setTitle(viewMvc.getTitleText());
-                podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
-                podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
-                podcastToBeCreated.setPosterUrl(taskSnapshot.getDownloadUrl().toString());
-                String podcasterPushId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                podcastToBeCreated.setPodcasterId(podcasterPushId);
+                        posterStorageRef.putFile(cachedPosterUri).addOnSuccessListener(taskSnapshot -> {
 
-                DatabaseReference podcastRef = firebaseDatabase.getReference()
-                        .child(ChildNames.CHILD_NAME_PODCASTS)
-                        .child(podcastPushId);
+                            Podcast podcastToBeCreated = new Podcast();
+                            podcastToBeCreated.setTitle(viewMvc.getTitleText());
+                            podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
+                            podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
+                            podcastToBeCreated.setPosterUrl(taskSnapshot.getDownloadUrl().toString());
+                            String podcasterPushId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            podcastToBeCreated.setPodcasterId(podcasterPushId);
 
-                podcastRef.setValue(podcastToBeCreated).addOnSuccessListener(aVoid -> {
-                    //  TODO:   Snackbar to inform user that the podcast was uploaded
-                    getActivity().finish();
-                });
+                            DatabaseReference podcastRef = firebaseDatabase.getReference()
+                                    .child(ChildNames.CHILD_NAME_PODCASTS)
+                                    .child(podcastPushId);
+
+                            podcastRef.setValue(podcastToBeCreated).addOnSuccessListener(aVoid -> {
+                                //  TODO:   Snackbar to inform user that the podcast was uploaded
+                                getActivity().finish();
+                            });
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
             });
 
         } else {
