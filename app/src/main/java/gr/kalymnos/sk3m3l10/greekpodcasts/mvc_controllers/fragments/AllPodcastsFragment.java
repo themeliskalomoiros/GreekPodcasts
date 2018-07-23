@@ -38,7 +38,6 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
 
     protected FirebaseDatabase firebaseDatabase;
     protected DatabaseReference allPodcastsRef;
-    private ChildEventListener allPodcastsChildEventListener;
 
     @Nullable
     @Override
@@ -55,22 +54,6 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
             viewMvc.bindPodcasts(cachedPodcasts);
         } else {
             initializeFirebase();
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (allPodcastsRef != null) {
-            allPodcastsRef.addChildEventListener(allPodcastsChildEventListener);
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (allPodcastsRef != null) {
-            allPodcastsRef.removeEventListener(allPodcastsChildEventListener);
         }
     }
 
@@ -111,42 +94,7 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
         firebaseDatabase = FirebaseDatabase.getInstance();
         allPodcastsRef = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTS);
         bindPodcastsToUi();
-        allPodcastsChildEventListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if (isCachedPodcastsListValid()) {
-                    Podcast podcast = dataSnapshot.getValue(Podcast.class);
-                    //  Always setting the firebasePushId of the podcast because it's used in local database
-                    podcast.setFirebasePushId(dataSnapshot.getKey());
-                    cachedPodcasts.add(podcast);
-                    viewMvc.bindPodcasts(cachedPodcasts);
-                }
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-
-            private boolean isCachedPodcastsListValid() {
-                return cachedPodcasts != null && cachedPodcasts.size() > 0;
-            }
-        };
+        
     }
 
     private void bindPodcastsToUi() {

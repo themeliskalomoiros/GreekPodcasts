@@ -7,14 +7,10 @@ import android.view.LayoutInflater;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Arrays;
 import java.util.List;
 
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.main_screen.MainViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.main_screen.MainViewMvcImpl;
 
@@ -27,10 +23,7 @@ public class MainActivity extends AppCompatActivity implements MainViewMvc.OnAct
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initializeViewMvc();
-
-        //  TODO:   Shouldn't do something here with checking savedInstanceState and fragments? Check it!!!
         this.setContentView(this.viewMvc.getRootView());
     }
 
@@ -57,18 +50,7 @@ public class MainActivity extends AppCompatActivity implements MainViewMvc.OnAct
             IdpResponse response = IdpResponse.fromResultIntent(data);
 
             if (resultCode == RESULT_OK) {
-                //  TODO: Replace with a real service
-                DataRepository repo = new StaticFakeDataRepo();
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                String uId = user.getUid();
-
-                /*  Uid is unique across all providers (google,facebook,email-password etc...)*/
-                if (repo.podcasterExists(uId)) {
-                    startActivity(new Intent(this, PortofolioActivity.class));
-                }else{
-                    repo.createPodcaster(this, uId,
-                            () -> startActivity(new Intent(this, PortofolioActivity.class)));
-                }
+                startActivity(new Intent(this, PortofolioActivity.class));
             } else {
                 //  Sign in failed. If response is null the user canceled the
                 //  sign-in flow using the back button. Otherwise check response.getError().getErrorCode()

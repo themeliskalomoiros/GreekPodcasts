@@ -101,4 +101,28 @@ public class Podcaster implements Parcelable {
     public void setFirebasePushId(String firebasePushId) {
         this.firebasePushId = firebasePushId;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPersonalStatement(String personalStatement) {
+        this.personalStatement = personalStatement;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public void setPromotionLinksId(String promotionLinksId) {
+        this.promotionLinksId = promotionLinksId;
+    }
+
+    public void setJoinedDate(long joinedDate) {
+        this.joinedDate = joinedDate;
+    }
 }

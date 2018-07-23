@@ -35,8 +35,10 @@ public class LocalDatabaseTasks {
                         cursor.moveToFirst();
                         int idColumnIndex = cursor.getColumnIndex(UserMetadataContract.PodcastWatchedEntry._ID);
                         _id = cursor.getInt(idColumnIndex);
+                        cursor.close();
                         return true;
                     } else {
+                        cursor.close();
                         return false;
                     }
                 } else {

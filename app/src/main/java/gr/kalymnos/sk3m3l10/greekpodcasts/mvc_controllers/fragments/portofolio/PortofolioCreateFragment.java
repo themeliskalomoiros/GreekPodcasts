@@ -197,7 +197,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                 podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
                 podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
                 podcastToBeCreated.setPosterUrl(taskSnapshot.getDownloadUrl().toString());
-                String podcasterPushId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                String podcasterPushId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 podcastToBeCreated.setPodcasterId(podcasterPushId);
 
                 DatabaseReference podcastRef = firebaseDatabase.getReference()

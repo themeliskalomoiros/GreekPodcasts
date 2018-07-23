@@ -38,17 +38,18 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
     }
 
     private void initializeMvcView() {
-        Bundle extras = this.getIntent().getExtras();
+        Bundle extras = getIntent().getExtras();
 
         if (extras != null && extras.containsKey(Podcast.PODCAST_KEY)) {
             cachedPodcast = extras.getParcelable(Podcast.PODCAST_KEY);
             if (cachedPodcast != null) {
-                this.viewMvc = new PodcastScreenViewMvcImpl(LayoutInflater.from(this),
-                        null, this.getSupportFragmentManager(), extras);
-                this.viewMvc.setOnActionPlayClickListener(this);
-                this.viewMvc.bindPoster(cachedPodcast.getPosterUrl());
-                this.viewMvc.bindPodcastTitle(cachedPodcast.getTitle());
-                this.viewMvc.bindPodcasterName(cachedPodcast.getTitle());
+                viewMvc = new PodcastScreenViewMvcImpl(LayoutInflater.from(this),
+                        null, getSupportFragmentManager(), extras);
+                viewMvc.setOnActionPlayClickListener(this);
+                viewMvc.bindPoster(cachedPodcast.getPosterUrl());
+                viewMvc.bindPodcastTitle(cachedPodcast.getTitle());
+                //  TODO:   bindPodcasterName() should not bind the podcast title
+                viewMvc.bindPodcasterName(cachedPodcast.getTitle());
             } else {
                 throw new IllegalStateException(TAG + ": Podcast activity cannot be instantiated with a null Podcast.");
             }
@@ -68,9 +69,9 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
             @Override
             protected void onStartLoading() {
                 if (cachedPodcasterName != null) {
-                    this.deliverResult(cachedPodcasterName);
+                    deliverResult(cachedPodcasterName);
                 } else {
-                    this.forceLoad();
+                    forceLoad();
                 }
             }
 
@@ -87,7 +88,7 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
     @Override
     public void onLoadFinished(@NonNull Loader<String> loader, String data) {
         if (data != null) {
-            this.viewMvc.bindPodcasterName(this.cachedPodcasterName = data);
+            viewMvc.bindPodcasterName(cachedPodcasterName = data);
         }
     }
 
@@ -115,7 +116,7 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
 
         QuickPlayerFragment quickPlayerFragment = new QuickPlayerFragment();
         quickPlayerFragment.setArguments(args);
-        this.getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(viewMvc.getQuickPlayerContainerId(), quickPlayerFragment)
                 .commit();
     }
