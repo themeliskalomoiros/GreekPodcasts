@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -196,6 +197,8 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                 podcastToBeCreated.setDescription(viewMvc.getDescriptionText());
                 podcastToBeCreated.setCategoryId(cachedCategories.get(viewMvc.getSelectedCategoryPosition()).getFirebasePushId());
                 podcastToBeCreated.setPosterUrl(taskSnapshot.getDownloadUrl().toString());
+                String podcasterPushId = FirebaseAuth.getInstance().getCurrentUser().getEmail();
+                podcastToBeCreated.setPodcasterId(podcasterPushId);
 
                 DatabaseReference podcastRef = firebaseDatabase.getReference()
                         .child(ChildNames.CHILD_NAME_PODCASTS)
@@ -203,6 +206,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
 
                 podcastRef.setValue(podcastToBeCreated).addOnSuccessListener(aVoid -> {
                     //  TODO:   Snackbar to inform user that the podcast was uploaded
+                    getActivity().finish();
                 });
             });
 
