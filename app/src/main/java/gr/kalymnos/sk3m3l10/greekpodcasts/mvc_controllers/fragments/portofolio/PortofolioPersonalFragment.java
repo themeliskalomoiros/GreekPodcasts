@@ -7,20 +7,28 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
+import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.personal.PortofolioPersonalViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.personal.PortofolioPersonalViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
@@ -28,11 +36,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
-public class PortofolioPersonalFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
-        ChangeSaver, PortofolioPersonalViewMvc.OnViewsClickListener {
+public class PortofolioPersonalFragment extends Fragment implements ChangeSaver, PortofolioPersonalViewMvc.OnViewsClickListener {
 
-    private static final int PROMOTION_LOADER_ID = 100;
-    private static final int PODCASTER_LOADER_ID = 200;
     private static final String TAG = PortofolioPersonalFragment.class.getSimpleName();
     private static final int RC_POSTER_PIC = 1313;
 
@@ -42,6 +47,13 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     private PortofolioPersonalViewMvc viewMvc;
 
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference podcasterRef;
+    private DatabaseReference promotionLinksRef;
+    private FirebaseStorage firebaseStorage;
+    private StorageReference podcasterImageRef;
+    private FirebaseUser firebaseUser;
+
     private InsertTextDialogFragment nameDialog, statementDialog;
     private InsertTextDialogFragment.OnInsertedTextListener
             nameInsertedListener = text -> viewMvc.bindPodcasterName(text),
@@ -49,19 +61,21 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     private PromotionLinkDialogFragment promotionDialog;
     private PromotionLinkDialogFragment.OnInsertedTextListener promotionInsertedTextListener =
             (title, url) -> {
-                if (cachedPromotionLinks != null) {
-                    boolean hasTitleAndUrl = !TextUtils.isEmpty(title) && !TextUtils.isEmpty(url);
+                if (cachedPromotionLinks == null) {
+                    cachedPromotionLinks = new ArrayList<>();
+                }
 
-                    if (hasTitleAndUrl) {
-                        //  Update Ui
-                        PromotionLink newPromotionLink = new PromotionLink(title, url, cachedPodcaster.getFirebasePushId());
-                        cachedPromotionLinks.add(newPromotionLink);
-                        viewMvc.bindPromotionLinks(cachedPromotionLinks);
+                boolean hasTitleAndUrl = !TextUtils.isEmpty(title) && !TextUtils.isEmpty(url);
 
-                        //  TODO: The new promotion link must be uploaded
-                    } else {
-                        Toast.makeText(getContext(), viewMvc.getNoTitleOrUrlMessageId(), Toast.LENGTH_SHORT).show();
-                    }
+                if (hasTitleAndUrl) {
+                    //  Update Ui
+                    PromotionLink newPromotionLink = new PromotionLink(title, url);
+                    cachedPromotionLinks.add(newPromotionLink);
+                    viewMvc.bindPromotionLinks(cachedPromotionLinks);
+
+                    //  TODO: The new promotion link must be uploaded
+                } else {
+                    Toast.makeText(getContext(), viewMvc.getNoTitleOrUrlMessageId(), Toast.LENGTH_SHORT).show();
                 }
             };
 
@@ -69,6 +83,7 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        initializeFirebase();
         viewMvc = new PortofolioPersonalViewMvcImpl(inflater, container);
         viewMvc.setOnViewsClickListener(this);
         return viewMvc.getRootView();
@@ -78,18 +93,50 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        boolean isValidState = savedInstanceState != null
-                && savedInstanceState.containsKey(PromotionLink.PROMOTION_LINKS_KEY)
-                && savedInstanceState.containsKey(Podcaster.PODCASTER_KEY);
+        if (isValidSavedInstanceState(savedInstanceState)) {
+            initializeUiFromSavedInstanceState(savedInstanceState);
+        } else {
+            podcasterRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Podcaster podcaster = dataSnapshot.getValue(Podcaster.class);
+                    if (podcaster != null) {
+                        cachedPodcaster = podcaster;
+                        viewMvc.bindPersonalStatement(cachedPodcaster.getPersonalStatement());
+                        viewMvc.bindPodcasterName(cachedPodcaster.getUsername());
+                        viewMvc.bindImage(cachedPodcaster.getImageUrl());
 
-        if (isValidState) {
-            cachedPodcaster = savedInstanceState.getParcelable(Podcaster.PODCASTER_KEY);
-            cachedPromotionLinks = savedInstanceState.getParcelableArrayList(PromotionLink.PROMOTION_LINKS_KEY);
-            cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
+                    } else {
+                        //  There is not podcaster, borrow a temporary username from FirebaseUser
+                        viewMvc.bindPodcasterName(firebaseUser.getDisplayName());
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+            promotionLinksRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    List<PromotionLink> promotionLinks = new ArrayList<>();
+                    for (DataSnapshot promotionLinkSnapShot : dataSnapshot.getChildren()) {
+                        PromotionLink promotionLink = promotionLinkSnapShot.getValue(PromotionLink.class);
+                        promotionLinks.add(promotionLink);
+                    }
+                    if (promotionLinks != null && promotionLinks.size() > 0) {
+                        viewMvc.bindPromotionLinks(cachedPromotionLinks = promotionLinks);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
-
-        getLoaderManager().restartLoader(PROMOTION_LOADER_ID, null, this);
-        getLoaderManager().restartLoader(PODCASTER_LOADER_ID, null, this);
     }
 
     @Override
@@ -116,108 +163,130 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelableArrayList(PromotionLink.PROMOTION_LINKS_KEY, (ArrayList<? extends Parcelable>) cachedPromotionLinks);
-        outState.putParcelable(Podcaster.PODCASTER_KEY, cachedPodcaster);
+        if (cachedPodcaster != null) {
+            outState.putParcelable(Podcaster.PODCASTER_KEY, cachedPodcaster);
+        }
+        if (cachedPromotionLinks != null && cachedPromotionLinks.size() > 0) {
+            outState.putParcelableArrayList(PromotionLink.PROMOTION_LINKS_KEY, (ArrayList<? extends Parcelable>) cachedPromotionLinks);
+        }
         if (cachedPosterUri != null) {
             outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
         }
     }
 
-    @NonNull
-    @Override
-    public Loader<Object> onCreateLoader(int id, @Nullable Bundle args) {
-        switch (id) {
-            case PROMOTION_LOADER_ID:
-                return new AsyncTaskLoader<Object>(getContext()) {
-
-                    @Override
-                    protected void onStartLoading() {
-                        if (cachedPromotionLinks != null) {
-                            deliverResult(cachedPromotionLinks);
-                        } else {
-                            viewMvc.displayLoadingIndicator(true);
-                            forceLoad();
-                        }
-                    }
-
-                    @Nullable
-                    @Override
-                    public Object loadInBackground() {
-                        //  TODO: Replace with real service.
-                        DataRepository repo = new StaticFakeDataRepo();
-                        return repo.fetchPromotionLinks(repo.getCurrentUserUid());
-                    }
-                };
-
-            case PODCASTER_LOADER_ID:
-                return new AsyncTaskLoader<Object>(getContext()) {
-
-                    @Override
-                    protected void onStartLoading() {
-                        if (cachedPodcaster != null) {
-                            deliverResult(cachedPodcaster);
-                        } else {
-                            forceLoad();
-                        }
-                    }
-
-                    @Nullable
-                    @Override
-                    public Object loadInBackground() {
-                        //  TODO: Replace with a real service
-                        DataRepository repo = new StaticFakeDataRepo();
-                        return repo.fetchPodcaster(repo.getCurrentUserUid());
-                    }
-                };
-
-            default:
-                throw new UnsupportedOperationException(TAG + ": unknown loader id.");
-        }
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Object> loader, Object data) {
-        if (data != null) {
-            switch (loader.getId()) {
-                case PROMOTION_LOADER_ID:
-                    List<PromotionLink> list = (List<PromotionLink>) data;
-                    if (list != null && list.size() > 0) {
-                        viewMvc.displayLoadingIndicator(false);
-                        viewMvc.bindPromotionLinks(cachedPromotionLinks = list);
-                    }
-                    break;
-
-                case PODCASTER_LOADER_ID:
-                    if (data instanceof Podcaster) {
-                        cachedPodcaster = (Podcaster) data;
-                        viewMvc.bindPodcasterName(cachedPodcaster.getUsername());
-                        if (cachedPosterUri == null) {
-                            viewMvc.bindImage(cachedPodcaster.getImageUrl());
-                        }
-                        viewMvc.bindPersonalStatement(cachedPodcaster.getPersonalStatement());
-                    }
-                    break;
-
-                default:
-                    throw new UnsupportedOperationException(TAG + ": unknown loader id.");
-            }
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Object> loader) {
-
-    }
-
     @Override
     public void save() {
-        boolean nameIsValid = !TextUtils.isEmpty(viewMvc.getPodcasterName());
-        boolean pictureIsValid = viewMvc.pictureExists() && cachedPosterUri != null;
-        boolean statementIsValid = !TextUtils.isEmpty(viewMvc.getPersonalStatement());
+        if (isValidStateToSave()) {
+            viewMvc.displayLoadingIndicator(true);
 
-        if (nameIsValid && pictureIsValid && statementIsValid){
-            //  TODO: Upload the image and when finished create the podcaster and upload it
+            if (cachedPosterUri != null) {
+                podcasterImageRef.putFile(cachedPosterUri).addOnSuccessListener(taskSnapshot -> {
+                    savePodcastWithNewImage(taskSnapshot);
+                });
+            } else {
+                podcasterRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Podcaster podcaster = dataSnapshot.getValue(Podcaster.class);
+                        if (podcaster != null) {
+                            podcasterRef.updateChildren(getUpdatedValuesMap())
+                                    .addOnSuccessListener(aVoid ->
+                                    {
+                                        viewMvc.displayLoadingIndicator(false);
+                                        getActivity().finish();
+                                    });
+                        } else {
+                            Toast.makeText(getContext(), "Must choose a picture", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    private HashMap<String, Object> getUpdatedValuesMap() {
+                        HashMap<String, Object> updatedValuesMap = new HashMap<>();
+                        updatedValuesMap.put(Podcaster.FIELD_NAME_PERSONAL_STATEMENT, viewMvc.getPersonalStatement());
+                        updatedValuesMap.put(Podcaster.FIELD_NAME_USERNAME, viewMvc.getPodcasterName());
+                        updatedValuesMap.put(Podcaster.FIELD_NAME_PERSONAL_STATEMENT, viewMvc.getPersonalStatement());
+                        return updatedValuesMap;
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            if (cachedPromotionLinks != null && cachedPromotionLinks.size() > 0) {
+                promotionLinksRef.setValue(cachedPromotionLinks);
+            }
+
+        } else {
+            Toast.makeText(getContext(), "Must complete all fields.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void savePodcastWithNewImage(UploadTask.TaskSnapshot taskSnapshot) {
+        podcasterRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Podcaster podcaster = dataSnapshot.getValue(Podcaster.class);
+
+                if (podcaster != null) {
+                    podcasterRef.updateChildren(getUpdatedValuesMap(taskSnapshot.getDownloadUrl().toString()))
+                            .addOnSuccessListener(aVoid ->
+                            {
+                                viewMvc.displayLoadingIndicator(false);
+                                boolean promotionLinksAreValid = viewMvc.getPromotionLinks() != null && viewMvc.getPromotionLinks().size() > 0;
+                                if (promotionLinksAreValid) {
+                                    promotionLinksRef.setValue(viewMvc.getPromotionLinks()).addOnSuccessListener(aVoid1 -> getActivity().finish());
+                                } else {
+                                    getActivity().finish();
+                                }
+                            });
+                } else {
+                    createNewPodcaster(podcaster, taskSnapshot.getDownloadUrl().toString());
+                }
+            }
+
+            private void createNewPodcaster(Podcaster podcaster, String imageUrl) {
+                if (podcaster == null) {
+                    podcaster = new Podcaster();
+                }
+                setupPodcaster(podcaster, imageUrl);
+                podcasterRef.setValue(podcaster)
+                        .addOnSuccessListener(aVoid ->
+                        {
+                            viewMvc.displayLoadingIndicator(false);
+                            boolean promotionLinksAreValid = viewMvc.getPromotionLinks() != null && viewMvc.getPromotionLinks().size() > 0;
+                            if (promotionLinksAreValid) {
+                                promotionLinksRef.setValue(viewMvc.getPromotionLinks()).addOnSuccessListener(aVoid1 -> getActivity().finish());
+                            } else {
+                                getActivity().finish();
+                            }
+                        });
+            }
+
+            private void setupPodcaster(Podcaster podcaster, String imageUrl) {
+                podcaster.setJoinedDate(System.currentTimeMillis());
+                podcaster.setEmail(firebaseUser.getEmail());
+                podcaster.setUsername(viewMvc.getPodcasterName());
+                podcaster.setPersonalStatement(viewMvc.getPersonalStatement());
+                podcaster.setImageUrl(imageUrl);
+            }
+
+            @NonNull
+            private HashMap<String, Object> getUpdatedValuesMap(String imageUrl) {
+                HashMap<String, Object> updatedValuesMap = new HashMap<>();
+                updatedValuesMap.put(Podcaster.FIELD_NAME_USERNAME, viewMvc.getPodcasterName());
+                updatedValuesMap.put(Podcaster.FIELD_NAME_IMAGEURL, imageUrl);
+                updatedValuesMap.put(Podcaster.FIELD_NAME_PERSONAL_STATEMENT, viewMvc.getPersonalStatement());
+                return updatedValuesMap;
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     @Override
@@ -227,7 +296,10 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     @Override
     public boolean isValidStateToSave() {
-        return false;
+        boolean nameIsValid = !TextUtils.isEmpty(viewMvc.getPodcasterName());
+        boolean pictureIsValid = viewMvc.pictureExists() || cachedPosterUri != null;
+        boolean statementIsValid = !TextUtils.isEmpty(viewMvc.getPersonalStatement());
+        return nameIsValid && pictureIsValid && statementIsValid;
     }
 
     @Override
@@ -283,5 +355,29 @@ public class PortofolioPersonalFragment extends Fragment implements LoaderManage
 
     private String getPromotionDialogFragmentTag() {
         return InsertTextDialogFragment.TAG + "_promotion_dialog_tag";
+    }
+
+    private void initializeFirebase() {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        podcasterRef = firebaseDatabase.getReference().child(ChildNames.PODCASTERS).child(firebaseUser.getUid());
+        promotionLinksRef = firebaseDatabase.getReference().child(ChildNames.PROMOTION_LINKS).child(firebaseUser.getUid());
+        podcasterImageRef = firebaseStorage.getReference().child(ChildNames.PODCASTERS).child(firebaseUser.getEmail());
+    }
+
+    private boolean isValidSavedInstanceState(@Nullable Bundle savedInstanceState) {
+        return savedInstanceState != null
+                && savedInstanceState.containsKey(PromotionLink.PROMOTION_LINKS_KEY)
+                && savedInstanceState.containsKey(Podcaster.PODCASTER_KEY);
+    }
+
+    private void initializeUiFromSavedInstanceState(@NonNull Bundle savedInstanceState) {
+        cachedPodcaster = savedInstanceState.getParcelable(Podcaster.PODCASTER_KEY);
+        cachedPromotionLinks = savedInstanceState.getParcelableArrayList(PromotionLink.PROMOTION_LINKS_KEY);
+        cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
+        viewMvc.bindPromotionLinks(cachedPromotionLinks);
+        viewMvc.bindPodcasterName(cachedPodcaster.getUsername());
+        viewMvc.bindPersonalStatement(cachedPodcaster.getPersonalStatement());
     }
 }

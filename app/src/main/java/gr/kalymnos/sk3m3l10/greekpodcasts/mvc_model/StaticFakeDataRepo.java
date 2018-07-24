@@ -147,7 +147,7 @@ public class StaticFakeDataRepo implements DataRepository {
     @Override
     public Podcaster fetchPodcaster(String pushId) {
         sleep(SLEEP_TIME);
-        return new Podcaster("papaki@email.com", "Solomontas", "Thats a personal statement motherfucker", IMG_URL_4, FIREBASE_ID_1, PUSH_ID, System.currentTimeMillis());
+        return null;
     }
 
     @Override

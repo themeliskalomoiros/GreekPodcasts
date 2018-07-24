@@ -103,7 +103,8 @@ public class PodcasterActivity extends AppCompatActivity implements OnPromotionL
                     @Override
                     public Object loadInBackground() {
                         if (cachedPodcaster != null) {
-                            return dataRepository.fetchPromotionLinks(cachedPodcaster.getPromotionLinksId());
+                            //  TODO: implement a real service and not return null here obviously
+                            return null;
                         }
                         return null;
                     }

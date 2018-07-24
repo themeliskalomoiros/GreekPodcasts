@@ -7,28 +7,23 @@ public class Podcaster implements Parcelable {
 
     public static final String PUSH_ID_KEY = "podcaster push id  key";
     public static final String PODCASTER_KEY = "podcaster key";
-    private String email, username, personalStatement, imageUrl, firebasePushId, promotionLinksId;
+
+    public static final String FIELD_NAME_EMAIL = "email";
+    public static final String FIELD_NAME_USERNAME = "username";
+    public static final String FIELD_NAME_PERSONAL_STATEMENT = "personalStatement";
+    public static final String FIELD_NAME_IMAGEURL = "imageUrl";
+
+    private String email, username, personalStatement, imageUrl;
     private long joinedDate;
 
     public Podcaster() {
     }
 
-    public Podcaster(String email, String username, String personalStatement, String imageUrl, String firebasePushId, String promotionLinksId, long joinedDate) {
+    public Podcaster(String email, String username, String personalStatement, String imageUrl, long joinedDate) {
         this.email = email;
         this.username = username;
         this.personalStatement = personalStatement;
         this.imageUrl = imageUrl;
-        this.firebasePushId = firebasePushId;
-        this.promotionLinksId = promotionLinksId;
-        this.joinedDate = joinedDate;
-    }
-
-    public Podcaster(String email, String username, String personalStatement, String imageUrl, String promotionLinksId, long joinedDate) {
-        this.email = email;
-        this.username = username;
-        this.personalStatement = personalStatement;
-        this.imageUrl = imageUrl;
-        this.promotionLinksId = promotionLinksId;
         this.joinedDate = joinedDate;
     }
 
@@ -37,8 +32,6 @@ public class Podcaster implements Parcelable {
         username = in.readString();
         personalStatement = in.readString();
         imageUrl = in.readString();
-        firebasePushId = in.readString();
-        promotionLinksId = in.readString();
         joinedDate = in.readLong();
     }
 
@@ -48,8 +41,6 @@ public class Podcaster implements Parcelable {
         dest.writeString(username);
         dest.writeString(personalStatement);
         dest.writeString(imageUrl);
-        dest.writeString(firebasePushId);
-        dest.writeString(promotionLinksId);
         dest.writeLong(joinedDate);
     }
 
@@ -74,52 +65,36 @@ public class Podcaster implements Parcelable {
         return email;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPersonalStatement() {
-        return personalStatement;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public String getFirebasePushId() {
-        return firebasePushId;
-    }
-
-    public String getPromotionLinksId() {
-        return promotionLinksId;
-    }
-
-    public long getJoinedDate() {
-        return joinedDate;
-    }
-
-    public void setFirebasePushId(String firebasePushId) {
-        this.firebasePushId = firebasePushId;
-    }
-
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
     }
 
+    public String getPersonalStatement() {
+        return personalStatement;
+    }
+
     public void setPersonalStatement(String personalStatement) {
         this.personalStatement = personalStatement;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 
-    public void setPromotionLinksId(String promotionLinksId) {
-        this.promotionLinksId = promotionLinksId;
+    public long getJoinedDate() {
+        return joinedDate;
     }
 
     public void setJoinedDate(long joinedDate) {
