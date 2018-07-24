@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -92,7 +91,7 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
 
     private void initializeFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        allPodcastsRef = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTS);
+        allPodcastsRef = firebaseDatabase.getReference().child(ChildNames.PODCASTS);
         bindPodcastsToUi();
         
     }

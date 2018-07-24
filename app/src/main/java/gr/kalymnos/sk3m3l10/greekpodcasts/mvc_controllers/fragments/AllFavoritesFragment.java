@@ -191,7 +191,7 @@ public class AllFavoritesFragment extends Fragment implements AllPodcastsViewMvc
     private void initializeFirebase() {
         if (firebaseDatabase == null) {
             firebaseDatabase = FirebaseDatabase.getInstance();
-            allPodcastsRef = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTS);
+            allPodcastsRef = firebaseDatabase.getReference().child(ChildNames.PODCASTS);
         }
     }
 }

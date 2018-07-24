@@ -23,7 +23,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -188,7 +187,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
         if (isValidStateToSave()) {
 
             String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-            DatabaseReference podcasterRef = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTERS).child(userId);
+            DatabaseReference podcasterRef = firebaseDatabase.getReference().child(ChildNames.PODCASTERS).child(userId);
             podcasterRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -199,11 +198,11 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                     } else {
                         //  Getting the push id from the start in order to save the picture at Storage and then
                         // save the Podcast at Database
-                        String podcastPushId = firebaseDatabase.getReference().child(ChildNames.CHILD_NAME_PODCASTS).push().getKey();
+                        String podcastPushId = firebaseDatabase.getReference().child(ChildNames.PODCASTS).push().getKey();
                         StorageReference posterStorageRef = firebaseStorage.getReference()
-                                .child(ChildNames.CHILD_NAME_PODCASTS)
+                                .child(ChildNames.PODCASTS)
                                 .child(podcastPushId)
-                                .child(ChildNames.CHILD_NAME_POSTER);
+                                .child(ChildNames.POSTER);
 
                         posterStorageRef.putFile(cachedPosterUri).addOnSuccessListener(taskSnapshot -> {
 
@@ -216,7 +215,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                             podcastToBeCreated.setPodcasterId(podcasterPushId);
 
                             DatabaseReference podcastRef = firebaseDatabase.getReference()
-                                    .child(ChildNames.CHILD_NAME_PODCASTS)
+                                    .child(ChildNames.PODCASTS)
                                     .child(podcastPushId);
 
                             podcastRef.setValue(podcastToBeCreated).addOnSuccessListener(aVoid -> {
