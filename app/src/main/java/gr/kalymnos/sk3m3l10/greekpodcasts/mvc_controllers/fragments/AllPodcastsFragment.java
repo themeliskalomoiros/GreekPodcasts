@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,11 +33,12 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
 
     private static final String TAG = AllPodcastsFragment.class.getSimpleName();
 
-    protected AllPodcastsViewMvc viewMvc;
-    protected List<Podcast> cachedPodcasts = null;
+    private AllPodcastsViewMvc viewMvc;
+    private List<Podcast> cachedPodcasts = null;
 
-    protected FirebaseDatabase firebaseDatabase;
-    protected DatabaseReference allPodcastsRef;
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference allPodcastsRef;
+    private ChildEventListener allPodcastsRefChildEventListener;
 
     @Nullable
     @Override
@@ -62,6 +64,12 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
         if (this.cachedPodcasts != null) {
             outState.putParcelableArrayList(Podcast.PODCASTS_KEY, (ArrayList) cachedPodcasts);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        allPodcastsRef.removeEventListener(allPodcastsRefChildEventListener);
     }
 
     @Override
@@ -92,34 +100,41 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
     private void initializeFirebase() {
         firebaseDatabase = FirebaseDatabase.getInstance();
         allPodcastsRef = firebaseDatabase.getReference().child(ChildNames.PODCASTS);
-        bindPodcastsToUi();
-        
-    }
-
-    private void bindPodcastsToUi() {
-        viewMvc.displayLoadingIndicator(true);
-
-        allPodcastsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        allPodcastsRefChildEventListener = new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot podcastListSnapshot) {
-                viewMvc.displayLoadingIndicator(false);
-                List<Podcast> tempList = new ArrayList<>();
-                for (DataSnapshot podcastSnapshot : podcastListSnapshot.getChildren()) {
-                    Podcast podcast = podcastSnapshot.getValue(Podcast.class);
-                    //  Always setting the firebasePushId of the podcast because it's used in local database
-                    podcast.setFirebasePushId(podcastSnapshot.getKey());
-                    tempList.add(podcast);
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (cachedPodcasts == null) {
+                    cachedPodcasts = new ArrayList<>();
                 }
-                if (tempList != null && tempList.size() > 0) {
-                    cachedPodcasts = tempList;
+
+                Podcast podcast = dataSnapshot.getValue(Podcast.class);
+                if (podcast != null) {
+                    podcast.setFirebasePushId(dataSnapshot.getKey());
+                    cachedPodcasts.add(podcast);
                     viewMvc.bindPodcasts(cachedPodcasts);
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                //  TODO: Either this listener failed at the server or Firebase rules security, do something...
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
             }
-        });
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        allPodcastsRef.addChildEventListener(allPodcastsRefChildEventListener);
     }
 }
