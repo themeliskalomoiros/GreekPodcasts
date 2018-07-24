@@ -139,8 +139,8 @@ public class StaticFakeDataRepo implements DataRepository {
     public List<PromotionLink> fetchPromotionLinks(String podcasterId) {
         sleep(SLEEP_TIME);
         List<PromotionLink> links = new ArrayList<>();
-        links.add(new PromotionLink("Support me on Patreon", "https://www.patreon.com/powerplaychess", PUSH_ID, PUSH_ID));
-        links.add(new PromotionLink("Friend me on Facebook", "https://www.facebook.com/madonna/", PUSH_ID, PUSH_ID));
+//        links.add(new PromotionLink("Support me on Patreon", "https://www.patreon.com/powerplaychess", PUSH_ID, PUSH_ID));
+//        links.add(new PromotionLink("Friend me on Facebook", "https://www.facebook.com/madonna/", PUSH_ID, PUSH_ID));
         return links;
     }
 

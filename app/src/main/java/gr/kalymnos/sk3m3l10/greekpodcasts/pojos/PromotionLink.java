@@ -9,42 +9,35 @@ public class PromotionLink implements Parcelable{
     /*  Promotion Link is an object that the Podcaster defines to promote himself.
      *   Example: The title could be "Support me on Patreon" and the url "www.patreon.com/user5" */
 
-    private String title, url, firebasePushId, podcasterId;
+    private String title, url;
 
     public PromotionLink() {
     }
 
-    public PromotionLink(String title, String url, String firebasePushId, String podcasterId) {
+    public PromotionLink(String title, String url) {
         this.title = title;
         this.url = url;
-        this.firebasePushId = firebasePushId;
-        this.podcasterId = podcasterId;
     }
 
-    public PromotionLink(String title, String url, String podcasterId) {
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
         this.url = url;
-        this.podcasterId = podcasterId;
     }
 
     protected PromotionLink(Parcel in) {
         title = in.readString();
         url = in.readString();
-        firebasePushId = in.readString();
-        podcasterId = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(title);
-        dest.writeString(url);
-        dest.writeString(firebasePushId);
-        dest.writeString(podcasterId);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<PromotionLink> CREATOR = new Creator<PromotionLink>() {
@@ -59,23 +52,14 @@ public class PromotionLink implements Parcelable{
         }
     };
 
-    public void setFirebasePushId(String firebasePushId) {
-        this.firebasePushId = firebasePushId;
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getFirebasePushId() {
-        return firebasePushId;
-    }
-
-    public String getPodcasterId() {
-        return podcasterId;
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeString(url);
     }
 }

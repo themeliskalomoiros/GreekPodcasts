@@ -9,6 +9,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 
 public interface PortofolioPersonalViewMvc extends ViewMvc {
 
+    List<PromotionLink> getPromotionLinks();
+
     interface OnViewsClickListener {
 
         void onEditPodcasterName();

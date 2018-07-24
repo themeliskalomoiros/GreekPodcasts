@@ -34,6 +34,11 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
+    public List<PromotionLink> getPromotionLinks() {
+        return adapter.getPromotionLinks();
+    }
+
+    @Override
     public void bindImage(Uri uri) {
         Picasso.get().load(uri)
                 .placeholder(R.drawable.ic_headset_black_light_148dp)

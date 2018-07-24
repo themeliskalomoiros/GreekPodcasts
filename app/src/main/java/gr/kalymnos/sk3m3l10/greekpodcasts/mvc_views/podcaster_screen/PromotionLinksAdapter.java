@@ -54,6 +54,10 @@ public class PromotionLinksAdapter extends RecyclerView.Adapter<PromotionLinksAd
         return 0;
     }
 
+    public List<PromotionLink> getPromotionLinks() {
+        return promotionLinks;
+    }
+
     class PromotionLinkHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView title, url;
