@@ -12,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import java.util.List;
+
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish.EpisodesAdapter;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
@@ -36,23 +38,14 @@ public class ViewAllEpisodesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.view_all_episodes_fragment, container, false);
-        addEpisodeButton = root.findViewById(R.id.add_episode_imagebutton);
-        addEpisodeButton.setOnClickListener(view -> callback.onViewAllEpisodesFragmentAddButtonClicked(getArguments().getString(Podcast.PUSH_ID_KEY)));
-        //  Recycler View initialization
-        episodesRecyclerView = root.findViewById(R.id.recycler_view);
-        episodesAdapter = new EpisodesAdapter(getContext());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        episodesRecyclerView.setLayoutManager(layoutManager);
-        episodesRecyclerView.setHasFixedSize(true);
-        episodesRecyclerView.setAdapter(episodesAdapter);
+        initializeViews(root);
         return root;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        episodesAdapter.addEpisodes(getArguments().getParcelableArrayList(Episode.EPISODES_KEY));
-        episodesAdapter.notifyDataSetChanged();
+        bindEpisodes(getArguments().getParcelableArrayList(Episode.EPISODES_KEY));
     }
 
     @Override
@@ -67,5 +60,23 @@ public class ViewAllEpisodesFragment extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnAddButtonClickListener");
         }
+    }
+
+    private void initializeViews(View root) {
+        addEpisodeButton = root.findViewById(R.id.add_episode_imagebutton);
+        addEpisodeButton.setOnClickListener(view ->
+                callback.onViewAllEpisodesFragmentAddButtonClicked(getArguments().getString(Podcast.PUSH_ID_KEY)));
+        //  Recycler View initialization
+        episodesRecyclerView = root.findViewById(R.id.recycler_view);
+        episodesAdapter = new EpisodesAdapter(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        episodesRecyclerView.setLayoutManager(layoutManager);
+        episodesRecyclerView.setHasFixedSize(true);
+        episodesRecyclerView.setAdapter(episodesAdapter);
+    }
+
+    private void bindEpisodes(List<Episode> episodeList) {
+        episodesAdapter.addEpisodes(episodeList);
+        episodesAdapter.notifyDataSetChanged();
     }
 }
