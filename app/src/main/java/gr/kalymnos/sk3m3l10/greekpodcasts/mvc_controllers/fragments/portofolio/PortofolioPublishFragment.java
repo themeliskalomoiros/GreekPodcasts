@@ -508,7 +508,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private void initialzeAndShowViewAllEpisodesFragment() {
         Bundle args = new Bundle();
         args.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
-        args.putString(Podcast.PUSH_ID_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
+        args.putParcelable(Podcast.PODCAST_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()));
         ViewAllEpisodesFragment episodesFragment = new ViewAllEpisodesFragment();
         episodesFragment.setArguments(args);
         getFragmentManager().beginTransaction().addToBackStack(null).replace(viewMvc.getAllEpisodesContainerId(), episodesFragment).commit();

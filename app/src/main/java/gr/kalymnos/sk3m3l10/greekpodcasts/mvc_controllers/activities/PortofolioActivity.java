@@ -44,9 +44,9 @@ public class PortofolioActivity extends AppCompatActivity implements PortofolioV
     }
 
     @Override
-    public void onViewAllEpisodesFragmentAddButtonClicked(String podcastPushId) {
+    public void onViewAllEpisodesFragmentAddButtonClicked(Podcast podcast) {
         Intent intent = new Intent(this, AddEpisodeActivity.class);
-        intent.putExtra(Podcast.PUSH_ID_KEY, podcastPushId);
+        intent.putExtra(Podcast.PODCAST_KEY, podcast);
         startActivity(intent);
     }
 }

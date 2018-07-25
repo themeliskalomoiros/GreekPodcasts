@@ -12,6 +12,7 @@ public class Episode implements Parcelable {
     public static final String DATE_KEY = "date key";
     public static final String MINUTES_KEY = "minutes key";
     public static final String SECONDS_KEY = "seconds key";
+    public static final String AUDIO_KEY = "audio key";
 
     private String title, url, firebasePushId;
     private int minutes, seconds;
@@ -34,6 +35,26 @@ public class Episode implements Parcelable {
         this.firebasePushId = firebasePushId;
         this.minutes = minutes;
         this.seconds = seconds;
+        this.dateMilli = dateMilli;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setMinutes(int minutes) {
+        this.minutes = minutes;
+    }
+
+    public void setSeconds(int seconds) {
+        this.seconds = seconds;
+    }
+
+    public void setDateMilli(long dateMilli) {
         this.dateMilli = dateMilli;
     }
 

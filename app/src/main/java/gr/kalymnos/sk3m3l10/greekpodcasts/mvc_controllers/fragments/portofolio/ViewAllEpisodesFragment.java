@@ -24,7 +24,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 public class ViewAllEpisodesFragment extends Fragment {
 
     public interface OnAddButtonClickListener {
-        void onViewAllEpisodesFragmentAddButtonClicked(String podcastPushId);
+        void onViewAllEpisodesFragmentAddButtonClicked(Podcast podcast);
     }
 
     private OnAddButtonClickListener callback;
@@ -65,7 +65,7 @@ public class ViewAllEpisodesFragment extends Fragment {
     private void initializeViews(View root) {
         addEpisodeButton = root.findViewById(R.id.add_episode_imagebutton);
         addEpisodeButton.setOnClickListener(view ->
-                callback.onViewAllEpisodesFragmentAddButtonClicked(getArguments().getString(Podcast.PUSH_ID_KEY)));
+                callback.onViewAllEpisodesFragmentAddButtonClicked(getArguments().getParcelable(Podcast.PODCAST_KEY)));
         //  Recycler View initialization
         episodesRecyclerView = root.findViewById(R.id.recycler_view);
         episodesAdapter = new EpisodesAdapter(getContext());
