@@ -4,28 +4,37 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.Toast;
 
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
-public class UploadAudioService extends IntentService implements DataRepository.OnAudioUploadSuccessListener {
+import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
+
+public class UploadAudioService extends IntentService {
 
     private static final String ACTION_UPLOAD_AUDIO = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.action.upload_audio";
 
     private static final String EXTRA_AUDIO_URI = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.audio_uri";
-    private static final String EXTRA_PODCAST_PUSH_ID = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.podcast_push_id";
+    private static final String EXTRA_PODCAST = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.podcast_push_id";
+    private static final String EXTRA_AUDIO_TITLE = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.audio_title";
 
     public UploadAudioService() {
         super("UploadAudioService");
     }
 
-    public static void startActionUploadAudio(Context context, Uri audioUri, String podcastPushId) {
+    public static void startActionUploadAudio(Context context, String audioTitle, Uri audioUri, Podcast podcast) {
         Intent intent = new Intent(context, UploadAudioService.class);
         intent.setAction(ACTION_UPLOAD_AUDIO);
         intent.putExtra(EXTRA_AUDIO_URI, audioUri);
-        intent.putExtra(EXTRA_PODCAST_PUSH_ID,podcastPushId);
+        intent.putExtra(EXTRA_PODCAST, podcast);
+        intent.putExtra(EXTRA_AUDIO_TITLE, audioTitle);
         context.startService(intent);
     }
 
@@ -35,23 +44,42 @@ public class UploadAudioService extends IntentService implements DataRepository.
             final String action = intent.getAction();
             if (ACTION_UPLOAD_AUDIO.equals(action)) {
                 final Uri audioUri = intent.getParcelableExtra(EXTRA_AUDIO_URI);
-                final String podcastPushId = intent.getParcelableExtra(EXTRA_PODCAST_PUSH_ID);
-
-                handleActionUploadAudio(audioUri,podcastPushId);
+                final Podcast podcast = intent.getParcelableExtra(EXTRA_PODCAST);
+                final String audioTitle = intent.getStringExtra(EXTRA_AUDIO_TITLE);
+                handleActionUploadAudio(audioTitle, audioUri, podcast);
             }
         }
     }
 
-    private void handleActionUploadAudio(Uri audioUri, String podcastPushId) {
-        //  TODO: Replace with a real service
-        DataRepository repo = new StaticFakeDataRepo();
-        repo.setOnAudioUploadSuccessListener(this);
-        repo.uploadAudio(audioUri,podcastPushId);
+    private void handleActionUploadAudio(String audioTitle, Uri audioUri, Podcast podcast) {
+        StorageReference audioRef = FirebaseStorage.getInstance().getReference()
+                .child(ChildNames.EPISODES)
+                .child(podcast.getFirebasePushId())
+                .child(audioTitle);
+
+        audioRef.putFile(audioUri).addOnSuccessListener(taskSnapshot -> {
+
+            //  TODO:   Show a snackbar indicating that the audio was successfully uploaded
+            Toast.makeText(this, audioTitle + " uploaded successfully", Toast.LENGTH_SHORT).show();
+
+            uploadEpisode(audioTitle, podcast, taskSnapshot);
+
+        }).addOnFailureListener(exception ->
+                Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show()
+        );
     }
 
-    @Override
-    public void onSuccess() {
-        //  TODO: Do something when audio upload is complete.
-        
+    private void uploadEpisode(String audioTitle, Podcast podcast, UploadTask.TaskSnapshot taskSnapshot) {
+        Episode episode = new Episode();
+        episode.setTitle(audioTitle);
+        episode.setDateMilli(System.currentTimeMillis());
+        episode.setUrl(taskSnapshot.getDownloadUrl().toString());
+
+        DatabaseReference episodeRef = FirebaseDatabase.getInstance().getReference()
+                .child(ChildNames.EPISODES)
+                .child(podcast.getFirebasePushId())
+                .push();
+
+        episodeRef.setValue(episode);
     }
 }
