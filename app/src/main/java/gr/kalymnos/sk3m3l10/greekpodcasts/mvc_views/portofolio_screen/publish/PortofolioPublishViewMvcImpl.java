@@ -1,6 +1,5 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

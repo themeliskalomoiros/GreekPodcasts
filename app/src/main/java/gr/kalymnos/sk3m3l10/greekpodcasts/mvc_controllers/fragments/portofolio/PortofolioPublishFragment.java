@@ -15,9 +15,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.AddEpisodeActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
@@ -45,6 +54,10 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private List<Episode> cachedEpisodes;
     private List<Category> cachedCategories;
 
+    private FirebaseDatabase firebaseDatabase;
+    private FirebaseStorage firebaseStorage;
+    private DatabaseReference categoriesRef, podcastsRef, episodesRef;
+
     private PortofolioPublishViewMvc viewMvc;
 
     private DataRepository repo;
@@ -71,20 +84,104 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initializeFirebase();
 
-        boolean isSavedStateValid = savedInstanceState != null && savedInstanceState.containsKey(Podcast.PODCASTS_KEY)
-                && savedInstanceState.containsKey(Episode.EPISODES_KEY)
-                && savedInstanceState.containsKey(Category.CATEGORIES_KEY);
-
-        if (isSavedStateValid) {
-            cachedPodcasts = savedInstanceState.getParcelableArrayList(Podcast.PODCASTS_KEY);
-            cachedEpisodes = savedInstanceState.getParcelableArrayList(Episode.EPISODES_KEY);
-            cachedCategories = savedInstanceState.getParcelableArrayList(Category.CATEGORIES_KEY);
-            cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
+        if (isValidInstanceState(savedInstanceState)) {
+            restoreCachedData(savedInstanceState);
+        } else {
+            fetchData();
         }
+    }
 
-        getLoaderManager().restartLoader(PODCASTS_LOADER_ID, null, this);
-        getLoaderManager().restartLoader(CATEGORIES_LOADER_ID, null, this);
+    private void fetchData() {
+        viewMvc.displayCategoryLoadingIndicator(true);
+        //  Fetch categories first, then podcasts
+        categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                bindCategoriesTitles(dataSnapshot, loadUserPodcasts());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+            private Runnable loadUserPodcasts() {
+                return () -> {
+                    viewMvc.displayPodcastLoadingIndicator(true);
+                    podcastsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            fetchPodcastsAndBindSpinner(dataSnapshot);
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+
+                        private void fetchPodcastsAndBindSpinner(DataSnapshot dataSnapshot) {
+                            viewMvc.displayPodcastLoadingIndicator(false);
+
+                            List<Podcast> podcastList = new ArrayList<>();
+
+                            for (DataSnapshot podcastSnapshot : dataSnapshot.getChildren()) {
+                                Podcast podcast = podcastSnapshot.getValue(Podcast.class);
+                                podcast.setFirebasePushId(podcastSnapshot.getKey());
+                                if (podcast != null) {
+                                    boolean podcastBelongsToCurrentUser = podcast.getPodcasterId().equals(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                    if (podcastBelongsToCurrentUser) {
+                                        podcastList.add(podcast);
+                                    }
+                                }
+                            }
+
+                            if (isListValid(podcastList)) {
+                                cachedPodcasts = podcastList;
+                                viewMvc.addPodcastsToSpinner(createPodcastTitles());
+                            }
+                        }
+
+                        @NonNull
+                        private String[] createPodcastTitles() {
+                            String[] titles = new String[cachedPodcasts.size()];
+                            for (int i = 0; i < cachedPodcasts.size(); i++) {
+                                titles[i] = cachedPodcasts.get(i).getTitle();
+                            }
+                            return titles;
+                        }
+                    });
+                };
+            }
+
+            private void bindCategoriesTitles(DataSnapshot dataSnapshot, Runnable actionAfterCompletion) {
+                viewMvc.displayCategoryLoadingIndicator(false);
+
+                List<Category> categoryList = new ArrayList<>();
+                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                    Category category = categorySnapshot.getValue(Category.class);
+                    if (category != null) {
+                        categoryList.add(category);
+                    }
+                }
+
+                if (isListValid(categoryList)) {
+                    cachedCategories = categoryList;
+
+                    //  Create the titles array.
+                    String[] titles = new String[cachedCategories.size()];
+                    for (int i = 0; i < cachedCategories.size(); i++) {
+                        titles[i] = cachedCategories.get(i).getTitle();
+                    }
+                    viewMvc.addCategoriesToSpinner(titles);
+
+                    getActivity().runOnUiThread(actionAfterCompletion);
+                }
+
+
+            }
+        });
     }
 
     @Override
@@ -112,13 +209,17 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putParcelableArrayList(Podcast.PODCASTS_KEY, (ArrayList<? extends Parcelable>) cachedPodcasts);
-        outState.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
-        outState.putParcelableArrayList(Category.CATEGORIES_KEY, (ArrayList<? extends Parcelable>) cachedCategories);
-        outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
-        if (cachedPosterUri != null) {
-            cachedPosterUri = outState.getParcelable(Podcast.POSTER_KEY);
-        }
+        if (isListValid(cachedPodcasts))
+            outState.putParcelableArrayList(Podcast.PODCASTS_KEY, (ArrayList<? extends Parcelable>) cachedPodcasts);
+
+        if (isListValid(cachedEpisodes))
+            outState.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
+
+        if (isListValid(cachedCategories))
+            outState.putParcelableArrayList(Category.CATEGORIES_KEY, (ArrayList<? extends Parcelable>) cachedCategories);
+
+        if (cachedPosterUri != null)
+            outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
     }
 
     private View initialize(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
@@ -222,7 +323,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
                         viewMvc.addPodcastsToSpinner(createPodcastTitles());
 
                         //  Make sure that when episodes are fetched, cachedPodcasts will not be null.
-                        getLoaderManager().restartLoader(EPISODES_LOADER_ID, null, PortofolioPublishFragment.this);
+//                        getLoaderManager().restartLoader(EPISODES_LOADER_ID, null, PortofolioPublishFragment.this);
                     } else {
                         throw new IllegalArgumentException(TAG + ": data should be of type List<Podcast>.");
                     }
@@ -276,15 +377,16 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onPodcastSelected(int position) {
-        if (cachedPodcasts != null && cachedPodcasts.size() > 0) {
-
+        if (isListValid(cachedPodcasts)) {
             Podcast podcastSelected = cachedPodcasts.get(position);
+
             if (cachedPosterUri == null) {
                 viewMvc.bindPoster(podcastSelected.getPosterUrl());
             }
+
             viewMvc.bindDescription(podcastSelected.getDescription());
 
-            if (cachedCategories != null && cachedCategories.size() > 0) {
+            if (isListValid(cachedCategories)) {
                 for (int i = 0; i < cachedCategories.size(); i++) {
                     if (podcastSelected.getCategoryId().equals(cachedCategories.get(i).getFirebasePushId())) {
                         //  Found a cached category which matches the podcasts category id, choose it on spinner
@@ -294,15 +396,48 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
                 }
             }
 
-            Bundle loaderArgs = new Bundle();
-            loaderArgs.putBoolean(FORCE_LOAD_KEY, true);
-            getLoaderManager().restartLoader(EPISODES_LOADER_ID, loaderArgs, this);
+            if (episodesRef == null) {
+                episodesRef = firebaseDatabase.getReference()
+                        .child(ChildNames.EPISODES)
+                        .child(cachedPodcasts.get(position).getFirebasePushId());
+            }
+
+            viewMvc.displayEpisodesLoadingIndicator(true);
+
+            episodesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    viewMvc.displayEpisodesLoadingIndicator(false);
+
+                    List<Episode> episodeList = new ArrayList<>();
+                    for (DataSnapshot episodeSnapshot : dataSnapshot.getChildren()) {
+                        Episode episode = episodeSnapshot.getValue(Episode.class);
+                        if (episode != null) {
+                            episodeList.add(episode);
+                        }
+                    }
+
+                    if (isListValid(episodeList)) {
+                        cachedEpisodes = episodeList;
+                        viewMvc.bindEpisodes(cachedEpisodes);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
         }
     }
 
     @Override
     public void onCategorySelected(int position) {
 
+    }
+
+    private boolean isListValid(List<? extends Parcelable> list) {
+        return list != null && list.size() > 0;
     }
 
     @Override
@@ -327,8 +462,7 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public boolean isValidStateToSave() {
-        return cachedPosterUri != null && cachedPodcasts != null && cachedCategories != null
-                && cachedPodcasts.size() > 0 && cachedCategories.size() > 0;
+        return cachedPosterUri != null && isListValid(cachedPodcasts) && isListValid(cachedCategories);
     }
 
     @Override
@@ -365,17 +499,19 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
 
     @Override
     public void onViewEpisodesClick() {
-        if (cachedEpisodes != null) {
-            boolean fragmentExists = getFragmentManager().findFragmentById(viewMvc.getAllEpisodesContainerId()) != null;
-            if (!fragmentExists) {
-                Bundle args = new Bundle();
-                args.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
-                args.putString(Podcast.PUSH_ID_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
-                ViewAllEpisodesFragment episodesFragment = new ViewAllEpisodesFragment();
-                episodesFragment.setArguments(args);
-                getFragmentManager().beginTransaction().addToBackStack(null).replace(viewMvc.getAllEpisodesContainerId(), episodesFragment).commit();
-            }
+        boolean fragmentExists = getFragmentManager().findFragmentById(viewMvc.getAllEpisodesContainerId()) != null;
+        if (!fragmentExists) {
+            initialzeAndShowViewAllEpisodesFragment();
         }
+    }
+
+    private void initialzeAndShowViewAllEpisodesFragment() {
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
+        args.putString(Podcast.PUSH_ID_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
+        ViewAllEpisodesFragment episodesFragment = new ViewAllEpisodesFragment();
+        episodesFragment.setArguments(args);
+        getFragmentManager().beginTransaction().addToBackStack(null).replace(viewMvc.getAllEpisodesContainerId(), episodesFragment).commit();
     }
 
     @Override
@@ -395,5 +531,25 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(intent, RC_POSTER_PIC);
         }
+    }
+
+    private void restoreCachedData(@NonNull Bundle savedInstanceState) {
+        cachedPodcasts = savedInstanceState.getParcelableArrayList(Podcast.PODCASTS_KEY);
+        cachedEpisodes = savedInstanceState.getParcelableArrayList(Episode.EPISODES_KEY);
+        cachedCategories = savedInstanceState.getParcelableArrayList(Category.CATEGORIES_KEY);
+        cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
+    }
+
+    private void initializeFirebase() {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseStorage = FirebaseStorage.getInstance();
+        categoriesRef = firebaseDatabase.getReference().child(ChildNames.CATEGORIES);
+        podcastsRef = firebaseDatabase.getReference().child(ChildNames.PODCASTS);
+    }
+
+    private boolean isValidInstanceState(@Nullable Bundle savedInstanceState) {
+        return savedInstanceState != null && savedInstanceState.containsKey(Podcast.PODCASTS_KEY)
+                && savedInstanceState.containsKey(Episode.EPISODES_KEY)
+                && savedInstanceState.containsKey(Category.CATEGORIES_KEY);
     }
 }
