@@ -149,6 +149,7 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
                 List<Category> categoryList = new ArrayList<>();
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
                     Category category = categorySnapshot.getValue(Category.class);
+                    category.setFirebasePushId(categorySnapshot.getKey());
                     if (category != null) {
                         categoryList.add(category);
                     }
@@ -214,7 +215,8 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
 
             if (isListValid(cachedCategories)) {
                 for (int i = 0; i < cachedCategories.size(); i++) {
-                    if (podcastSelected.getCategoryId().equals(cachedCategories.get(i).getFirebasePushId())) {
+                    boolean isPodcastCategory = podcastSelected.getCategoryId().equals(cachedCategories.get(i).getFirebasePushId());
+                    if (isPodcastCategory) {
                         //  Found a cached category which matches the podcasts category id, choose it on spinner
                         viewMvc.setCategorySelection(i);
                         break;
