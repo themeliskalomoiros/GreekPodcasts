@@ -37,15 +37,10 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
-public class PortofolioPublishFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object>,
-        PortofolioPublishViewMvc.OnItemsSelectedListener, ChangeSaver, PortofolioPublishViewMvc.OnButtonsClickListener {
+public class PortofolioPublishFragment extends Fragment implements PortofolioPublishViewMvc.OnItemsSelectedListener,
+        ChangeSaver, PortofolioPublishViewMvc.OnButtonsClickListener {
 
     private static final String TAG = PortofolioPublishFragment.class.getSimpleName();
-
-    private static final int PODCASTS_LOADER_ID = 121;
-    private static final int EPISODES_LOADER_ID = 232;
-    private static final int CATEGORIES_LOADER_ID = 343;
-    private static final String FORCE_LOAD_KEY = "force_load_key";
 
     private static final int RC_POSTER_PIC = 1323;
     private Uri cachedPosterUri;
@@ -59,8 +54,6 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     private DatabaseReference categoriesRef, podcastsRef, episodesRef;
 
     private PortofolioPublishViewMvc viewMvc;
-
-    private DataRepository repo;
 
     private InsertTextDialogFragment titleDialog, descriptionDialog;
     private InsertTextDialogFragment.OnInsertedTextListener titleInsertedListener = text -> {
@@ -208,174 +201,6 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (isListValid(cachedPodcasts))
-            outState.putParcelableArrayList(Podcast.PODCASTS_KEY, (ArrayList<? extends Parcelable>) cachedPodcasts);
-
-        if (isListValid(cachedEpisodes))
-            outState.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
-
-        if (isListValid(cachedCategories))
-            outState.putParcelableArrayList(Category.CATEGORIES_KEY, (ArrayList<? extends Parcelable>) cachedCategories);
-
-        if (cachedPosterUri != null)
-            outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
-    }
-
-    private View initialize(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
-        viewMvc = new PortofolioPublishViewMvcImpl(inflater, container);
-        viewMvc.setOnItemsSelectedListener(this);
-        viewMvc.setOnButtonsClickListener(this);
-        //  TODO: Replace with a real service
-        repo = new StaticFakeDataRepo();
-        return viewMvc.getRootView();
-    }
-
-    @NonNull
-    @Override
-    public Loader<Object> onCreateLoader(int id, @Nullable Bundle loaderArgs) {
-        switch (id) {
-            case PODCASTS_LOADER_ID:
-                return new AsyncTaskLoader<Object>(getContext()) {
-
-                    @Override
-                    protected void onStartLoading() {
-                        if (cachedPodcasts != null) {
-                            deliverResult(cachedPodcasts);
-                        } else {
-                            viewMvc.displayPodcastLoadingIndicator(true);
-                            forceLoad();
-                        }
-                    }
-
-                    @Nullable
-                    @Override
-                    public Object loadInBackground() {
-                        return repo.fetchPodcastsFromPodcaster(repo.getCurrentUserUid());
-                    }
-                };
-            case EPISODES_LOADER_ID:
-                return new AsyncTaskLoader<Object>(getContext()) {
-
-                    @Override
-                    protected void onStartLoading() {
-                        if (loaderArgs != null && loaderArgs.containsKey(FORCE_LOAD_KEY)) {
-                            if (loaderArgs.getBoolean(FORCE_LOAD_KEY)) {
-                                //  Force a load even if there are cached episodes
-                                viewMvc.displayEpisodesLoadingIndicator(true);
-                                forceLoad();
-                                return;
-                            }
-                        }
-
-                        if (cachedEpisodes != null) {
-                            deliverResult(cachedEpisodes);
-                        } else {
-                            viewMvc.displayEpisodesLoadingIndicator(true);
-                            forceLoad();
-                        }
-                    }
-
-                    @Nullable
-                    @Override
-                    public Object loadInBackground() {
-                        if (cachedPodcasts != null) {
-                            return repo.fetchEpisodes(cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getEpisodesId());
-                        } else {
-                            throw new UnsupportedOperationException(TAG + ": cachedPodcasts are null.");
-                        }
-                    }
-                };
-            case CATEGORIES_LOADER_ID:
-                return new AsyncTaskLoader<Object>(getContext()) {
-
-                    @Override
-                    protected void onStartLoading() {
-                        if (cachedCategories != null) {
-                            deliverResult(cachedCategories);
-                        } else {
-                            viewMvc.displayCategoryLoadingIndicator(true);
-                            forceLoad();
-                        }
-                    }
-
-                    @Nullable
-                    @Override
-                    public Object loadInBackground() {
-                        return repo.fetchAllCategories();
-                    }
-                };
-            default:
-                throw new UnsupportedOperationException(TAG + ": unknown loader id.");
-        }
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<Object> loader, Object data) {
-        if (data != null) {
-            switch (loader.getId()) {
-                case PODCASTS_LOADER_ID:
-
-                    if (data != null) {
-                        cachedPodcasts = (List<Podcast>) data;
-                        viewMvc.displayPodcastLoadingIndicator(false);
-
-                        viewMvc.addPodcastsToSpinner(createPodcastTitles());
-
-                        //  Make sure that when episodes are fetched, cachedPodcasts will not be null.
-//                        getLoaderManager().restartLoader(EPISODES_LOADER_ID, null, PortofolioPublishFragment.this);
-                    } else {
-                        throw new IllegalArgumentException(TAG + ": data should be of type List<Podcast>.");
-                    }
-                    break;
-
-                case EPISODES_LOADER_ID:
-
-                    if (data != null) {
-                        cachedEpisodes = (List<Episode>) data;
-                        viewMvc.displayEpisodesLoadingIndicator(false);
-                        viewMvc.bindEpisodes(cachedEpisodes);
-                    } else {
-                        throw new IllegalArgumentException(TAG + ": data should be of type List<Episode>.");
-                    }
-                    break;
-                case CATEGORIES_LOADER_ID:
-
-                    if (data != null) {
-                        cachedCategories = (List<Category>) data;
-                        viewMvc.displayCategoryLoadingIndicator(false);
-                        //  Create the titles array.
-                        String[] titles = new String[cachedCategories.size()];
-                        for (int i = 0; i < cachedCategories.size(); i++) {
-                            titles[i] = cachedCategories.get(i).getTitle();
-                        }
-
-                        viewMvc.addCategoriesToSpinner(titles);
-                    } else {
-                        throw new IllegalArgumentException(TAG + ": data should be of type List<Category>.");
-                    }
-                    break;
-                default:
-                    throw new UnsupportedOperationException(TAG + ": unknown loader id.");
-            }
-        }
-    }
-
-    @NonNull
-    private String[] createPodcastTitles() {
-        String[] titles = new String[cachedPodcasts.size()];
-        for (int i = 0; i < cachedPodcasts.size(); i++) {
-            titles[i] = cachedPodcasts.get(i).getTitle();
-        }
-        return titles;
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<Object> loader) {
-
-    }
-
-    @Override
     public void onPodcastSelected(int position) {
         if (isListValid(cachedPodcasts)) {
             Podcast podcastSelected = cachedPodcasts.get(position);
@@ -483,26 +308,27 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
         descriptionDialog.show(getFragmentManager(), getDialogFragmentTag(viewMvc.getDescriptionDialogTitleRes()));
     }
 
-    private InsertTextDialogFragment createDialog(int titleRes) {
-        Bundle args = new Bundle();
-        args.putInt(InsertTextDialogFragment.TITLE_KEY, titleRes);
-
-        InsertTextDialogFragment dialogFragment = new InsertTextDialogFragment();
-        dialogFragment.setArguments(args);
-
-        return dialogFragment;
-    }
-
-    private String getDialogFragmentTag(int titleRes) {
-        return InsertTextDialogFragment.TAG + String.valueOf(titleRes);
-    }
-
     @Override
     public void onViewEpisodesClick() {
         boolean fragmentExists = getFragmentManager().findFragmentById(viewMvc.getAllEpisodesContainerId()) != null;
         if (!fragmentExists) {
             initialzeAndShowViewAllEpisodesFragment();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (isListValid(cachedPodcasts))
+            outState.putParcelableArrayList(Podcast.PODCASTS_KEY, (ArrayList<? extends Parcelable>) cachedPodcasts);
+
+        if (isListValid(cachedEpisodes))
+            outState.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
+
+        if (isListValid(cachedCategories))
+            outState.putParcelableArrayList(Category.CATEGORIES_KEY, (ArrayList<? extends Parcelable>) cachedCategories);
+
+        if (cachedPosterUri != null)
+            outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
     }
 
     private void initialzeAndShowViewAllEpisodesFragment() {
@@ -551,5 +377,35 @@ public class PortofolioPublishFragment extends Fragment implements LoaderManager
         return savedInstanceState != null && savedInstanceState.containsKey(Podcast.PODCASTS_KEY)
                 && savedInstanceState.containsKey(Episode.EPISODES_KEY)
                 && savedInstanceState.containsKey(Category.CATEGORIES_KEY);
+    }
+
+    private InsertTextDialogFragment createDialog(int titleRes) {
+        Bundle args = new Bundle();
+        args.putInt(InsertTextDialogFragment.TITLE_KEY, titleRes);
+
+        InsertTextDialogFragment dialogFragment = new InsertTextDialogFragment();
+        dialogFragment.setArguments(args);
+
+        return dialogFragment;
+    }
+
+    private String getDialogFragmentTag(int titleRes) {
+        return InsertTextDialogFragment.TAG + String.valueOf(titleRes);
+    }
+
+    private View initialize(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
+        viewMvc = new PortofolioPublishViewMvcImpl(inflater, container);
+        viewMvc.setOnItemsSelectedListener(this);
+        viewMvc.setOnButtonsClickListener(this);
+        return viewMvc.getRootView();
+    }
+
+    @NonNull
+    private String[] createPodcastTitles() {
+        String[] titles = new String[cachedPodcasts.size()];
+        for (int i = 0; i < cachedPodcasts.size(); i++) {
+            titles[i] = cachedPodcasts.get(i).getTitle();
+        }
+        return titles;
     }
 }

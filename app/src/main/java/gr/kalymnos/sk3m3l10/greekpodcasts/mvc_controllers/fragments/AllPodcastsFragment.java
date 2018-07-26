@@ -69,7 +69,9 @@ public class AllPodcastsFragment extends Fragment implements OnPodcastItemClickL
     @Override
     public void onDestroy() {
         super.onDestroy();
-        allPodcastsRef.removeEventListener(allPodcastsRefChildEventListener);
+        if(allPodcastsRef!=null){
+            allPodcastsRef.removeEventListener(allPodcastsRefChildEventListener);
+        }
     }
 
     @Override
