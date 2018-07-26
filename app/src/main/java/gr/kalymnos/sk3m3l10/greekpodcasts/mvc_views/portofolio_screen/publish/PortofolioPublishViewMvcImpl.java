@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
@@ -48,6 +49,10 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
         if (episodesAdapter != null) {
             if (episodes != null && episodes.size() > 0) {
                 episodesAdapter.addEpisodes(episodes);
+                episodesAdapter.notifyDataSetChanged();
+            }else{
+                List<Episode> emptyList = new ArrayList<>();
+                episodesAdapter.addEpisodes(emptyList);
                 episodesAdapter.notifyDataSetChanged();
             }
         }
