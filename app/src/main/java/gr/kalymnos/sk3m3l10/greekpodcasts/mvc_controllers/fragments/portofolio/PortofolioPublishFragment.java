@@ -7,9 +7,6 @@ import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +25,6 @@ import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.AddEpisodeActivity;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish.PortofolioPublishViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish.PortofolioPublishViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
@@ -51,7 +46,7 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
 
     private FirebaseDatabase firebaseDatabase;
     private FirebaseStorage firebaseStorage;
-    private DatabaseReference categoriesRef, podcastsRef, episodesRef;
+    private DatabaseReference categoriesRef, podcastsRef;
 
     private PortofolioPublishViewMvc viewMvc;
 
@@ -227,15 +222,9 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
                 }
             }
 
-            if (episodesRef == null) {
-                episodesRef = firebaseDatabase.getReference()
-                        .child(ChildNames.EPISODES)
-                        .child(cachedPodcasts.get(position).getFirebasePushId());
-            }
-
             viewMvc.displayEpisodesLoadingIndicator(true);
-
-            episodesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            getEpisodesReference(podcastSelected.getFirebasePushId())
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     viewMvc.displayEpisodesLoadingIndicator(false);
@@ -248,10 +237,12 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
                         }
                     }
 
+                    viewMvc.bindEpisodes(episodeList);
+
                     if (isListValid(episodeList)) {
                         cachedEpisodes = episodeList;
-                        viewMvc.bindEpisodes(cachedEpisodes);
                     }
+
                 }
 
                 @Override
@@ -260,6 +251,12 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
                 }
             });
         }
+    }
+
+    private DatabaseReference getEpisodesReference(String podcastSelectedPushId) {
+        return firebaseDatabase.getReference()
+                        .child(ChildNames.EPISODES)
+                        .child(podcastSelectedPushId);
     }
 
     @Override
@@ -318,7 +315,7 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
     public void onViewEpisodesClick() {
         boolean fragmentExists = getFragmentManager().findFragmentById(viewMvc.getAllEpisodesContainerId()) != null;
         if (!fragmentExists) {
-            initialzeAndShowViewAllEpisodesFragment();
+            showViewAllEpisodesFragment();
         }
     }
 
@@ -337,19 +334,21 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
             outState.putParcelable(Podcast.POSTER_KEY, cachedPosterUri);
     }
 
-    private void initialzeAndShowViewAllEpisodesFragment() {
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
-        args.putParcelable(Podcast.PODCAST_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()));
-        ViewAllEpisodesFragment episodesFragment = new ViewAllEpisodesFragment();
-        episodesFragment.setArguments(args);
-        getFragmentManager().beginTransaction().addToBackStack(null).replace(viewMvc.getAllEpisodesContainerId(), episodesFragment).commit();
+    private void showViewAllEpisodesFragment() {
+        if (!viewMvc.onLand()) {
+            Bundle args = new Bundle();
+            args.putParcelableArrayList(Episode.EPISODES_KEY, (ArrayList<? extends Parcelable>) cachedEpisodes);
+            args.putParcelable(Podcast.PODCAST_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()));
+            ViewAllEpisodesFragment episodesFragment = new ViewAllEpisodesFragment();
+            episodesFragment.setArguments(args);
+            getFragmentManager().beginTransaction().addToBackStack(null).replace(viewMvc.getAllEpisodesContainerId(), episodesFragment).commit();
+        }
     }
 
     @Override
     public void onAddEpisodeClick() {
         Bundle extras = new Bundle();
-        extras.putString(Podcast.PUSH_ID_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()).getFirebasePushId());
+        extras.putParcelable(Podcast.PODCAST_KEY, cachedPodcasts.get(viewMvc.getSelectedPodcastPosition()));
         Intent intent = new Intent(getContext(), AddEpisodeActivity.class);
         intent.putExtras(extras);
         getContext().startActivity(intent);
