@@ -163,10 +163,7 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
                     cachedCategories = categoryList;
 
                     //  Create the titles array.
-                    String[] titles = new String[cachedCategories.size()];
-                    for (int i = 0; i < cachedCategories.size(); i++) {
-                        titles[i] = cachedCategories.get(i).getTitle();
-                    }
+                    String[] titles = createCategoriesTitles();
                     viewMvc.addCategoriesToSpinner(titles);
 
                     getActivity().runOnUiThread(actionAfterCompletion);
@@ -175,6 +172,15 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
 
             }
         });
+    }
+
+    @NonNull
+    private String[] createCategoriesTitles() {
+        String[] titles = new String[cachedCategories.size()];
+        for (int i = 0; i < cachedCategories.size(); i++) {
+            titles[i] = cachedCategories.get(i).getTitle();
+        }
+        return titles;
     }
 
     @Override
@@ -364,6 +370,9 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
         cachedEpisodes = savedInstanceState.getParcelableArrayList(Episode.EPISODES_KEY);
         cachedCategories = savedInstanceState.getParcelableArrayList(Category.CATEGORIES_KEY);
         cachedPosterUri = savedInstanceState.getParcelable(Podcast.POSTER_KEY);
+
+        viewMvc.addPodcastsToSpinner(createPodcastTitles());
+        viewMvc.addCategoriesToSpinner(createCategoriesTitles());
     }
 
     private void initializeFirebase() {
