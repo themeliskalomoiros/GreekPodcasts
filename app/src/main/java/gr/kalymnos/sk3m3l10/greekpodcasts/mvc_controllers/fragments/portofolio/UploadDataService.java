@@ -19,10 +19,15 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 public class UploadDataService extends IntentService {
 
     private static final String ACTION_UPLOAD_AUDIO = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.action.upload_audio";
+    private static final String ACTION_UPDATE_PODCAST = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.action.update_podcast";
 
     private static final String EXTRA_AUDIO_URI = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.audio_uri";
     private static final String EXTRA_PODCAST = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.podcast_push_id";
     private static final String EXTRA_AUDIO_TITLE = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.audio_title";
+    private static final String EXTRA_PODCAST_TITLE = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.PODCAST_title";
+    private static final String EXTRA_PODCAST_DESCRIPTION = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.PODCAST_description";
+    private static final String EXTRA_PODCAST_POSTER_DATA = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.PODCAST_poster_data";
+    private static final String EXTRA_PODCAST_PUSH_ID = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.PODCAST_push_id";
 
     public UploadDataService() {
         super("UploadDataService");
@@ -37,17 +42,54 @@ public class UploadDataService extends IntentService {
         context.startService(intent);
     }
 
+    public static void startActionUpdatePodcast(Context context, String podcastTitle, String description,
+                                                byte[] posterData, String podcastPushId) {
+        Intent intent = new Intent(context, UploadDataService.class);
+        intent.setAction(ACTION_UPDATE_PODCAST);
+        intent.putExtra(EXTRA_PODCAST_TITLE, podcastTitle);
+        intent.putExtra(EXTRA_PODCAST_DESCRIPTION, description);
+        intent.putExtra(EXTRA_PODCAST_POSTER_DATA, posterData);
+        intent.putExtra(EXTRA_PODCAST_PUSH_ID, podcastPushId);
+        context.startService(intent);
+    }
+
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (ACTION_UPLOAD_AUDIO.equals(action)) {
+            if (action.equals(ACTION_UPLOAD_AUDIO)) {
                 final Uri audioUri = intent.getParcelableExtra(EXTRA_AUDIO_URI);
                 final Podcast podcast = intent.getParcelableExtra(EXTRA_PODCAST);
                 final String audioTitle = intent.getStringExtra(EXTRA_AUDIO_TITLE);
                 handleActionUploadAudio(audioTitle, audioUri, podcast);
+            } else if (action.equals(ACTION_UPDATE_PODCAST)) {
+                final String podcastTitle = intent.getStringExtra(EXTRA_PODCAST_TITLE);
+                final String podcastDescription = intent.getStringExtra(EXTRA_PODCAST_DESCRIPTION);
+                final byte[] posterData = intent.getByteArrayExtra(EXTRA_PODCAST_POSTER_DATA);
+                final String podcastPushId = intent.getStringExtra(EXTRA_PODCAST_PUSH_ID);
+                handleActionUpdatePodcast(podcastTitle, podcastDescription, posterData, podcastPushId);
             }
         }
+    }
+
+    private void handleActionUpdatePodcast(String podcastTitle, String description, byte[] posterData, String podcastPushId) {
+        getPosterStorageReference(podcastPushId).putBytes(posterData).addOnSuccessListener(taskSnapshot -> {
+            getPodcastDatabaseReference(podcastPushId).child(Podcast.FIELD_NAME_TITLE).setValue(podcastTitle);
+            getPodcastDatabaseReference(podcastPushId).child(Podcast.FIELD_NAME_DESCRIPTION).setValue(description);
+            getPodcastDatabaseReference(podcastPushId).child(Podcast.FIELD_NAME_POSTER_URL).setValue(taskSnapshot.getDownloadUrl().toString());
+        }).addOnFailureListener(exception -> {
+            //  TODO: Switch with snackbar
+            Toast.makeText(this, "Could not upload " + exception.getMessage(), Toast.LENGTH_LONG).show();
+        });
+    }
+
+    private StorageReference getPosterStorageReference(String podcastPushId) {
+        return FirebaseStorage.getInstance().getReference()
+                .child(ChildNames.PODCASTS).child(podcastPushId).child(ChildNames.POSTER);
+    }
+
+    private DatabaseReference getPodcastDatabaseReference(String podcastPushId) {
+        return FirebaseDatabase.getInstance().getReference().child(ChildNames.PODCASTS).child(podcastPushId);
     }
 
     private void handleActionUploadAudio(String audioTitle, Uri audioUri, Podcast podcast) {
