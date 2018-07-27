@@ -41,7 +41,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
 public class PortofolioCreateFragment extends Fragment implements PortofolioCreateViewMvc.OnPosterClickListener,
         PortofolioCreateViewMvc.OnCategorySelectedListener, LoaderManager.LoaderCallbacks<List<Category>>,
-        ChangeSaver, DataRepository.OnCreatedPodcastListener {
+        SaveOperationer, DataRepository.OnCreatedPodcastListener {
 
     private static final String TAG = PortofolioCreateFragment.class.getSimpleName();
     private static final int LOADER_ID = 121;

@@ -1,6 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio;
 
-public interface ChangeSaver {
+public interface SaveOperationer {
     
     static final int MIN_TITLE_LENGTH = 3;
     static final int MAX_TITLE_LENGTH = 80;

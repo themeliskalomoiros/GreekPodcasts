@@ -1,14 +1,12 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities;
 
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.widget.Toast;
 
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.ChangeSaver;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.SaveOperationer;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.ViewAllEpisodesFragment;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.PortofolioViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.PortofolioViewMvcImpl;
@@ -34,11 +32,11 @@ public class PortofolioActivity extends AppCompatActivity implements PortofolioV
     public void onSaveClick() {
         String currentFragmentTag = FragmentUtils.fragmentTag(viewMvc.getViewPagerId(), viewMvc.getCurrentTabItem());
         if (!TextUtils.isEmpty(currentFragmentTag)) {
-            ChangeSaver currentFragment = (ChangeSaver) getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
+            SaveOperationer currentFragment = (SaveOperationer) getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
             if (currentFragment != null) {
                 currentFragment.save();
             } else {
-                throw new UnsupportedOperationException(TAG + ": all PortofolioActivity's fragments must implement " + ChangeSaver.class.getSimpleName());
+                throw new UnsupportedOperationException(TAG + ": all PortofolioActivity's fragments must implement " + SaveOperationer.class.getSimpleName());
             }
         }
     }

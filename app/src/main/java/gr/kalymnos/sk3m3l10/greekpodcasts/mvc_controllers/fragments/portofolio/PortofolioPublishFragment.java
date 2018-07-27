@@ -33,7 +33,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
 public class PortofolioPublishFragment extends Fragment implements PortofolioPublishViewMvc.OnItemsSelectedListener,
-        ChangeSaver, PortofolioPublishViewMvc.OnButtonsClickListener {
+        SaveOperationer, PortofolioPublishViewMvc.OnButtonsClickListener {
 
     private static final String TAG = PortofolioPublishFragment.class.getSimpleName();
 

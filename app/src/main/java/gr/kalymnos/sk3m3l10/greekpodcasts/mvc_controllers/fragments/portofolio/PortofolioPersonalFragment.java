@@ -36,7 +36,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.PromotionLink;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
-public class PortofolioPersonalFragment extends Fragment implements ChangeSaver, PortofolioPersonalViewMvc.OnViewsClickListener {
+public class PortofolioPersonalFragment extends Fragment implements SaveOperationer, PortofolioPersonalViewMvc.OnViewsClickListener {
 
     private static final String TAG = PortofolioPersonalFragment.class.getSimpleName();
     private static final int RC_POSTER_PIC = 1313;
