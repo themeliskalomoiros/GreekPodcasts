@@ -23,6 +23,7 @@ import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 
 public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
@@ -211,6 +212,21 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     @Override
     public int getPosterContainerHeight() {
         return posterImageView.getHeight();
+    }
+
+    @Override
+    public byte[] getPosterData() {
+        return BitmapUtils.getBytesFromImageView(posterImageView);
+    }
+
+    @Override
+    public String getPodcastTitle() {
+        return podcastSpinner.getSelectedItem().toString();
+    }
+
+    @Override
+    public String getDescription() {
+        return descriptionTextView.getText().toString();
     }
 
     @Override

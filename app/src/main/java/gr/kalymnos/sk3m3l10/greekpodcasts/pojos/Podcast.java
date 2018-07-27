@@ -12,6 +12,11 @@ public class Podcast implements Parcelable {
     public static final String DESCRIPTION_KEY = "description key";
     public static final String LOCAL_DB_ID_KEY = "local db key";
 
+    public static final String FIELD_NAME_TITLE = "title";
+    public static final String FIELD_NAME_DESCRIPTION = "description";
+    public static final String FIELD_NAME_POSTER_URL = "posterUrl";
+
+
     private String title, categoryId, posterUrl, description, podcasterId, firebasePushId, episodesId;
     private int localDbId;
 

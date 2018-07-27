@@ -89,6 +89,12 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
 
     int getPosterContainerHeight();
 
+    byte[] getPosterData();
+
+    String getPodcastTitle();
+
+    String getDescription();
+
     boolean posterExists();
 
     void bindImageFileName(String name);
