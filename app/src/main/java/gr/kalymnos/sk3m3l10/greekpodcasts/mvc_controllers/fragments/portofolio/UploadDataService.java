@@ -6,7 +6,6 @@ import android.content.Context;
 import android.net.Uri;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -17,7 +16,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
-public class UploadAudioService extends IntentService {
+public class UploadDataService extends IntentService {
 
     private static final String ACTION_UPLOAD_AUDIO = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.action.upload_audio";
 
@@ -25,12 +24,12 @@ public class UploadAudioService extends IntentService {
     private static final String EXTRA_PODCAST = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.podcast_push_id";
     private static final String EXTRA_AUDIO_TITLE = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.audio_title";
 
-    public UploadAudioService() {
-        super("UploadAudioService");
+    public UploadDataService() {
+        super("UploadDataService");
     }
 
     public static void startActionUploadAudio(Context context, String audioTitle, Uri audioUri, Podcast podcast) {
-        Intent intent = new Intent(context, UploadAudioService.class);
+        Intent intent = new Intent(context, UploadDataService.class);
         intent.setAction(ACTION_UPLOAD_AUDIO);
         intent.putExtra(EXTRA_AUDIO_URI, audioUri);
         intent.putExtra(EXTRA_PODCAST, podcast);

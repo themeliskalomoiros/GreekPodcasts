@@ -8,9 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.widget.Toast;
 
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.UploadAudioService;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.UploadDataService;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.add_episode.AddEpisodeViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.add_episode.AddEpisodeViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
@@ -82,7 +80,7 @@ public class AddEpisodeActivity extends AppCompatActivity implements AddEpisodeV
     public void onUploadActionClick() {
         if (!TextUtils.isEmpty(viewMvc.getInsertedTitle()) && cachedAudioUri != null) {
             Podcast podcast = getIntent().getExtras().getParcelable(Podcast.PODCAST_KEY);
-            UploadAudioService.startActionUploadAudio(this, viewMvc.getInsertedTitle(),cachedAudioUri, podcast);
+            UploadDataService.startActionUploadAudio(this, viewMvc.getInsertedTitle(),cachedAudioUri, podcast);
             finish();
         } else {
             Toast.makeText(this, "Enter title and select an audio file.", Toast.LENGTH_SHORT).show();
