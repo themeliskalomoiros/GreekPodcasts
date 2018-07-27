@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -30,6 +31,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.portofolio_screen.publish.Po
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FileUtils;
 
 public class PortofolioPublishFragment extends Fragment implements PortofolioPublishViewMvc.OnItemsSelectedListener,
@@ -58,7 +60,11 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
             //  Swap the new title
             originalTitles[viewMvc.getSelectedPodcastPosition()] = text;
 
+            //  We keep the position because after addPodcastsToSpinner() call the adapter
+            //  reselects the first item of the spinner
+            int currentPodcastPosition = viewMvc.getSelectedPodcastPosition();
             viewMvc.addPodcastsToSpinner(originalTitles);
+            viewMvc.selectPodcastSpinnerItem(currentPodcastPosition);
         }
     },
             descriptionInsertedListener = text -> viewMvc.bindDescription(text);
@@ -227,38 +233,38 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
             viewMvc.displayEpisodesLoadingIndicator(true);
             getEpisodesReference(podcastSelected.getFirebasePushId())
                     .addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    viewMvc.displayEpisodesLoadingIndicator(false);
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            viewMvc.displayEpisodesLoadingIndicator(false);
 
-                    List<Episode> episodeList = new ArrayList<>();
-                    for (DataSnapshot episodeSnapshot : dataSnapshot.getChildren()) {
-                        Episode episode = episodeSnapshot.getValue(Episode.class);
-                        if (episode != null) {
-                            episodeList.add(episode);
+                            List<Episode> episodeList = new ArrayList<>();
+                            for (DataSnapshot episodeSnapshot : dataSnapshot.getChildren()) {
+                                Episode episode = episodeSnapshot.getValue(Episode.class);
+                                if (episode != null) {
+                                    episodeList.add(episode);
+                                }
+                            }
+
+                            viewMvc.bindEpisodes(episodeList);
+
+                            if (isListValid(episodeList)) {
+                                cachedEpisodes = episodeList;
+                            }
+
                         }
-                    }
 
-                    viewMvc.bindEpisodes(episodeList);
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
 
-                    if (isListValid(episodeList)) {
-                        cachedEpisodes = episodeList;
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
+                        }
+                    });
         }
     }
 
     private DatabaseReference getEpisodesReference(String podcastSelectedPushId) {
         return firebaseDatabase.getReference()
-                        .child(ChildNames.EPISODES)
-                        .child(podcastSelectedPushId);
+                .child(ChildNames.EPISODES)
+                .child(podcastSelectedPushId);
     }
 
     @Override
@@ -273,14 +279,18 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
     @Override
     public void save() {
         if (isValidStateToSave()) {
-            Podcast selectedPodcast = cachedPodcasts.get(viewMvc.getSelectedPodcastPosition());
-            boolean validTitle = !TextUtils.isEmpty(selectedPodcast.getTitle());
-            boolean validPoster = viewMvc.posterExists();
-            boolean validDescription = !TextUtils.isEmpty(getString(viewMvc.getDescriptionDialogTitleRes()));
-            boolean userFilledInEverything = validTitle && validPoster && validDescription;
+            if (isListValid(cachedPodcasts) && isListValid(cachedCategories)) {
+                Podcast selectedPodcast = cachedPodcasts.get(viewMvc.getSelectedPodcastPosition());
+                Category selectedCategory = cachedCategories.get(viewMvc.getSelectedCategoryPosition());
 
-            if (userFilledInEverything) {
-                //  TODO:   Update podcast with the new values
+                UploadDataService.startActionUpdatePodcast(getContext(),
+                        viewMvc.getPodcastTitle(), viewMvc.getDescription(), viewMvc.getPosterData(),
+                        selectedCategory.getFirebasePushId(), selectedPodcast.getFirebasePushId());
+
+                getActivity().finish();
+            } else {
+                //  TODO: Switch to snackbar
+                Toast.makeText(getContext(), "No podcast to save", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -292,7 +302,10 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
 
     @Override
     public boolean isValidStateToSave() {
-        return cachedPosterUri != null && isListValid(cachedPodcasts) && isListValid(cachedCategories);
+        boolean validTitle = !TextUtils.isEmpty(viewMvc.getPodcastTitle());
+        boolean validPoster = viewMvc.posterExists();
+        boolean validDescription = !TextUtils.isEmpty(viewMvc.getDescription());
+        return validTitle && validPoster && validDescription;
     }
 
     @Override

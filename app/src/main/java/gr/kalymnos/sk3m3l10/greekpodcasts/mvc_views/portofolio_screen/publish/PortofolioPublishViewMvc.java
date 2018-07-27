@@ -98,4 +98,6 @@ public interface PortofolioPublishViewMvc extends ViewMvc {
     boolean posterExists();
 
     void bindImageFileName(String name);
+
+    void selectPodcastSpinnerItem(int position);
 }

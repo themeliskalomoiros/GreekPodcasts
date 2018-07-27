@@ -240,6 +240,11 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public void selectPodcastSpinnerItem(int position) {
+        podcastSpinner.setSelection(position);
+    }
+
+    @Override
     public boolean onLand() {
         if (episodesRecyclerView != null) {
             return true;

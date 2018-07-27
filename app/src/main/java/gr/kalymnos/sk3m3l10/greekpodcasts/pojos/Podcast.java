@@ -15,6 +15,7 @@ public class Podcast implements Parcelable {
     public static final String FIELD_NAME_TITLE = "title";
     public static final String FIELD_NAME_DESCRIPTION = "description";
     public static final String FIELD_NAME_POSTER_URL = "posterUrl";
+    public static final String FIELD_NAME_CATEGORY_ID = "categoryId";
 
 
     private String title, categoryId, posterUrl, description, podcasterId, firebasePushId, episodesId;

@@ -13,6 +13,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
+import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
@@ -28,6 +29,7 @@ public class UploadDataService extends IntentService {
     private static final String EXTRA_PODCAST_DESCRIPTION = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.PODCAST_description";
     private static final String EXTRA_PODCAST_POSTER_DATA = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.PODCAST_poster_data";
     private static final String EXTRA_PODCAST_PUSH_ID = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.portofolio.extra.PODCAST_push_id";
+    private static final String EXTRA_CATEGORY_PUSH_ID = "gr.kalymnos.sk3m3l10.greekCATEGORYs.mvc_controllers.fragments.portofolio.extra.CATEGORY_push_id";
 
     public UploadDataService() {
         super("UploadDataService");
@@ -43,13 +45,14 @@ public class UploadDataService extends IntentService {
     }
 
     public static void startActionUpdatePodcast(Context context, String podcastTitle, String description,
-                                                byte[] posterData, String podcastPushId) {
+                                                byte[] posterData, String categoryPushId, String podcastPushId) {
         Intent intent = new Intent(context, UploadDataService.class);
         intent.setAction(ACTION_UPDATE_PODCAST);
         intent.putExtra(EXTRA_PODCAST_TITLE, podcastTitle);
         intent.putExtra(EXTRA_PODCAST_DESCRIPTION, description);
         intent.putExtra(EXTRA_PODCAST_POSTER_DATA, posterData);
         intent.putExtra(EXTRA_PODCAST_PUSH_ID, podcastPushId);
+        intent.putExtra(EXTRA_CATEGORY_PUSH_ID, categoryPushId);
         context.startService(intent);
     }
 
@@ -67,16 +70,21 @@ public class UploadDataService extends IntentService {
                 final String podcastDescription = intent.getStringExtra(EXTRA_PODCAST_DESCRIPTION);
                 final byte[] posterData = intent.getByteArrayExtra(EXTRA_PODCAST_POSTER_DATA);
                 final String podcastPushId = intent.getStringExtra(EXTRA_PODCAST_PUSH_ID);
-                handleActionUpdatePodcast(podcastTitle, podcastDescription, posterData, podcastPushId);
+                final String categoryPushId = intent.getStringExtra(EXTRA_CATEGORY_PUSH_ID);
+                handleActionUpdatePodcast(podcastTitle, podcastDescription, posterData, categoryPushId, podcastPushId);
             }
         }
     }
 
-    private void handleActionUpdatePodcast(String podcastTitle, String description, byte[] posterData, String podcastPushId) {
+    private void handleActionUpdatePodcast(String podcastTitle, String description, byte[] posterData,
+                                           String categoryPushId, String podcastPushId) {
         getPosterStorageReference(podcastPushId).putBytes(posterData).addOnSuccessListener(taskSnapshot -> {
+
             getPodcastDatabaseReference(podcastPushId).child(Podcast.FIELD_NAME_TITLE).setValue(podcastTitle);
             getPodcastDatabaseReference(podcastPushId).child(Podcast.FIELD_NAME_DESCRIPTION).setValue(description);
             getPodcastDatabaseReference(podcastPushId).child(Podcast.FIELD_NAME_POSTER_URL).setValue(taskSnapshot.getDownloadUrl().toString());
+            getPodcastDatabaseReference(podcastPushId).child(Podcast.FIELD_NAME_CATEGORY_ID).setValue(categoryPushId);
+
         }).addOnFailureListener(exception -> {
             //  TODO: Switch with snackbar
             Toast.makeText(this, "Could not upload " + exception.getMessage(), Toast.LENGTH_LONG).show();
