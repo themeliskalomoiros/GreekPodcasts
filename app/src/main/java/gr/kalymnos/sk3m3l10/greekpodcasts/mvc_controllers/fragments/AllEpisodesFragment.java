@@ -57,12 +57,17 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        viewMvc = new AllEpisodesViewMvcImpl(inflater, container);
-        viewMvc.setOnEpisodeClickListener(this);
-        viewMvc.setOnPopUpMenuClickListener(this);
-        //  Display loading bar until the fragment get connected to PlaybackService and fetched mediaItems
-        viewMvc.displayLoadingIndicator(true);
+        initializeViewMvc(inflater, container);
         return viewMvc.getRootView();
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mediaBrowser = new MediaBrowserCompat(getContext(),
+                new ComponentName(getActivity().getApplicationContext(), PlaybackService.class),
+                connectionCallback = new ConnectionCallback(),
+                getArguments());
     }
 
     @Override
@@ -77,15 +82,6 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
             throw new ClassCastException(activity.toString()
                     + " must implement OnChosenEpisodeChangedListener");
         }
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        mediaBrowser = new MediaBrowserCompat(getContext(),
-                new ComponentName(getActivity().getApplicationContext(), PlaybackService.class),
-                connectionCallback = new ConnectionCallback(),
-                getArguments());
     }
 
     @Override
@@ -206,8 +202,8 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
         public void onConnectionFailed() {
             //  Service has refused our connection
         }
-    }
 
+    }
     private void markPlayingItemInList(MediaMetadataCompat metadata) {
         String playingItemMediaId = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
         int indexToSelectInTheList = viewMvc.getItemPositionFromMediaId(playingItemMediaId);
@@ -219,9 +215,10 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
     private static class DatabaseOperations {
 
         private static final int NO_EPISODES = 0;
-        private static final int FIRST_EPISODE = 0;
 
+        private static final int FIRST_EPISODE = 0;
         //  We need to get the count of the episodes that are saved in the local database.
+
         //  In case of none the first episode of the new will be the current episode of the podcast by default.
         static AsyncTask<Void, Void, Integer> countPodcastEpisodesTask(@NonNull Activity activity,
                                                                        @NonNull int podcastLocalDbId,
@@ -255,7 +252,6 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                 }
             };
         }
-
         static AsyncTask<Void, Void, Void> insertAllEpisodesTask(@NonNull Context context, int podcastLocalDbId,
                                                                  @NonNull List<MediaBrowserCompat.MediaItem> mediaItems) {
             return new AsyncTask<Void, Void, Void>() {
@@ -314,5 +310,13 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
             episodeValues.put(UserMetadataContract.EpisodeEntry.COLUMN_NAME_FIREBASE_PUSH_ID, episodePushId);
             return episodeValues;
         }
+
+    }
+    private void initializeViewMvc(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
+        viewMvc = new AllEpisodesViewMvcImpl(inflater, container);
+        viewMvc.setOnEpisodeClickListener(this);
+        viewMvc.setOnPopUpMenuClickListener(this);
+        //  Display loading bar until the fragment get connected to PlaybackService and fetched mediaItems
+        viewMvc.displayLoadingIndicator(true);
     }
 }
