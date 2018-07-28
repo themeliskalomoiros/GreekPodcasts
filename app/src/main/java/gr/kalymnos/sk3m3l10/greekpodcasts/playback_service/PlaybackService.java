@@ -5,8 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -25,24 +23,25 @@ import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.support.v4.media.app.NotificationCompat.MediaStyle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
-import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
+import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.BitmapUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.DateUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.PlaybackUtils;
 import gr.kalymnos.sk3m3l10.greekpodcasts.widget.PlaybackWidget;
@@ -71,10 +70,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     private PlayerHolder player;
     private int reportedPlayerState;
     private String cachedMediaId = null;
-
-    private AsyncTask<String, Void, List<Episode>> fetchEpisodesTask;
-    private AsyncTask<String, Void, String> fetchPodcasterNameTask;
-    private AsyncTask<String, Void, Bitmap> fetchPosterBitmapTask;    /*Podcast's poster*/
+    
     private List<MediaBrowserCompat.MediaItem> cachedMediaItems;
     private String cachedPodcastersName;
 
@@ -123,168 +119,118 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     public void onLoadChildren(@NonNull String parentId, @NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
         Bundle rootHints = getBrowserRootHints();
         if (areRootHintsValid(rootHints)) {
-            //  Detatch to fetch the data in another thread
-            result.detach();
 
-            if (fetchEpisodesTask == null) {
-                initializeFetchEpisodesTask(result);
+            Podcast podcast = rootHints.getParcelable(Podcast.PODCAST_KEY);
+
+            if (podcast != null) {
+                //  Detatch to fetch the data in another thread
+                result.detach();
+
+                String podcasterPushId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                FirebaseDatabase.getInstance().getReference()
+                        .child(ChildNames.PODCASTERS)
+                        .child(podcasterPushId)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                Podcaster podcaster = dataSnapshot.getValue(Podcaster.class);
+                                if (podcaster != null) {
+                                    //  An artist name was fetched, cache it to set it to metadata later
+                                    cachedPodcastersName = podcaster.getUsername();
+                                    fetchPosterBitmapAndAfterEpisodes();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+
+                            private void fetchPosterBitmapAndAfterEpisodes() {
+                                AsyncTask<Void, Void, Bitmap> fetchBitmapFromNetworkTask = new AsyncTask<Void, Void, Bitmap>() {
+                                    @Override
+                                    protected Bitmap doInBackground(Void... voids) {
+                                        try {
+                                            return BitmapUtils.bitmapFromUrl(new URL(podcast.getPosterUrl()));
+                                        } catch (MalformedURLException e) {
+                                            e.printStackTrace();
+                                            return null;
+                                        }
+                                    }
+
+                                    @Override
+                                    protected void onPostExecute(Bitmap bitmap) {
+                                        if (bitmap != null) {
+                                            cachedAlbumArt = bitmap;
+                                            fetchEpisodes();
+                                        }
+                                    }
+                                };
+
+                                fetchBitmapFromNetworkTask.execute();
+                            }
+
+                            private void fetchEpisodes() {
+                                FirebaseDatabase.getInstance().getReference()
+                                        .child(ChildNames.EPISODES)
+                                        .child(podcast.getFirebasePushId()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        List<Episode> episodeList = new ArrayList<>();
+
+                                        for (DataSnapshot episodeSnapshot : dataSnapshot.getChildren()) {
+                                            Episode episode = episodeSnapshot.getValue(Episode.class);
+                                            if (episode != null) {
+                                                episode.setFirebasePushId(episodeSnapshot.getKey());
+                                                episodeList.add(episode);
+                                            }
+                                        }
+
+                                        if (episodeList.size() > 0) {
+                                            result.sendResult(createMediaItems(episodeList));
+                                        } else {
+                                            //  No dataFetched send nothing
+                                            result.sendResult(null);
+                                        }
+                                    }
+
+                                    private List<MediaBrowserCompat.MediaItem> createMediaItems(List<Episode> episodeList) {
+                                        //  Data is fetched. Create mediaItems for clients
+                                        List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
+
+                                        for (Episode episode : episodeList) {
+
+                                            Bundle extras = new Bundle();
+                                            extras.putLong(Episode.DATE_KEY, episode.getDateMilli());
+                                            extras.putInt(Episode.MINUTES_KEY, episode.getMinutes());
+                                            extras.putInt(Episode.SECONDS_KEY, episode.getSeconds());
+
+                                            MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat
+                                                    .Builder()
+                                                    .setTitle(episode.getTitle())
+                                                    .setMediaId(episode.getFirebasePushId())
+                                                    .setMediaUri(Uri.parse(episode.getUrl()))
+                                                    .setIconBitmap(cachedAlbumArt)
+                                                    .setExtras(extras)
+                                                    .build();
+                                            mediaItems.add(new MediaBrowserCompat.MediaItem(mediaDescription, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
+                                        }
+                                        //  MediaItems are ready, cache them for use in onPlayFromMediaId and send the result
+                                        return cachedMediaItems = mediaItems;
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+                            }
+                        });
+
             } else {
-                //  If an older instance of this thread is running, cancel it
-                fetchEpisodesTask.cancel(true);
-                fetchEpisodesTask = null;
-                initializeFetchEpisodesTask(result);
+                throw new UnsupportedOperationException(TAG + ": Podcast should not be null.");
             }
-
-            if (fetchPodcasterNameTask == null) {
-                initializeFetchPodcasterNameTask();
-            } else {
-                fetchPodcasterNameTask.cancel(true);
-                fetchPodcasterNameTask = null;
-                initializeFetchPodcasterNameTask();
-            }
-
-            if (fetchPosterBitmapTask == null) {
-                initializeFetchPosterBitmapTask();
-            } else {
-                fetchPosterBitmapTask.cancel(true);
-                fetchPosterBitmapTask = null;
-                initializeFetchPosterBitmapTask();
-            }
-
-            /*  Tasks Execution Order:
-             *   1 ->    fetchPodcasterNameTask. When has fetched data it executes fetchPosterBitmapTask.
-             *   2 ->    fetchPosterBitmapTask.  When has fetched data it executes fetchEpisodesTask
-             *   3 ->    fetchEpisodesTask.      When has fetched data it creates mediaItems and sends the result to clients
-             *   All the parameters for the tasks are given to the first one.*/
-            fetchPodcasterNameTask.execute(new String[]{
-                    rootHints.getString(Podcaster.PUSH_ID_KEY)  /*  Pass podcaster push id*/,
-                    rootHints.getString(Podcast.POSTER_KEY),    /*  Pass podcast poster url*/
-                    rootHints.getString(Episode.EPISODES_KEY)   /*  Pass podcast's episodes push id*/});
-
-            return;
         }
-        result.sendResult(null);
-    }
-
-
-    private void initializeFetchPodcasterNameTask() {
-
-        final String[] localTaskParam = new String[1];
-        final String[] bitmapTaskParam = new String[1];
-        final String[] episodeTaskParam = new String[1];
-
-        fetchPodcasterNameTask = new AsyncTask<String, Void, String>() {
-            @Override
-            protected String doInBackground(String... strings) {
-
-                localTaskParam[0] = strings[0];
-                bitmapTaskParam[0] = strings[1];
-                episodeTaskParam[0] = strings[2];
-
-                //  TODO:   Swap with a real service.
-                DataRepository repo = new StaticFakeDataRepo();
-                return repo.fetchPodcasterName(strings[0]);
-            }
-
-            @Override
-            protected void onPostExecute(String podcasterName) {
-                if (!TextUtils.isEmpty(podcasterName)) {
-                    //  An artist name was fetched, cache it to set it to metadata later
-                    cachedPodcastersName = podcasterName;
-                } else {
-                    throw new IllegalArgumentException(TAG + ": Cannot fetch podcaster (artist) name with null parameter");
-                }
-
-                if (!TextUtils.isEmpty(bitmapTaskParam[0]) && !TextUtils.isEmpty(episodeTaskParam[0])) {
-                    //  Start fetching the bitmap.
-                    // Pass also episode task parameter to execute the latter.
-                    fetchPosterBitmapTask.execute(bitmapTaskParam[0], episodeTaskParam[0]);
-                } else {
-                    throw new IllegalArgumentException(TAG + ": Cannot fetch bitmap/episodes with null parameter");
-                }
-
-            }
-        };
-    }
-
-    private void initializeFetchPosterBitmapTask() {
-        fetchPosterBitmapTask = new AsyncTask<String, Void, Bitmap>() {
-
-            String episodeTaskParam;
-
-            @Override
-            protected Bitmap doInBackground(String... strings) {
-                String imageUrl = strings[0];
-                episodeTaskParam = strings[1];
-
-                Bitmap bitmap = null;
-
-                try {
-                    InputStream in = new URL(imageUrl).openStream();
-                    bitmap = BitmapFactory.decodeStream(in);
-                } catch (IOException e) {
-                    Log.d(TAG, "Error when fetching the stream for " + imageUrl);
-                    e.printStackTrace();
-                }
-                return bitmap;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap bitmap) {
-                if (bitmap != null) {
-                    cachedAlbumArt = bitmap;
-                }
-
-                //  Execute the final task which will also send the result
-                fetchEpisodesTask.execute(episodeTaskParam);
-            }
-        };
-    }
-
-    private void initializeFetchEpisodesTask(@NonNull Result<List<MediaBrowserCompat.MediaItem>> result) {
-        fetchEpisodesTask = new AsyncTask<String, Void, List<Episode>>() {
-
-
-            @Override
-            protected List<Episode> doInBackground(String... strings) {
-                //  TODO:   Replace with a real service.
-                DataRepository repo = new StaticFakeDataRepo();
-                return repo.fetchEpisodes(strings[0]);
-            }
-
-            @Override
-            protected void onPostExecute(List<Episode> episodes) {
-                if (episodes != null && episodes.size() > 0) {
-
-                    //  Data is fetched. Create mediaItems for clients
-                    List<MediaBrowserCompat.MediaItem> mediaItems = new ArrayList<>();
-
-                    for (Episode episode : episodes) {
-
-                        Bundle extras = new Bundle();
-                        extras.putLong(Episode.DATE_KEY, episode.getDateMilli());
-                        extras.putInt(Episode.MINUTES_KEY, episode.getMinutes());
-                        extras.putInt(Episode.SECONDS_KEY, episode.getSeconds());
-
-                        MediaDescriptionCompat mediaDescription = new MediaDescriptionCompat
-                                .Builder()
-                                .setTitle(episode.getTitle())
-                                .setMediaId(episode.getFirebasePushId())
-                                .setMediaUri(Uri.parse(episode.getUrl()))
-                                .setIconBitmap(cachedAlbumArt)
-                                .setExtras(extras)
-                                .build();
-                        mediaItems.add(new MediaBrowserCompat.MediaItem(mediaDescription, MediaBrowserCompat.MediaItem.FLAG_PLAYABLE));
-                    }
-                    //  MediaItems are ready, cache them for use in onPlayFromMediaId and send the result
-                    cachedMediaItems = mediaItems;
-                    result.sendResult(mediaItems);
-                } else {
-                    //  No dataFetched send nothing
-                    result.sendResult(null);
-                }
-            }
-        };
     }
 
     private void initializeMediaSession() {
