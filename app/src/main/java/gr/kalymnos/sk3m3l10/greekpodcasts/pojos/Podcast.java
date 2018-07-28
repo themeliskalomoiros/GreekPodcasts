@@ -17,7 +17,7 @@ public class Podcast implements Parcelable {
     public static final String FIELD_NAME_POSTER_URL = "posterUrl";
     public static final String FIELD_NAME_CATEGORY_ID = "categoryId";
 
-
+    //  TODO: When ready, remove the episodesId field, its not needed.
     private String title, categoryId, posterUrl, description, podcasterId, firebasePushId, episodesId;
     private int localDbId;
 

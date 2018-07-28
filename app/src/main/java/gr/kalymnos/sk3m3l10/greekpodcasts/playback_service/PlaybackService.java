@@ -556,11 +556,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     }
 
     private boolean areRootHintsValid(Bundle rootHints) {
-        //  One key to fetch all the episodes of the podcast, one key for the podcast poster
-        //  and one key to fetch the podcaster (artist) name.
-        if (rootHints != null && rootHints.containsKey(Episode.EPISODES_KEY)
-                && rootHints.containsKey(Podcast.POSTER_KEY)
-                && rootHints.containsKey(Podcaster.PUSH_ID_KEY)) {
+        if (rootHints != null && rootHints.containsKey(Podcast.PODCAST_KEY)) {
             return true;
         }
         return false;
