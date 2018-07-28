@@ -161,7 +161,8 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                         markPositionTask.start();
 
                         //  Store episodes to local database
-                        int podcastLocalDbId = getArguments().getInt(Podcast.LOCAL_DB_ID_KEY);
+                        Podcast podcast = getArguments().getParcelable(Podcast.PODCAST_KEY);
+                        int podcastLocalDbId = podcast.getLocalDbId();
                         DatabaseOperations.countPodcastEpisodesTask(getActivity(),
                                 podcastLocalDbId,
                                 () -> DatabaseOperations.insertAllEpisodesTask(getContext(), podcastLocalDbId, children).execute(),
@@ -204,6 +205,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
         }
 
     }
+
     private void markPlayingItemInList(MediaMetadataCompat metadata) {
         String playingItemMediaId = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID);
         int indexToSelectInTheList = viewMvc.getItemPositionFromMediaId(playingItemMediaId);
@@ -252,6 +254,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                 }
             };
         }
+
         static AsyncTask<Void, Void, Void> insertAllEpisodesTask(@NonNull Context context, int podcastLocalDbId,
                                                                  @NonNull List<MediaBrowserCompat.MediaItem> mediaItems) {
             return new AsyncTask<Void, Void, Void>() {
@@ -312,6 +315,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
         }
 
     }
+
     private void initializeViewMvc(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {
         viewMvc = new AllEpisodesViewMvcImpl(inflater, container);
         viewMvc.setOnEpisodeClickListener(this);
