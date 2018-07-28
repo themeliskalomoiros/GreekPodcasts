@@ -16,11 +16,12 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
 
 public class PodcastPagerAdapter extends MainPagerAdapter {
 
-    private Bundle allEpisodesArgs, aboutPodcastArgs;
+    private Bundle args;
+    private static final String TAG = PodcastPagerAdapter.class.getSimpleName();
 
     public PodcastPagerAdapter(FragmentManager fm, @NonNull Bundle pagerArguments, @NonNull String... titles) {
         super(fm, titles);
-        initializeFragmentsArgs(pagerArguments);
+        args = pagerArguments;
     }
 
     public Fragment[] getFragmentsArray() {
@@ -28,34 +29,22 @@ public class PodcastPagerAdapter extends MainPagerAdapter {
             fragmentsArray = new Fragment[TAB_COUNT];
 
             fragmentsArray[0] = new AllEpisodesFragment();
-            fragmentsArray[0].setArguments(allEpisodesArgs);
+            fragmentsArray[0].setArguments(args);
 
             fragmentsArray[1] = new AboutPodcastFragment();
-            fragmentsArray[1].setArguments(aboutPodcastArgs);
+            fragmentsArray[1].setArguments(getAboutPodcastArgs());
         }
         return fragmentsArray;
     }
 
-    private void initializeFragmentsArgs(@NonNull Bundle pagerArguments) {
-        if (pagerArguments!=null && pagerArguments.containsKey(Podcast.PODCAST_KEY)){
-
-            Podcast podcast = pagerArguments.getParcelable(Podcast.PODCAST_KEY);
-
-            String posterUrl = podcast.getPosterUrl();
-            String podcasterId = podcast.getPodcasterId();
-            String episodesId = podcast.getEpisodesId();
-            int localDbId = podcast.getLocalDbId();
-
-            allEpisodesArgs = new Bundle();
-            allEpisodesArgs.putString(Podcast.POSTER_KEY, posterUrl);
-            allEpisodesArgs.putString(Podcaster.PUSH_ID_KEY, podcasterId);
-            allEpisodesArgs.putString(Episode.EPISODES_KEY, episodesId);
-            allEpisodesArgs.putInt(Podcast.LOCAL_DB_ID_KEY, localDbId);
-
-            aboutPodcastArgs = new Bundle();
-            aboutPodcastArgs.putString(Podcast.DESCRIPTION_KEY, podcast.getDescription());
-        }else {
-            throw new IllegalArgumentException(PodcastPagerAdapter.class.getSimpleName()+": Bundle is null or does not contain Podcast.PODCAST_KEY");
+    private Bundle getAboutPodcastArgs() {
+        Podcast podcast = args.getParcelable(Podcast.PODCAST_KEY);
+        if (podcast != null) {
+            Bundle bundle = new Bundle();
+            bundle.putString(Podcast.DESCRIPTION_KEY, podcast.getDescription());
+            return bundle;
+        } else {
+            throw new UnsupportedOperationException(TAG + ": Podcast should not be null");
         }
     }
 }
