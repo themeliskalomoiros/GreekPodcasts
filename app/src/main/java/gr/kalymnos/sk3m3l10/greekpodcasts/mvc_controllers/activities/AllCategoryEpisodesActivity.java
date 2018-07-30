@@ -10,9 +10,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments.AllPodcastsFragment;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
@@ -23,8 +29,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.utils.LocalDatabaseTasks;
 
-public class AllCategoryEpisodesActivity extends AppCompatActivity implements AllPodcastsViewMvc.OnPodcastItemClickListener, LoaderManager.LoaderCallbacks<List<Podcast>> {
-    private static final int LOADER_ID = 121;
+public class AllCategoryEpisodesActivity extends AppCompatActivity implements AllPodcastsViewMvc.OnPodcastItemClickListener {
     private static final String TAG = AllCategoryEpisodesActivity.class.getSimpleName();
 
     private AllCategoryEpisodesViewMvc viewMvc;
@@ -36,7 +41,13 @@ public class AllCategoryEpisodesActivity extends AppCompatActivity implements Al
 
         if (getCategoryFromExtras() != null) {
             initializeUi();
-            getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
+
+            if (savedInstanceState != null && savedInstanceState.containsKey(Podcast.PODCASTS_KEY)) {
+                cachedPodcasts = savedInstanceState.getParcelableArrayList(Podcast.PODCASTS_KEY);
+                viewMvc.bindPodcasts(cachedPodcasts);
+            } else {
+                fetchAndBindCategoryPodcasts();
+            }
         } else {
             throw new UnsupportedOperationException(TAG + " Category is null");
         }
@@ -70,6 +81,38 @@ public class AllCategoryEpisodesActivity extends AppCompatActivity implements Al
         }
     }
 
+    private void fetchAndBindCategoryPodcasts() {
+        viewMvc.displayLoadingIndicator(true);
+        FirebaseDatabase.getInstance().getReference().child(ChildNames.PODCASTS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                viewMvc.displayLoadingIndicator(false);
+
+                List<Podcast> tempPodcastList = new ArrayList<>();
+                for (DataSnapshot podcastSnapshot : dataSnapshot.getChildren()) {
+                    Podcast podcast = podcastSnapshot.getValue(Podcast.class);
+                    if (podcast != null) {
+                        podcast.setFirebasePushId(podcastSnapshot.getKey());
+                        if (podcast.getCategoryId().equals(getCategoryFromExtras().getFirebasePushId())) {
+                            //  Add the podcast only if it belongs to this Category
+                            tempPodcastList.add(podcast);
+                        }
+                    }
+                }
+
+                if (tempPodcastList.size() > 0) {
+                    cachedPodcasts = tempPodcastList;
+                    viewMvc.bindPodcasts(cachedPodcasts);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private void navigateToPodcastActivity(Podcast podcast) {
         Bundle extras = new Bundle();
         extras.putParcelable(Podcast.PODCAST_KEY, podcast);
@@ -79,48 +122,8 @@ public class AllCategoryEpisodesActivity extends AppCompatActivity implements Al
         startActivity(intent);
     }
 
-    @NonNull
-    @Override
-    public Loader<List<Podcast>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new AsyncTaskLoader<List<Podcast>>(this) {
-
-            @Override
-            protected void onStartLoading() {
-                if (cachedPodcasts != null) {
-                    deliverResult(cachedPodcasts);
-                } else {
-                    viewMvc.displayLoadingIndicator(true);
-                    forceLoad();
-                }
-            }
-
-            @Nullable
-            @Override
-            public List<Podcast> loadInBackground() {
-                //  TODO: Replace with a real web service
-                DataRepository repo = new StaticFakeDataRepo();
-                return repo.fetchPodcastsFromCategory(getCategoryFromExtras().getFirebasePushId());
-            }
-        };
-    }
-
     private Category getCategoryFromExtras() {
         Category category = getIntent().getParcelableExtra(Category.CATEGORY_KEY);
         return category;
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<Podcast>> loader, List<Podcast> data) {
-        viewMvc.displayLoadingIndicator(false);
-        if (data != null && data.size() > 0) {
-            viewMvc.bindPodcasts(cachedPodcasts = data);
-        } else {
-            //  TODO: Pop up a snack bar informing that podcasts could not be fetched
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<Podcast>> loader) {
-
     }
 }
