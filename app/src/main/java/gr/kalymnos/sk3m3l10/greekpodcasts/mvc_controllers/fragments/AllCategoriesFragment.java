@@ -87,11 +87,12 @@ public class AllCategoriesFragment extends Fragment implements OnCategoryItemCli
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 viewMvc.displayLoadingIndicator(false);
-                
+
                 List<Category> tempCategoryList = new ArrayList<>();
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
                     Category category = categorySnapshot.getValue(Category.class);
                     if (category != null) {
+                        category.setFirebasePushId(categorySnapshot.getKey());
                         tempCategoryList.add(category);
                     }
                 }
