@@ -11,9 +11,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.AllCategoryEpisodesActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.DataRepository;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.StaticFakeDataRepo;
@@ -24,9 +31,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import static android.support.v4.app.LoaderManager.LoaderCallbacks;
 import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_categories.AllCategoriesViewMvc.OnCategoryItemClickListener;
 
-public class AllCategoriesFragment extends Fragment implements OnCategoryItemClickListener, LoaderCallbacks<List<Category>> {
+public class AllCategoriesFragment extends Fragment implements OnCategoryItemClickListener {
 
-    private static final int LOADER_ID = 121;
     private List<Category> cachedCategories = null;
 
     private AllCategoriesViewMvc viewMvc;
@@ -43,8 +49,9 @@ public class AllCategoriesFragment extends Fragment implements OnCategoryItemCli
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null && savedInstanceState.containsKey(Category.CATEGORIES_KEY)) {
             this.cachedCategories = savedInstanceState.getParcelableArrayList(Category.CATEGORIES_KEY);
+        } else {
+            fetchAndBindCategories();
         }
-        this.getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -73,44 +80,30 @@ public class AllCategoriesFragment extends Fragment implements OnCategoryItemCli
         return null;
     }
 
-    @NonNull
-    @Override
-    public Loader<List<Category>> onCreateLoader(int id, @Nullable Bundle args) {
-        return new AsyncTaskLoader<List<Category>>(this.getContext()) {
-
+    private void fetchAndBindCategories() {
+        DatabaseReference categoriesRef = FirebaseDatabase.getInstance().getReference().child(ChildNames.CATEGORIES);
+        categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            protected void onStartLoading() {
-                if (cachedCategories != null) {
-                    this.deliverResult(cachedCategories);
-                } else {
-                    viewMvc.displayLoadingIndicator(true);
-                    this.forceLoad();
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                List<Category> tempCategoryList = new ArrayList<>();
+                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                    Category category = categorySnapshot.getValue(Category.class);
+                    if (category != null) {
+                        tempCategoryList.add(category);
+                    }
+                }
+
+                if (tempCategoryList.size() > 0) {
+                    cachedCategories = tempCategoryList;
+                    viewMvc.bindCategories(cachedCategories);
                 }
             }
 
-            @Nullable
             @Override
-            public List<Category> loadInBackground() {
-                //  TODO: Replace with real service.
-                DataRepository repo = new StaticFakeDataRepo();
-                return repo.fetchAllCategories();
+            public void onCancelled(DatabaseError databaseError) {
+
             }
-        };
-    }
-
-    @Override
-    public void onLoadFinished(@NonNull Loader<List<Category>> loader, List<Category> data) {
-        this.viewMvc.displayLoadingIndicator(false);
-        if (data != null && data.size() > 0) {
-            this.viewMvc.bindCategories(cachedCategories = data);
-        } else {
-            //  TODO: Pop up a snack bar informing that categories could not be fetched
-        }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader<List<Category>> loader) {
-
+        });
     }
 
     private void initializeViewMvc(@NonNull LayoutInflater inflater, @Nullable ViewGroup container) {

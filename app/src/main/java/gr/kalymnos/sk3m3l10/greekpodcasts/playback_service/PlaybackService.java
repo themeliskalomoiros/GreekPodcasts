@@ -59,7 +59,6 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
 
     private static final String ACTION_UPDATE_WIDGETS = PlaybackService.class.getCanonicalName() + "action_update_widgets";
 
-
     private MediaSessionCompat session;
     private MediaSessionCallback sessionCallback;
 
@@ -70,7 +69,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     private PlayerHolder player;
     private int reportedPlayerState;
     private String cachedMediaId = null;
-    
+
     private List<MediaBrowserCompat.MediaItem> cachedMediaItems;
     private String cachedPodcastersName;
 
