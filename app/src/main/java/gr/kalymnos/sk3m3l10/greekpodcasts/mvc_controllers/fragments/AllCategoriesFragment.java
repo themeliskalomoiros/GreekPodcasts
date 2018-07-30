@@ -81,10 +81,13 @@ public class AllCategoriesFragment extends Fragment implements OnCategoryItemCli
     }
 
     private void fetchAndBindCategories() {
+        viewMvc.displayLoadingIndicator(true);
         DatabaseReference categoriesRef = FirebaseDatabase.getInstance().getReference().child(ChildNames.CATEGORIES);
         categoriesRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                viewMvc.displayLoadingIndicator(false);
+                
                 List<Category> tempCategoryList = new ArrayList<>();
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
                     Category category = categorySnapshot.getValue(Category.class);
