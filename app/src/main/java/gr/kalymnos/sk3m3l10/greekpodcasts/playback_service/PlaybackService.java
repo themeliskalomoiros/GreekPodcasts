@@ -360,7 +360,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                         }else{
                             player.loadUrl(item.getDescription().getMediaUri().toString());
                         }
-                        
+
                     } else {
                         throw new UnsupportedOperationException(TAG + ": Invalid state to prepare the MediaPlayer.");
                     }
