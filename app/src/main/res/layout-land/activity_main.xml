@@ -42,10 +42,18 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_create_podcast"
         style="@style/FAB"
+        android:src="@drawable/ic_add_white_24dp"
         app:layout_anchor="@id/appbar_layout"
-        app:layout_anchorGravity="bottom|end"
-        android:src="@drawable/ic_add_white_24dp" />
+        app:layout_anchorGravity="bottom|end" />
 </android.support.design.widget.CoordinatorLayout>

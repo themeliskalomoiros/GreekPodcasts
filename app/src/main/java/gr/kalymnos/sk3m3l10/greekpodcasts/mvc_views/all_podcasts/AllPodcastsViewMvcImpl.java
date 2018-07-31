@@ -1,6 +1,5 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_podcasts;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +17,7 @@ public class AllPodcastsViewMvcImpl implements AllPodcastsViewMvc {
 
     public static final int NUMBER_COLUMNS_ON_PORTRAIT = 2;
     public static final int NUMBER_COLUMNS_ON_LAND = 3;
+
 
     protected View rootView;
     private RecyclerView recyclerView;

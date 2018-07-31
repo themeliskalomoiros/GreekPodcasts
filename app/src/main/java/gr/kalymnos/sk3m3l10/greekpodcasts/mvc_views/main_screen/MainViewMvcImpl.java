@@ -11,6 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 
 public class MainViewMvcImpl implements MainViewMvc {
@@ -22,6 +25,7 @@ public class MainViewMvcImpl implements MainViewMvc {
     private CollapsingToolbarLayout collapsingToolbarLayout;
     private MainPagerAdapter mainPagerAdapter;
     private TabLayout tabLayout;
+    private AdView adView;
 
     public MainViewMvcImpl(LayoutInflater inflater, ViewGroup parent, @NonNull FragmentManager fragmentManager) {
         this.rootView = inflater.inflate(R.layout.activity_main, parent, false);
@@ -49,6 +53,7 @@ public class MainViewMvcImpl implements MainViewMvc {
         this.collapsingToolbarLayout.setTitle(this.collapsingToolbarLayout.getContext().getString(R.string.app_name));
         this.tabLayout = this.rootView.findViewById(R.id.tabLayout);
         this.tabLayout.setupWithViewPager(this.viewPager);
+        this.adView = rootView.findViewById(R.id.adview);
     }
 
     @Override
@@ -67,5 +72,10 @@ public class MainViewMvcImpl implements MainViewMvc {
             if (listener != null)
                 listener.onActionCreatePodcastClick();
         });
+    }
+
+    @Override
+    public void loadAd(AdRequest adRequest) {
+        adView.loadAd(adRequest);
     }
 }
