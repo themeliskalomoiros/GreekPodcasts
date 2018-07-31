@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -16,6 +17,7 @@ import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -109,10 +111,53 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
     @Override
     public void onEpisodeClick(int position) {
         if (cachedMediaItems != null && cachedMediaItems.size() > 0) {
+            Bundle playbackServiceArgs = new Bundle();
             String mediaId = cachedMediaItems.get(position).getMediaId();
-            MediaControllerCompat.getMediaController(getActivity()).getTransportControls().prepareFromMediaId(mediaId, null);
-            mCallback.onEpisodeClicked(position);
+            getLoadEpisodeTask(position, playbackServiceArgs, mediaId).execute();
         }
+    }
+
+    @NonNull
+    private AsyncTask<Void, Void, String> getLoadEpisodeTask(int position, Bundle playbackServiceArgs, String mediaId) {
+        return new AsyncTask<Void, Void, String>() {
+            @Override
+            protected void onPreExecute() {
+                viewMvc.displayLoadingIndicator(true);
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                Cursor cursor = getEpisodeCursor();
+                if (cursor != null && cursor.getCount() == 1) {
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI);
+                    return cursor.getString(columnIndex);
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String uri) {
+                viewMvc.displayLoadingIndicator(false);
+
+                if (!TextUtils.isEmpty(uri)) {
+                    playbackServiceArgs.putString(PlaybackService.LOAD_FROM_URI_KEY, uri);
+                    MediaControllerCompat.getMediaController(getActivity()).getTransportControls().prepareFromMediaId(mediaId, playbackServiceArgs);
+                } else {
+                    MediaControllerCompat.getMediaController(getActivity()).getTransportControls().prepareFromMediaId(mediaId, null);
+                }
+
+                mCallback.onEpisodeClicked(position);
+            }
+
+            private Cursor getEpisodeCursor() {
+                Uri uri = UserMetadataContract.EpisodeEntry.CONTENT_URI;
+                String[] projection = {UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI};
+                String selection = UserMetadataContract.EpisodeEntry.COLUMN_NAME_FIREBASE_PUSH_ID + "=?";
+                String[] selectionArgs = {mediaId};
+                return getContext().getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            }
+        };
     }
 
     @Override

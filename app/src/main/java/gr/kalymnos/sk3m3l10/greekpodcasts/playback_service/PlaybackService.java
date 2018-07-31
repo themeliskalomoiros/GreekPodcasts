@@ -58,6 +58,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
     private static final int FOREGROUND_ID = 112;
 
     private static final String ACTION_UPDATE_WIDGETS = PlaybackService.class.getCanonicalName() + "action_update_widgets";
+    public static final String LOAD_FROM_URI_KEY = "load from uri key";
 
     private MediaSessionCompat session;
     private MediaSessionCallback sessionCallback;
@@ -353,7 +354,13 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                     player.reset();
                     if (PlaybackUtils.validStateToSetDataSource(reportedPlayerState)) {
                         //  When the item is loaded onPlaybackPrepared() will be called
-                        player.loadUrl(item.getDescription().getMediaUri().toString());
+
+                        if (extras!=null && extras.containsKey(LOAD_FROM_URI_KEY)){
+                            player.loadUri(Uri.parse(extras.getString(LOAD_FROM_URI_KEY)));
+                        }else{
+                            player.loadUrl(item.getDescription().getMediaUri().toString());
+                        }
+                        
                     } else {
                         throw new UnsupportedOperationException(TAG + ": Invalid state to prepare the MediaPlayer.");
                     }
