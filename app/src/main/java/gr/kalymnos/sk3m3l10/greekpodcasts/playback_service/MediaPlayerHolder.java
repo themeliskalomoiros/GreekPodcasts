@@ -3,6 +3,7 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.playback_service;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -86,6 +87,21 @@ class MediaPlayerHolder implements PlayerHolder, MediaPlayer.OnPreparedListener,
         if (mediaPlayer != null) {
             try {
                 mediaPlayer.setDataSource(url);
+                reportState(INITIALIZED);
+                mediaPlayer.prepareAsync();
+            } catch (IOException e) {
+                //  TODO: Instead of a toast you could pop up a snackbar
+                //  Exception with the URL
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    @Override
+    public void loadUri(Uri uri) {
+        if (mediaPlayer != null) {
+            try {
+                mediaPlayer.setDataSource(context,uri,null);
                 reportState(INITIALIZED);
                 mediaPlayer.prepareAsync();
             } catch (IOException e) {

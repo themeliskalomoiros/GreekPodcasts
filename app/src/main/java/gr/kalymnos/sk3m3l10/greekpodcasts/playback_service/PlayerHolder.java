@@ -4,6 +4,7 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.playback_service;
  *  Taken from: https://medium.com/google-developers/building-a-simple-audio-app-in-android-part-1-3-c14d1a66e0f1   */
 
 import android.content.Context;
+import android.net.Uri;
 
 interface PlayerHolder {
 
@@ -21,6 +22,8 @@ interface PlayerHolder {
     void reset();
 
     void loadUrl(String url);
+
+    void loadUri(Uri uri);
 
     void seekTo(int position);
 
