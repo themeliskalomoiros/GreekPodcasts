@@ -12,6 +12,7 @@ public class Podcaster implements Parcelable {
     public static final String FIELD_NAME_USERNAME = "username";
     public static final String FIELD_NAME_PERSONAL_STATEMENT = "personalStatement";
     public static final String FIELD_NAME_IMAGEURL = "imageUrl";
+    public static final String NAME_KEY = "name key";
 
     private String email, username, personalStatement, imageUrl;
     private long joinedDate;

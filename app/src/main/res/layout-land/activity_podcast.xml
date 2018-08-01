@@ -9,8 +9,8 @@
         layout="@layout/activity_podcast_surface"
         android:layout_width="490dp"
         android:layout_height="290dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginTop="32dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 
