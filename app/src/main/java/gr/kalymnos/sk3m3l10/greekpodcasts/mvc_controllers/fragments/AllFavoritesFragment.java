@@ -1,5 +1,6 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.fragments;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,11 +24,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
+import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.PodcastActivity;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_favorites.AllFavoritesViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_favorites.AllFavoritesViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_favorites.FavoritesAdapter;
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_podcasts.AllPodcastsViewMvc;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.LocalDatabaseTasks;
 
 import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_model.local_database.UserMetadataContract.PodcastWatchedEntry;
 import static gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.all_favorites.AllFavoritesViewMvc.OnPodcastItemLongClickListener;
@@ -173,7 +176,22 @@ public class AllFavoritesFragment extends Fragment implements AllPodcastsViewMvc
 
     @Override
     public void onItemPodcastClick(int position) {
-        //  TODO: Do something when a starred podcast is clicked.
+        if (this.cachedPodcasts != null && this.cachedPodcasts.size() > 0) {
+
+            LocalDatabaseTasks.findPodcastInLocalDatabaseTask(getActivity(),
+                    cachedPodcasts.get(position),
+                    () -> navigateToPodcastActivity(cachedPodcasts.get(position)))
+                    .execute();
+        }
+    }
+
+    private void navigateToPodcastActivity(Podcast podcast) {
+        Bundle extras = new Bundle();
+        extras.putParcelable(Podcast.PODCAST_KEY, podcast);
+
+        Intent intent = new Intent(this.getContext(), PodcastActivity.class);
+        intent.putExtras(extras);
+        this.getContext().startActivity(intent);
     }
 
     @Override
