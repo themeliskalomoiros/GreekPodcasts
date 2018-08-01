@@ -43,7 +43,7 @@
     <style name="ListItem_Category_Card" parent="Base_List_Item">
         <item name="android:layout_width">@dimen/list_item_category_default_width</item>
         <item name="android:layout_height">@dimen/list_item_category_default_height</item>
-        <item name="android:orientation">vertical</item>
+        <!--<item name="android:orientation">vertical</item>-->
     </style>
 
     <style name="ListItem_Podcast_Image" parent="Image_Center_Croped">

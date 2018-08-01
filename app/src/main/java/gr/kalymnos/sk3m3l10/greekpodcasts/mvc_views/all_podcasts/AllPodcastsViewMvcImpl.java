@@ -27,8 +27,6 @@ public class AllPodcastsViewMvcImpl implements AllPodcastsViewMvc {
 
     protected PodcastsAdapter adapter;
 
-    private OnPodcastItemClickListener onPodcastItemClickListener;
-
     public AllPodcastsViewMvcImpl(LayoutInflater inflater, ViewGroup parent, @NonNull PodcastsAdapter adapter) {
         this.rootView = inflater.inflate(R.layout.podcasts_list, parent, false);
         this.adapter = adapter;

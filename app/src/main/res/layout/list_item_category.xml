@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ListItem_Category_Card">
 
     <TextView
         android:id="@+id/list_item_category_title"
         style="@style/ListItem_Category_Title"
-        android:text="Education" />
+        android:text="Education"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"/>
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/list_item_category_title"
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:id="@+id/list_item_category_poster"
@@ -26,4 +30,4 @@
             android:text="@string/lorem_ipsum" />
 
     </android.support.v7.widget.CardView>
-</LinearLayout>
+</RelativeLayout>

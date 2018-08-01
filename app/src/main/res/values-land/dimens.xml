@@ -3,7 +3,7 @@
     <dimen name="main_app_bar_default_height">112dp</dimen>
     <dimen name="podcast_app_bar_default_height">84dp</dimen>
 
-    <dimen name="list_item_podcast_default_width">228dp</dimen>
+    <dimen name="list_item_podcast_default_width">196dp</dimen>
     <dimen name="list_item_podcast_image_height">120dp</dimen>
     <dimen name="list_item_podcast_title_height">32dp</dimen>
     <dimen name="list_item_podcast_title_text_size">24sp</dimen>
