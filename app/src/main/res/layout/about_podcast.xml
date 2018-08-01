@@ -18,8 +18,11 @@
             android:id="@+id/about_textview"
             style="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/primaryTextColor"
+            android:textSize="@dimen/list_item_episode_title_text_size"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:textAlignment="center"
             tools:text="@string/lorem_ipsum"/>
 
     </android.support.v4.widget.NestedScrollView>
