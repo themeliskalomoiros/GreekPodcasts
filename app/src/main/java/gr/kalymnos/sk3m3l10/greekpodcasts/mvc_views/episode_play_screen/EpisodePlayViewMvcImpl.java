@@ -2,6 +2,8 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.episode_play_screen;
 
 import android.graphics.Bitmap;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +64,10 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
 
     @Override
     public void bindPodcaster(String name) {
-        this.podcasterLabel.setText(name);
+        //  First underline the text and then set it to the textview
+        SpannableString content = new SpannableString(name);
+        content.setSpan(new UnderlineSpan(),0,content.length(),0);
+        this.podcasterLabel.setText(content);
     }
 
     @Override

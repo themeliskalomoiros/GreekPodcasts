@@ -51,10 +51,11 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
+        android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/podcaster_textView"
-        tools:text="Sappho the great poet of love: EP 24" />
+        tools:text="Sappho the great poet of love: EP 24"/>
 
     <ImageView
         android:id="@+id/star_imageview"
