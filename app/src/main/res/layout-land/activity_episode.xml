@@ -14,16 +14,19 @@
     <gr.kalymnos.sk3m3l10.greekpodcasts.android_views.EpisodePoster
         android:id="@+id/poster_imageview"
         android:layout_width="@dimen/episode_main_poster_default_width"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_height="256dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/include"
+        app:layout_constraintEnd_toStartOf="@+id/episode_title_textview"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="0.0"
         tools:srcCompat="@drawable/sappfo" />
 
 
@@ -36,23 +39,23 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toTopOf="@+id/episode_title_textview"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/poster_imageview"
+        app:layout_constraintStart_toEndOf="@+id/poster_imageview"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         tools:text="Panos Sketos" />
 
     <TextView
         android:id="@+id/episode_title_textview"
         style="@style/Episode_Title"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/primaryTextColor"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/poster_imageview"
         app:layout_constraintTop_toBottomOf="@+id/podcaster_textView"
         tools:text="Sappho the great poet of love: EP 24" />
 
@@ -60,25 +63,29 @@
         android:id="@+id/star_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
         android:src="@drawable/ic_star_white_40dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/download_imageview"
         app:layout_constraintStart_toStartOf="@+id/episode_title_textview"
-        app:layout_constraintTop_toBottomOf="@+id/episode_title_textview" />
+        app:layout_constraintTop_toTopOf="@+id/download_imageview" />
 
     <ImageView
         android:id="@+id/download_imageview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:src="@drawable/ic_file_download_white_40dp"
-        app:layout_constraintEnd_toStartOf="@+id/info_imageview"
-        app:layout_constraintStart_toEndOf="@+id/star_imageview"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/podcaster_textView"
+        app:layout_constraintStart_toStartOf="@+id/podcaster_textView"
         app:layout_constraintTop_toBottomOf="@+id/episode_title_textview" />
 
     <ImageView
@@ -86,11 +93,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
         android:src="@drawable/ic_info_outline_white_24dp"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/episode_title_textview"
-        app:layout_constraintTop_toBottomOf="@+id/episode_title_textview" />
+        app:layout_constraintStart_toEndOf="@+id/download_imageview"
+        app:layout_constraintTop_toTopOf="@+id/download_imageview" />
 
 
     <include
@@ -102,7 +112,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/download_imageview"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/download_imageview" />
 
 </android.support.constraint.ConstraintLayout>

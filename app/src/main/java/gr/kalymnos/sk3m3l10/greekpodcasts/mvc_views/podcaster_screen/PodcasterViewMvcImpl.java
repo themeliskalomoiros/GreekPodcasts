@@ -64,9 +64,9 @@ public class PodcasterViewMvcImpl implements PodcasterViewMvc {
 
     @Override
     public void displayLoading(boolean display) {
-        if (display){
+        if (display && progressBar != null) {
             progressBar.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             progressBar.setVisibility(View.INVISIBLE);
         }
     }
