@@ -49,6 +49,7 @@ public class AllCategoriesFragment extends Fragment implements OnCategoryItemCli
         super.onActivityCreated(savedInstanceState);
         if (savedInstanceState != null && savedInstanceState.containsKey(Category.CATEGORIES_KEY)) {
             this.cachedCategories = savedInstanceState.getParcelableArrayList(Category.CATEGORIES_KEY);
+            viewMvc.bindCategories(cachedCategories);
         } else {
             fetchAndBindCategories();
         }
