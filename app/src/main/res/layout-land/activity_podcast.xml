@@ -4,14 +4,14 @@
     android:layout_height="match_parent">
 
 
-        <include
-            android:id="@+id/content_surface"
-            layout="@layout/activity_podcast_surface"
-            android:layout_marginTop="32dp"
-            android:layout_width="490dp"
-            android:layout_height="290dp"
-            android:layout_gravity="bottom|center_horizontal"/>
-
+    <include
+        android:id="@+id/content_surface"
+        layout="@layout/activity_podcast_surface"
+        android:layout_width="490dp"
+        android:layout_height="290dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginTop="32dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 
     <android.support.design.widget.AppBarLayout
@@ -46,10 +46,10 @@
         android:id="@+id/play_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_play_arrow_white_24dp"
         app:layout_anchor="@id/tabLayout"
-        app:layout_anchorGravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"/>
+        app:layout_anchorGravity="end|bottom" />
 
 </android.support.design.widget.CoordinatorLayout>
 

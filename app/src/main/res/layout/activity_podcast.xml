@@ -9,8 +9,6 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_anchor="@id/quick_player_container"
-        app:layout_anchorGravity="top"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
