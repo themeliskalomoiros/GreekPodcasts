@@ -98,7 +98,7 @@ public class EpisodesAdapter extends RecyclerView.Adapter<EpisodesAdapter.Episod
         }
 
         void bindViews(MediaBrowserCompat.MediaItem item) {
-            this.dateTextView.setText(DateUtils.getStringDateFromMilli(item.getDescription().getExtras().getLong(Episode.DATE_KEY),
+            this.dateTextView.setText(DateUtils.getStringDateFromMilliWithoutYear(item.getDescription().getExtras().getLong(Episode.DATE_KEY),
                     context.getResources(), useFullTextMonth()));
             this.titleTextView.setText(item.getDescription().getTitle());
             this.durationTextView.setText(String.format("%d:%d", item.getDescription().getExtras().getInt(Episode.MINUTES_KEY),

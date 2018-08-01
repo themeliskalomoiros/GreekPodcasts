@@ -23,6 +23,12 @@ public class DateUtils {
         return String.format("%d %s %d", day, month, year);
     }
 
+    public static String getStringDateFromMilliWithoutYear(long milli, @NonNull Resources resources, boolean monthFirstThreeLettersOnly) {
+        int day = getDayFromMilli(milli);
+        String month = getStringMonth(getMonthFromMilli(milli), resources, monthFirstThreeLettersOnly);
+        return String.format("%d %s", day, month);
+    }
+
     //  Returns the joined date of a podcaster in a nice format.
     public static String getJoinedDate(long milli, Resources resources) {
         int day = getDayFromMilli(milli);
