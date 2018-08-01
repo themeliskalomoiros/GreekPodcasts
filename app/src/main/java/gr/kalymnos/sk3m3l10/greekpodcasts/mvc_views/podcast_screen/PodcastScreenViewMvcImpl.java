@@ -53,6 +53,11 @@ public class PodcastScreenViewMvcImpl implements PodcastScreenViewMvc {
     }
 
     @Override
+    public void hidePlayActionButton() {
+        playFab.setVisibility(View.GONE);
+    }
+
+    @Override
     public void bindPoster(String url) {
         Picasso.get().load(url).placeholder(R.drawable.ic_headset_black_light_148dp)
                 .error(R.drawable.ic_error_black_light_148dp)

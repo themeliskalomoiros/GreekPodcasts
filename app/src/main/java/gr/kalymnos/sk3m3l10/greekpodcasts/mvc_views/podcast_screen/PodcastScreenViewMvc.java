@@ -9,6 +9,8 @@ public interface PodcastScreenViewMvc extends ViewMvc {
 
     public static final int TAB_COUNT = 2;
 
+    void hidePlayActionButton();
+
     interface OnActionPlayClickListener {
 
         void onActionPlayClick();

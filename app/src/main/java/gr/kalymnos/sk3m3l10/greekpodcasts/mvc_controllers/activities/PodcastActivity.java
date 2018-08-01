@@ -3,6 +3,7 @@ package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -26,6 +27,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcast_screen.PodcastScreen
 import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.podcast_screen.PodcastScreenViewMvcImpl;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcaster;
+import gr.kalymnos.sk3m3l10.greekpodcasts.utils.FragmentUtils;
 
 public class PodcastActivity extends AppCompatActivity implements PodcastScreenViewMvc.OnActionPlayClickListener,
         AllEpisodesFragment.AllEpisodesFragmentCommunicator {
@@ -44,7 +46,7 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
         if (savedInstanceState != null && savedInstanceState.containsKey(Podcaster.NAME_KEY)) {
             cachedPodcasterName = savedInstanceState.getString(Podcaster.NAME_KEY);
             viewMvc.bindPodcasterName(cachedPodcasterName);
-        }else{
+        } else {
             fetchPodcasterName();
         }
         setContentView(viewMvc.getRootView());
@@ -60,7 +62,14 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
 
     @Override
     public void onActionPlayClick() {
-        Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show();
+        String allEpisodesFragmentTag = FragmentUtils.fragmentTag(viewMvc.getMainContentContainerId(), viewMvc.getMainContentContainerCurrentItem());
+        AllEpisodesFragment allEpisodesFragment = (AllEpisodesFragment) getSupportFragmentManager().findFragmentByTag(allEpisodesFragmentTag);
+        if (allEpisodesFragment != null) {
+             allEpisodesFragment.onEpisodeClick(0);
+             viewMvc.hidePlayActionButton();
+        } else {
+            throw new UnsupportedOperationException(TAG + ": that allEpisodesFragment should be of type " + AllEpisodesFragment.class.getSimpleName());
+        }
     }
 
     @Override
@@ -112,7 +121,7 @@ public class PodcastActivity extends AppCompatActivity implements PodcastScreenV
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Podcaster podcaster = dataSnapshot.getValue(Podcaster.class);
-                        if (podcaster!=null){
+                        if (podcaster != null) {
                             viewMvc.bindPodcasterName(cachedPodcasterName = podcaster.getUsername());
                         }
                     }
