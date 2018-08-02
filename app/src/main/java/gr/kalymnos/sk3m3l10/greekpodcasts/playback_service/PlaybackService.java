@@ -126,7 +126,7 @@ public class PlaybackService extends MediaBrowserServiceCompat implements Playba
                 //  Detatch to fetch the data in another thread
                 result.detach();
 
-                String podcasterPushId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                String podcasterPushId = podcast.getPodcasterId();
                 FirebaseDatabase.getInstance().getReference()
                         .child(ChildNames.PODCASTERS)
                         .child(podcasterPushId)
