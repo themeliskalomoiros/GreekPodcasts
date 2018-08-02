@@ -77,4 +77,19 @@
     <string name="add_widget">Add widget</string>
     <string name="personal_statement_imagebutton_content_description">Press this button to edit your personal statement,</string>
     <string name="error_fetching_episodes_message">Could not get episodes!</string>
+    <string name="add_episode_imagebutton_content_description">Click to add an episode</string>
+    <string name="player_play_content_description">Click to play the audio file</string>
+    <string name="player_pause_content_description">Click to pause the audio file</string>
+    <string name="background_content_description">Background image.</string>
+    <string name="edit_promotion_content_description">Click to edit promotion links.</string>
+    <string name="edit_name_content_description">Click to edit your name.</string>
+    <string name="player_previous_content_description">Skip to previous</string>
+    <string name="player_next_content_description">Skip to next.</string>
+    <string name="star_content_description">Click to star the podcast</string>
+    <string name="download_content_description">Click to download the episode</string>
+    <string name="info_content_description">Click to view info.</string>
+    <string name="favorite_content_description">This item is favorited, as indicated by the star</string>
+    <string name="pop_up_menu_content_description">A pop up menu</string>
+    <string name="edit_description_content_description">Edit the description</string>
+    <string name="podcast_title_content_description">Podcast title</string>
 </resources>

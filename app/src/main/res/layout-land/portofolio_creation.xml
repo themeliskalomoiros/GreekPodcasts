@@ -60,7 +60,8 @@
             android:layout_marginStart="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/choose_poster_hint"
             app:layout_constraintStart_toEndOf="@+id/choose_poster_label"
-            app:layout_constraintTop_toTopOf="@+id/choose_poster_label" />
+            app:layout_constraintTop_toTopOf="@+id/choose_poster_label"
+            android:contentDescription="@string/pop_up_menu_content_description" />
 
         <TextView
             android:id="@+id/click_the_icon_label"

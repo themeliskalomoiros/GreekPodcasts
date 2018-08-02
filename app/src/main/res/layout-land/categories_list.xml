@@ -41,7 +41,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.68"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        tools:ignore="ContentDescription" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline"
@@ -65,7 +66,8 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0.32"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline2" />
+        app:layout_constraintTop_toTopOf="@+id/guideline2"
+        tools:ignore="ContentDescription" />
 
     <android.support.constraint.Guideline
         android:id="@+id/guideline2"

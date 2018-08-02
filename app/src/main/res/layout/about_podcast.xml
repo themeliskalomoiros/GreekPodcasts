@@ -7,7 +7,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/ic_headset_black_light_148dp"/>
+        android:src="@drawable/ic_headset_black_light_148dp"
+        android:contentDescription="@string/background_content_description" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

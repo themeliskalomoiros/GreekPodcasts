@@ -38,7 +38,8 @@
                     android:layout_height="112dp"
                     android:layout_margin="@dimen/default_margin"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/sappfo" />
+                    android:src="@drawable/sappfo"
+                    android:contentDescription="@string/podcast_poster_content_description" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"

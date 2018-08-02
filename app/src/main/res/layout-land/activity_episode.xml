@@ -71,7 +71,8 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/download_imageview"
         app:layout_constraintStart_toStartOf="@+id/episode_title_textview"
-        app:layout_constraintTop_toTopOf="@+id/download_imageview" />
+        app:layout_constraintTop_toTopOf="@+id/download_imageview"
+        android:contentDescription="@string/star_content_description" />
 
     <ImageView
         android:id="@+id/download_imageview"
@@ -86,7 +87,8 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/podcaster_textView"
         app:layout_constraintStart_toStartOf="@+id/podcaster_textView"
-        app:layout_constraintTop_toBottomOf="@+id/episode_title_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/episode_title_textview"
+        android:contentDescription="@string/download_content_description" />
 
     <ImageView
         android:id="@+id/info_imageview"
@@ -100,7 +102,8 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="@+id/episode_title_textview"
         app:layout_constraintStart_toEndOf="@+id/download_imageview"
-        app:layout_constraintTop_toTopOf="@+id/download_imageview" />
+        app:layout_constraintTop_toTopOf="@+id/download_imageview"
+        android:contentDescription="@string/info_content_description" />
 
 
     <include

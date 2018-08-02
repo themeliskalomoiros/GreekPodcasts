@@ -70,7 +70,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/add_new_episode_label"
-        app:layout_constraintTop_toTopOf="@+id/add_new_episode_label" />
+        app:layout_constraintTop_toTopOf="@+id/add_new_episode_label"
+        android:contentDescription="@string/add_episode_imagebutton_content_description" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -16,7 +16,8 @@
             android:id="@+id/poster_imageview"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            tools:src="@drawable/ic_headset_black_light_148dp" />
+            tools:src="@drawable/ic_headset_black_light_148dp"
+            android:contentDescription="@string/podcast_poster_content_description" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -45,14 +46,16 @@
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
                     android:layout_toLeftOf="@+id/player_play_pause"
-                    android:src="@drawable/ic_skip_previous_white_32dp" />
+                    android:src="@drawable/ic_skip_previous_white_32dp"
+                    android:contentDescription="@string/player_previous_content_description" />
 
                 <ImageView
                     android:id="@+id/player_play_pause"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_play_arrow_white_40dp" />
+                    android:src="@drawable/ic_play_arrow_white_40dp"
+                    android:contentDescription="@string/player_pause_content_description" />
 
                 <ImageView
                     android:id="@+id/player_next"
@@ -62,7 +65,8 @@
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
                     android:layout_toRightOf="@id/player_play_pause"
-                    android:src="@drawable/ic_skip_next_white_32dp" />
+                    android:src="@drawable/ic_skip_next_white_32dp"
+                    android:contentDescription="@string/player_next_content_description" />
 
 
             </RelativeLayout>
@@ -76,7 +80,8 @@
         android:layout_height="4dp"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="4dp"
-        android:src="@color/secondaryColor" />
+        android:src="@color/secondaryColor"
+        tools:ignore="ContentDescription" />
 
 
 </LinearLayout>

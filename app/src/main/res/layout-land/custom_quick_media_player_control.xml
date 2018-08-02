@@ -26,14 +26,16 @@
         android:id="@+id/player_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_play_arrow_white_40dp" />
+        android:src="@drawable/ic_play_arrow_white_40dp"
+        android:contentDescription="@string/player_play_content_description" />
 
     <ImageView
         android:id="@+id/player_pause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_play_arrow_white_40dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:contentDescription="@string/player_pause_content_description" />
 
 
 </FrameLayout>

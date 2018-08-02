@@ -62,7 +62,8 @@
         app:layout_constraintEnd_toStartOf="@+id/player_play"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/play_playback_current_position"
-        app:layout_constraintTop_toBottomOf="@+id/player_seekbar" />
+        app:layout_constraintTop_toBottomOf="@+id/player_seekbar"
+        android:contentDescription="@string/player_previous_content_description" />
 
     <ImageView
         android:id="@+id/player_play"
@@ -79,7 +80,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/player_seekbar" />
+        app:layout_constraintTop_toBottomOf="@+id/player_seekbar"
+        android:contentDescription="@string/player_play_content_description" />
 
     <ImageView
         android:id="@+id/player_pause"
@@ -90,7 +92,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/player_play"
         app:layout_constraintEnd_toEndOf="@+id/player_play"
         app:layout_constraintStart_toStartOf="@+id/player_play"
-        app:layout_constraintTop_toTopOf="@+id/player_play" />
+        app:layout_constraintTop_toTopOf="@+id/player_play"
+        android:contentDescription="@string/player_pause_content_description" />
 
     <ImageView
         android:id="@+id/player_next"
@@ -107,7 +110,8 @@
         app:layout_constraintEnd_toStartOf="@+id/play_playback_duration"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/player_play"
-        app:layout_constraintTop_toBottomOf="@+id/player_seekbar" />
+        app:layout_constraintTop_toBottomOf="@+id/player_seekbar"
+        android:contentDescription="@string/player_next_content_description" />
 
 
     <TextView

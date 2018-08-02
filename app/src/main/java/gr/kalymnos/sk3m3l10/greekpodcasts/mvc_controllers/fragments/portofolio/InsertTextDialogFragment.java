@@ -27,7 +27,7 @@ public class InsertTextDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         initializeEditText(savedInstanceState);
-        
+
         if (doesTitleExists()) {
             return createAlertDialog();
         } else {

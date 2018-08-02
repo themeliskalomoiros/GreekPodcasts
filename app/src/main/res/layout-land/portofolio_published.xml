@@ -53,7 +53,8 @@
             style="@style/Portofolio_ImageView"
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="@+id/poster_label"
-            app:layout_constraintTop_toBottomOf="@+id/poster_label" />
+            app:layout_constraintTop_toBottomOf="@+id/poster_label"
+            android:contentDescription="@string/podcast_poster_content_description" />
 
         <TextView
             android:id="@+id/choose_podcast_label"
@@ -85,7 +86,8 @@
             android:layout_marginRight="16dp"
             app:layout_constraintBottom_toBottomOf="@+id/description_textview"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/description_textview" />
+            app:layout_constraintTop_toTopOf="@+id/description_textview"
+            android:contentDescription="@string/edit_description_content_description" />
 
         <ImageButton
             android:id="@+id/edit_podcast_title_imagebutton"
@@ -94,7 +96,8 @@
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/choose_podcast_spinner"
             app:layout_constraintStart_toEndOf="@+id/choose_podcast_spinner"
-            app:layout_constraintTop_toTopOf="@+id/choose_podcast_spinner" />
+            app:layout_constraintTop_toTopOf="@+id/choose_podcast_spinner"
+            android:contentDescription="@string/podcast_title_content_description" />
 
         <TextView
             android:id="@+id/poster_label"
@@ -185,7 +188,8 @@
             android:src="@drawable/ic_add_black_light_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/episodes_label"
             app:layout_constraintStart_toEndOf="@+id/episodes_label"
-            app:layout_constraintTop_toTopOf="@+id/episodes_label" />
+            app:layout_constraintTop_toTopOf="@+id/episodes_label"
+            android:contentDescription="@string/add_episode_imagebutton_content_description" />
 
         <ProgressBar
             android:id="@+id/podcast_loading_indicator"

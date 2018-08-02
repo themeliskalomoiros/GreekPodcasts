@@ -30,7 +30,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_headset_mic_white_32dp"
-                    android:visibility="invisible" />
+                    android:visibility="invisible"
+                    tools:ignore="ContentDescription" />
 
             </android.support.v7.widget.Toolbar>
 

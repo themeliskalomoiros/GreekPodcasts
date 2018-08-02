@@ -16,6 +16,7 @@
 
     <ImageView
         android:id="@+id/list_item_podcast_star"
-        style="@style/ListItem_Podcast_Star" />
+        style="@style/ListItem_Podcast_Star"
+        android:contentDescription="@string/star_content_description" />
 
 </gr.kalymnos.sk3m3l10.greekpodcasts.android_views.CardView_5_4>

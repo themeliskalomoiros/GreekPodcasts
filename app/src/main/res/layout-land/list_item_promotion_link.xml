@@ -18,7 +18,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_public_white_32dp" />
+        android:src="@drawable/ic_public_white_32dp"
+        tools:ignore="ContentDescription" />
 
     <TextView
         android:id="@+id/promotion_msg_textview"
