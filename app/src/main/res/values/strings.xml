@@ -75,4 +75,6 @@
     <string name="no_title_or_url">Both title and URL needed.</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="personal_statement_imagebutton_content_description">Press this button to edit your personal statement,</string>
+    <string name="error_fetching_episodes_message">Could not get episodes!</string>
 </resources>

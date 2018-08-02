@@ -86,6 +86,11 @@ public class AllEpisodesViewMvcImpl implements AllEpisodesViewMvc {
     }
 
     @Override
+    public String getErrorFetchingEpisodesMessage() {
+        return rootView.getContext().getString(R.string.error_fetching_episodes_message);
+    }
+
+    @Override
     public View getRootView() {
         return this.rootView;
     }

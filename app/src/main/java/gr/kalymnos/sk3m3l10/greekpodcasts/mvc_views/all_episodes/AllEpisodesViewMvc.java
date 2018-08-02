@@ -28,4 +28,6 @@ public interface AllEpisodesViewMvc extends ViewMvc {
     void setOnEpisodeClickListener(OnEpisodeClickListener listener);
 
     void setOnPopUpMenuClickListener(OnPopUpMenuClickListener listener);
+
+    String getErrorFetchingEpisodesMessage();
 }

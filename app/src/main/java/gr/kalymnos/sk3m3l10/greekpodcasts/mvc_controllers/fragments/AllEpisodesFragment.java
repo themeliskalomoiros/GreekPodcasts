@@ -219,7 +219,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
                     public void onError(@NonNull String parentId) {
                         viewMvc.displayLoadingIndicator(false);
                         cachedMediaItems = null;
-                        Toast.makeText(getContext(), "Error fetching episodes!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), viewMvc.getErrorFetchingEpisodesMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 

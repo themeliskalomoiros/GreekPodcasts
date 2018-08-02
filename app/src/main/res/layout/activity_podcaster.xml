@@ -49,6 +49,7 @@
                 android:layout_gravity="start|bottom"
                 app:layout_collapseMode="parallax"
                 android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_side_margin"
                 android:layout_marginLeft="@dimen/default_side_margin">
 
                 <TextView

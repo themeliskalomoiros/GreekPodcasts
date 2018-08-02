@@ -177,10 +177,7 @@ public class LocalDatabaseUtils {
                     cursor.moveToFirst();
                     int uriColumnIndex = cursor.getColumnIndex(UserMetadataContract.EpisodeEntry.COLUMN_NAME_DOWNLOADED_URI);
                     String episodeUri = cursor.getString(uriColumnIndex);
-                    if (!TextUtils.isEmpty(episodeUri)) {
-                        return true;
-                    }
-                    return false;
+                    return !TextUtils.isEmpty(episodeUri);
                 }
                 return false;
             }
