@@ -13,6 +13,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 public class InsertTextDialogFragment extends DialogFragment {
 
     public static final String TITLE_KEY = "title key";
+    public static final String INSERTED_TEXT_KEY = "inserted text key";
     public static final String TAG = InsertTextDialogFragment.class.getSimpleName();
 
     interface OnInsertedTextListener {
@@ -20,15 +21,32 @@ public class InsertTextDialogFragment extends DialogFragment {
     }
 
     private OnInsertedTextListener callback;
+    private EditText input;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        initializeEditText(savedInstanceState);
+        
         if (doesTitleExists()) {
             return createAlertDialog();
         } else {
             throw new UnsupportedOperationException(TAG + ": title is missing");
         }
+    }
+
+    private void initializeEditText(Bundle savedInstanceState) {
+        input = new EditText(getContext());
+
+        if (savedInstanceState!=null && savedInstanceState.containsKey(INSERTED_TEXT_KEY)){
+            input.setText(savedInstanceState.getString(INSERTED_TEXT_KEY));
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(INSERTED_TEXT_KEY, input.getText().toString());
     }
 
     private boolean doesTitleExists() {
@@ -39,7 +57,6 @@ public class InsertTextDialogFragment extends DialogFragment {
         AlertDialog.Builder
                 builder = new AlertDialog.Builder(getActivity(), R.style.InsertTextDialog);
 
-        EditText input = new EditText(getContext());
         builder.setView(input);
 
         builder.setMessage(getTitleRes())
