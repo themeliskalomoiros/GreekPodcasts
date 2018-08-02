@@ -1,6 +1,7 @@
 package gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.main_screen;
 
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -26,9 +27,10 @@ public class MainViewMvcImpl implements MainViewMvc {
     private MainPagerAdapter mainPagerAdapter;
     private TabLayout tabLayout;
     private AdView adView;
+    private AppBarLayout appBarLayout;
 
     public MainViewMvcImpl(LayoutInflater inflater, ViewGroup parent, @NonNull FragmentManager fragmentManager) {
-        this.rootView = inflater.inflate(R.layout.activity_main, parent, false);
+        rootView = inflater.inflate(R.layout.activity_main, parent, false);
         initialize(fragmentManager);
     }
 
@@ -38,37 +40,59 @@ public class MainViewMvcImpl implements MainViewMvc {
     }
 
     private void initializeViewPager(FragmentManager fragmentManager) {
-        String[] tabLabels = {this.rootView.getContext().getString(R.string.tab_label_shows),
-                this.rootView.getContext().getString(R.string.tab_label_categories),
-                this.rootView.getContext().getString(R.string.tab_label_favorites)};
-        this.mainPagerAdapter = new MainPagerAdapter(fragmentManager, tabLabels);
-        this.viewPager = this.rootView.findViewById(R.id.viewPager);
-        this.viewPager.setAdapter(this.mainPagerAdapter);
+        String[] tabLabels = {rootView.getContext().getString(R.string.tab_label_shows),
+                rootView.getContext().getString(R.string.tab_label_categories),
+                rootView.getContext().getString(R.string.tab_label_favorites)};
+        mainPagerAdapter = new MainPagerAdapter(fragmentManager, tabLabels);
+        viewPager = rootView.findViewById(R.id.viewPager);
+        viewPager.setAdapter(mainPagerAdapter);
     }
 
     private void initializeViews() {
-        this.createPodcastFAB = this.rootView.findViewById(R.id.fab_create_podcast);
-        this.toolbar = this.rootView.findViewById(R.id.toolbar);
-        this.collapsingToolbarLayout = this.rootView.findViewById(R.id.collapsing_toolbar_layout);
-        this.collapsingToolbarLayout.setTitle(this.collapsingToolbarLayout.getContext().getString(R.string.app_name));
-        this.tabLayout = this.rootView.findViewById(R.id.tabLayout);
-        this.tabLayout.setupWithViewPager(this.viewPager);
-        this.adView = rootView.findViewById(R.id.adview);
+        createPodcastFAB = rootView.findViewById(R.id.fab_create_podcast);
+        toolbar = rootView.findViewById(R.id.toolbar);
+        collapsingToolbarLayout = rootView.findViewById(R.id.collapsing_toolbar_layout);
+        collapsingToolbarLayout.setTitle(collapsingToolbarLayout.getContext().getString(R.string.app_name));
+        tabLayout = rootView.findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
+        adView = rootView.findViewById(R.id.adview);
+        appBarLayout = rootView.findViewById(R.id.appbar_layout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+
+            boolean isShow = true;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+
+                if (scrollRange + verticalOffset == 0) {
+                    //  Careful, there should be a space between double quote otherwise it wont work
+                    collapsingToolbarLayout.setTitle(" ");
+                    isShow = true;
+                } else if (isShow) {
+                    collapsingToolbarLayout.setTitle(rootView.getContext().getString(R.string.app_name));
+                    isShow=false;
+                }
+            }
+        });
     }
 
     @Override
     public View getRootView() {
-        return this.rootView;
+        return rootView;
     }
 
     @Override
     public Toolbar getToolbar() {
-        return this.toolbar;
+        return toolbar;
     }
 
     @Override
     public void setOnCreatePodcastClickListener(OnActionCreatePodcastClickListener listener) {
-        this.createPodcastFAB.setOnClickListener(view -> {
+        createPodcastFAB.setOnClickListener(view -> {
             if (listener != null)
                 listener.onActionCreatePodcastClick();
         });
