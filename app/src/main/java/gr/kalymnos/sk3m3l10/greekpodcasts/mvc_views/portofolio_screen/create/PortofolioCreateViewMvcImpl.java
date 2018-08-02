@@ -44,6 +44,16 @@ public class PortofolioCreateViewMvcImpl implements PortofolioCreateViewMvc {
     }
 
     @Override
+    public int getCreateProfileFirstMessage() {
+        return R.string.create_profile_first_message;
+    }
+
+    @Override
+    public int getCompleteAllFieldsMessage() {
+        return R.string.complete_all_fields_message;
+    }
+
+    @Override
     public void bindPoster(Uri uri) {
         Picasso.get().load(uri)
                 .placeholder(R.drawable.ic_headset_black_light_148dp)

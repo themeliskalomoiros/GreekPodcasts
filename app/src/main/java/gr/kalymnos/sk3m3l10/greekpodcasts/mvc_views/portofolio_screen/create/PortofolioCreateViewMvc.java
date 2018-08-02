@@ -8,6 +8,10 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.ViewMvc;
 
 public interface PortofolioCreateViewMvc extends ViewMvc {
 
+    int getCreateProfileFirstMessage();
+
+    int getCompleteAllFieldsMessage();
+
     interface OnPosterClickListener {
         void onPosterClick();
     }

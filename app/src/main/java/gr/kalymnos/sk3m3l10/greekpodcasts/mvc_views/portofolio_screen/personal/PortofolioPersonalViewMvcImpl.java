@@ -39,6 +39,16 @@ public class PortofolioPersonalViewMvcImpl implements PortofolioPersonalViewMvc 
     }
 
     @Override
+    public int getMustChoosePictureMessage() {
+        return R.string.must_choose_picture_message;
+    }
+
+    @Override
+    public int getMustCompleteAllFieldsMessage() {
+        return R.string.complete_all_fields_message;
+    }
+
+    @Override
     public void bindImage(Uri uri) {
         Picasso.get().load(uri)
                 .placeholder(R.drawable.ic_headset_black_light_148dp)

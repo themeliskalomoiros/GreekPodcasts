@@ -27,7 +27,6 @@ public class DownloadAudioService extends IntentService {
     private static final String ACTION_DOWNLOAD_AUDIO = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.episode_play.action.download_audio";
     private static final String PODCASTS_DIR = "podcasts";
 
-    // TODO: Rename parameters
     private static final String EXTRA_AUDIO_URL = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.episode_play.extra.audio_url";
     private static final String EXTRA_EPISODE_LOCAL_DB_ID = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.episode_play.extra.extra_episode_database_id";
     private static final String EXTRA_EPISODE_NAME = "gr.kalymnos.sk3m3l10.greekpodcasts.mvc_controllers.activities.episode_play.extra.extra_episode_name";

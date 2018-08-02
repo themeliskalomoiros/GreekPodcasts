@@ -83,7 +83,7 @@ public class AddEpisodeActivity extends AppCompatActivity implements AddEpisodeV
             UploadDataService.startActionUploadAudio(this, viewMvc.getInsertedTitle(),cachedAudioUri, podcast);
             finish();
         } else {
-            Toast.makeText(this, "Enter title and select an audio file.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, viewMvc.getEnterTitleAndSelectAudioMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

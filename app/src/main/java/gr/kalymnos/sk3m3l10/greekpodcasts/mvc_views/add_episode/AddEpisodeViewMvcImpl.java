@@ -28,6 +28,11 @@ public class AddEpisodeViewMvcImpl implements AddEpisodeViewMvc {
     }
 
     @Override
+    public int getEnterTitleAndSelectAudioMessage() {
+        return R.string.enter_title_select_audio_message;
+    }
+
+    @Override
     public String getInsertedTitle() {
         return titleEditText.getText().toString();
     }

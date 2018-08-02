@@ -8,6 +8,10 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.ViewMvc;
 
 public interface EpisodePlayViewMvc extends ViewMvc {
 
+    int getDownloadStartedMessage();
+
+    int getDownloadCompletedMessage();
+
     interface OnActionButtonsClickListener {
         void onStarClick();
 

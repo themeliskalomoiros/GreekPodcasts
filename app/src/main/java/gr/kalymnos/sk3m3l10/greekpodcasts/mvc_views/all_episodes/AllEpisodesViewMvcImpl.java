@@ -43,6 +43,11 @@ public class AllEpisodesViewMvcImpl implements AllEpisodesViewMvc {
     }
 
     @Override
+    public int getMenuClickedMessage() {
+        return R.string.menu_clicked_message;
+    }
+
+    @Override
     public void markSelectedPosition(int position) {
         if (adapter != null) {
             if (adapter.cachedViewHolder!=null){

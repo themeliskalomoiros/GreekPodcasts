@@ -46,6 +46,11 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
     }
 
     @Override
+    public int getNoPodcastToSaveMessage() {
+        return R.string.no_podcast_to_save_message;
+    }
+
+    @Override
     public void bindEpisodes(List<Episode> episodes) {
         if (episodesAdapter != null) {
             if (episodes != null && episodes.size() > 0) {

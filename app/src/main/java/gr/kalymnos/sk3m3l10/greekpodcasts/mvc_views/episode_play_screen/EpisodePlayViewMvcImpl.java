@@ -30,6 +30,16 @@ public class EpisodePlayViewMvcImpl implements EpisodePlayViewMvc {
     }
 
     @Override
+    public int getDownloadStartedMessage() {
+        return R.string.download_started_message;
+    }
+
+    @Override
+    public int getDownloadCompletedMessage() {
+        return R.string.download_completed;
+    }
+
+    @Override
     public void bindPoster(String url) {
         Picasso.get().load(url)
                 .placeholder(R.drawable.ic_headset_black_light_148dp)

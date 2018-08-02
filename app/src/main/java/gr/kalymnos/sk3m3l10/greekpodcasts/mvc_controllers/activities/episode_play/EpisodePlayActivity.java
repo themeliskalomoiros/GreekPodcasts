@@ -211,13 +211,13 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
 
     @Override
     public void onDownloadStarted() {
-        runOnUiThread(()-> Toast.makeText(this, "Download started", Toast.LENGTH_SHORT).show());
+        runOnUiThread(()-> Toast.makeText(this, viewMvc.getDownloadStartedMessage(), Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void onDownloadCompleted(String episodeName) {
         //  TODO: Add a snackbar to display the message
-        runOnUiThread(() -> Toast.makeText(this,"Download completed",Toast.LENGTH_SHORT).show());
+        runOnUiThread(() -> Toast.makeText(this,viewMvc.getDownloadCompletedMessage(),Toast.LENGTH_SHORT).show());
         runOnUiThread(() -> viewMvc.drawDownloadButton());
     }
 
@@ -260,8 +260,6 @@ public class EpisodePlayActivity extends AppCompatActivity implements EpisodePla
                     @Override
                     public void onSessionDestroyed() {
                         viewMvc.disableTransportControls(true);
-                        //  TODO:   Display a better message
-                        Toast.makeText(EpisodePlayActivity.this, "Debug: Session destroyed", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

@@ -9,6 +9,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
 
 public interface AllEpisodesViewMvc extends ViewMvc {
 
+    int getMenuClickedMessage();
+
     interface OnEpisodeClickListener {
         void onEpisodeClick(int position);
     }

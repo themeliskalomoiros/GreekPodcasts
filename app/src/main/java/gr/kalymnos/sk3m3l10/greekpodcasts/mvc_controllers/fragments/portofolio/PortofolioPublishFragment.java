@@ -290,7 +290,7 @@ public class PortofolioPublishFragment extends Fragment implements PortofolioPub
                 getActivity().finish();
             } else {
                 //  TODO: Switch to snackbar
-                Toast.makeText(getContext(), "No podcast to save", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), viewMvc.getNoPodcastToSaveMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }

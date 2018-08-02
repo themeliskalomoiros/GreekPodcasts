@@ -12,6 +12,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import gr.kalymnos.sk3m3l10.greekpodcasts.R;
 import gr.kalymnos.sk3m3l10.greekpodcasts.firebase.ChildNames;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Category;
 import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Episode;
@@ -87,7 +88,7 @@ public class UploadDataService extends IntentService {
 
         }).addOnFailureListener(exception -> {
             //  TODO: Switch with snackbar
-            Toast.makeText(this, "Could not upload " + exception.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.could_not_upload_message) + exception.getMessage(), Toast.LENGTH_LONG).show();
         });
     }
 
@@ -109,7 +110,7 @@ public class UploadDataService extends IntentService {
         audioRef.putFile(audioUri).addOnSuccessListener(taskSnapshot -> {
 
             //  TODO:   Show a snackbar indicating that the audio was successfully uploaded
-            Toast.makeText(this, audioTitle + " uploaded successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, audioTitle + getString(R.string.uploaded_successfully_message), Toast.LENGTH_SHORT).show();
 
             uploadEpisode(audioTitle, podcast, taskSnapshot);
 

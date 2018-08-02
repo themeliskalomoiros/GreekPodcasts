@@ -11,6 +11,10 @@ public interface PortofolioPersonalViewMvc extends ViewMvc {
 
     List<PromotionLink> getPromotionLinks();
 
+    int getMustChoosePictureMessage();
+
+    int getMustCompleteAllFieldsMessage();
+
     interface OnViewsClickListener {
 
         void onEditPodcasterName();

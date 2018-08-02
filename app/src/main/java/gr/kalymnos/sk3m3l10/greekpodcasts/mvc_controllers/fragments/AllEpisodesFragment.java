@@ -162,7 +162,7 @@ public class AllEpisodesFragment extends Fragment implements AllEpisodesViewMvc.
 
     @Override
     public void onPopUpMenuClick(int position) {
-        Toast.makeText(getContext(), "Menu Clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), viewMvc.getMenuClickedMessage(), Toast.LENGTH_SHORT).show();
     }
 
     private class ConnectionCallback extends MediaBrowserCompat.ConnectionCallback {

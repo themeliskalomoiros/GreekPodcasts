@@ -92,4 +92,13 @@
     <string name="pop_up_menu_content_description">A pop up menu</string>
     <string name="edit_description_content_description">Edit the description</string>
     <string name="podcast_title_content_description">Podcast title</string>
+    <string name="download_started_message">Download started.</string>
+    <string name="no_podcast_to_save_message">No podcast to save.</string>
+    <string name="create_profile_first_message">Create profile first.</string>
+    <string name="complete_all_fields_message">Complete all fields.</string>
+    <string name="could_not_upload_message">Could not upload.</string>
+    <string name="uploaded_successfully_message">Uploaded successfully!</string>
+    <string name="menu_clicked_message">Menu clicked!</string>
+    <string name="must_choose_picture_message">Must choose picture.</string>
+    <string name="enter_title_select_audio_message">Enter title and select audio.</string>
 </resources>

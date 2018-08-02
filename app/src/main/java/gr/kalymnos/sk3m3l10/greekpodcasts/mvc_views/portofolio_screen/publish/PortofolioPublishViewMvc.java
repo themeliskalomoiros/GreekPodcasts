@@ -11,6 +11,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.pojos.Podcast;
 
 public interface PortofolioPublishViewMvc extends ViewMvc {
 
+    int getNoPodcastToSaveMessage();
+
     interface OnButtonsClickListener {
 
         void onEditPodcastClick(int itemPosition);

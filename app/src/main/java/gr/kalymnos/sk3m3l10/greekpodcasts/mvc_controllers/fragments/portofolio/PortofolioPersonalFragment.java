@@ -196,7 +196,7 @@ public class PortofolioPersonalFragment extends Fragment implements SaveOperatio
                                         getActivity().finish();
                                     });
                         } else {
-                            Toast.makeText(getContext(), "Must choose a picture", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), viewMvc.getMustChoosePictureMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -220,7 +220,7 @@ public class PortofolioPersonalFragment extends Fragment implements SaveOperatio
             }
 
         } else {
-            Toast.makeText(getContext(), "Must complete all fields.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), viewMvc.getMustCompleteAllFieldsMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

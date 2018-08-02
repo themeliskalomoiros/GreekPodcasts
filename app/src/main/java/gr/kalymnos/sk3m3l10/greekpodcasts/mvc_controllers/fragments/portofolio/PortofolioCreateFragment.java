@@ -194,7 +194,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
                     Podcaster podcaster = dataSnapshot.getValue(Podcaster.class);
                     if (podcaster == null) {
                         //  TODO:   Instead of a toast display a snackbar
-                        Toast.makeText(getContext(), "Create profile first.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), viewMvc.getCreateProfileFirstMessage(), Toast.LENGTH_SHORT).show();
                     } else {
                         //  Getting the push id from the start in order to save the picture at Storage and then
                         // save the Podcast at Database
@@ -234,7 +234,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
 
         } else {
             //  TODO: pop-up a message explaining why the save cannot be done.
-            Toast.makeText(getContext(), "Complete all fields and insert a picture to save", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), viewMvc.getCompleteAllFieldsMessage(), Toast.LENGTH_SHORT).show();
         }
 
     }

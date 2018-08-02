@@ -4,6 +4,8 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.ViewMvc;
 
 public interface AddEpisodeViewMvc extends ViewMvc {
 
+    int getEnterTitleAndSelectAudioMessage();
+
     interface OnActionsClickListener {
 
         void onInsertAudioClick();

@@ -133,9 +133,6 @@ public class QuickPlayerFragment extends Fragment implements QuickPlayerViewMvc.
                     public void onSessionDestroyed() {
                         viewMvc.disableRoot(true);
                         viewMvc.disableTransportControls(true);
-
-                        //  TODO:   Display a better message
-                        Toast.makeText(getContext(), "Debug: Session destroyed", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
