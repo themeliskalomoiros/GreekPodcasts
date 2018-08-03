@@ -261,7 +261,7 @@ public class PortofolioCreateFragment extends Fragment implements PortofolioCrea
 
     @Override
     public void onPodcastCreationSuccess(String podcastPushId) {
-        byte[] posterData = BitmapUtils.getBytesFromImageView(viewMvc.getPosterImageView());
+        byte[] posterData = BitmapUtils.getImageDataFromImageView(viewMvc.getPosterImageView());
         repo.uploadImage(podcastPushId, posterData);
     }
 

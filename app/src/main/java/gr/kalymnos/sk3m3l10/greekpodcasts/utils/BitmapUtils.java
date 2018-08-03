@@ -46,7 +46,7 @@ public class BitmapUtils {
         }
     }
 
-    public static byte[] getBytesFromImageView(ImageView imageView) {
+    public static byte[] getImageDataFromImageView(ImageView imageView) {
         //  Get the bitmap
         imageView.setDrawingCacheEnabled(true);
         imageView.buildDrawingCache();

@@ -221,7 +221,7 @@ public class PortofolioPublishViewMvcImpl implements PortofolioPublishViewMvc {
 
     @Override
     public byte[] getPosterData() {
-        return BitmapUtils.getBytesFromImageView(posterImageView);
+        return BitmapUtils.getImageDataFromImageView(posterImageView);
     }
 
     @Override

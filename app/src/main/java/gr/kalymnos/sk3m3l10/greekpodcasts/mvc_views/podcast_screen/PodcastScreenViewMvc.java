@@ -7,7 +7,7 @@ import gr.kalymnos.sk3m3l10.greekpodcasts.mvc_views.ViewMvc;
 
 public interface PodcastScreenViewMvc extends ViewMvc {
 
-    public static final int TAB_COUNT = 2;
+    int TAB_COUNT = 2;
 
     void hidePlayActionButton();
 
