@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="@dimen/list_item_podcast_title_text_size"
-        android:text="I am Panos sketos and bla bla bla bla bla bla I am Panos sketos and bla bla bla bla bla blaI am Panos sketos and bla bla bla bla bla blaI am Panos sketos and bla bla bla bla bla blaI am Panos sketos and bla bla bla bla bla bla"/>
+        android:text="@string/personal_statement_label_2"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

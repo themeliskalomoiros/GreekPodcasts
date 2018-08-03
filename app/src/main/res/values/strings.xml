@@ -44,7 +44,7 @@
     <string name="month_nov">November</string>
     <string name="month_dec">December</string>
 
-    <string name="podcaster_prefix">By</string>
+    <string name="podcaster_prefix">By </string>
     <string name="tab_label_episodes">Episodes</string>
     <string name="tab_label_about">About</string>
     <string name="fransisco_tarega_mp3">https://www.mfiles.co.uk/mp3-downloads/francisco-tarrega-lagrima.mp3</string>
@@ -101,4 +101,7 @@
     <string name="menu_clicked_message">Menu clicked!</string>
     <string name="must_choose_picture_message">Must choose picture.</string>
     <string name="enter_title_select_audio_message">Enter title and select audio.</string>
+    <string name="education_label">Education</string>
+    <string name="brought_to_you_message">Brought to you by Panos Sketos</string>
+    <string name="personal_statement_label_2">I am Panos sketos and bla bla bla bla bla bla I am Panos sketos and bla bla bla bla bla blaI am Panos sketos and bla bla bla bla bla blaI am Panos sketos and bla bla bla bla bla blaI am Panos sketos and bla bla bla bla bla bla</string>
 </resources>

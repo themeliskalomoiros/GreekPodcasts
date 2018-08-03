@@ -5,7 +5,7 @@
     <TextView
         android:id="@+id/list_item_category_title"
         style="@style/ListItem_Category_Title"
-        android:text="Education"
+        android:text="@string/education_label"
         android:layout_gravity="center_horizontal"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"/>

@@ -45,6 +45,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="32dp"
                     android:layout_marginRight="32dp"
+                    android:layout_toStartOf="@+id/player_play_pause"
                     android:layout_toLeftOf="@+id/player_play_pause"
                     android:src="@drawable/ic_skip_previous_white_32dp"
                     android:contentDescription="@string/player_previous_content_description" />
@@ -64,6 +65,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="32dp"
                     android:layout_marginStart="32dp"
+                    android:layout_toEndOf="@id/player_play_pause"
                     android:layout_toRightOf="@id/player_play_pause"
                     android:src="@drawable/ic_skip_next_white_32dp"
                     android:contentDescription="@string/player_next_content_description" />

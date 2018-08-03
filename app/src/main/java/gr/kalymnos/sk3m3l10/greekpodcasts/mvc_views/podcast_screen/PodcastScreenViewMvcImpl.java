@@ -77,7 +77,7 @@ public class PodcastScreenViewMvcImpl implements PodcastScreenViewMvc {
     @Override
     public void bindPodcasterName(String name) {
         String prefix = this.rootView.getContext().getString(R.string.podcaster_prefix);
-        this.podcasterName.setText(prefix + " " + name);
+        this.podcasterName.setText(prefix + name);
     }
 
     @Override

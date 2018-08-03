@@ -50,7 +50,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginStart="16dp"
         android:lines="1"
-        android:text="Brought to you by Panos Sketos"
+        android:text="@string/brought_to_you_message"
         android:textColor="@color/primaryTextColor"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/viewPager"
